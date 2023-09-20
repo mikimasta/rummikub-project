@@ -73,6 +73,15 @@ public class StartScreen extends Application {
         exit.setPrefHeight(40);
         exit.setPrefWidth(200);
 
+        hvh.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                GameScreen gs = new GameScreen();
+            
+            }
+        });
+
         b.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -91,7 +100,7 @@ public class StartScreen extends Application {
             }
         });
 
-        b.setOnAction(new EventHandler<ActionEvent>() {
+        exit.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
