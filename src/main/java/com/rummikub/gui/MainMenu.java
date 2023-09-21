@@ -6,11 +6,15 @@ import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.BackgroundFill;
 
+/**
+ * This class represents the main menu screen of the game.
+ */
 class MainMenu extends Pane {
 
-
+    /**
+     * Creates a main menu instance, setting up all the buttons and environment
+     */
     MainMenu() {
-
 
         // start button
         HoverButton start = new HoverButton("Start");
@@ -31,6 +35,9 @@ class MainMenu extends Pane {
         HoverButton exit = new HoverButton("Quit");
         exit.setLayoutX(Rummikub.xCenter - 200);
         exit.setLayoutY(Rummikub.yCenter + 175);
+        exit.setOnAction(e -> {
+            System.exit(0);
+        });
 
         //Color.web("#4C516D" - blue shade)
         setBackground(new Background(new BackgroundFill(Color.DARKSLATEGRAY, null, null)));
@@ -43,8 +50,6 @@ class MainMenu extends Pane {
         rummikubLogoIV.setFitWidth(600);
 
         getChildren().addAll(rummikubLogoIV, start, settings, exit, rules);
-
-
     }
 
 }

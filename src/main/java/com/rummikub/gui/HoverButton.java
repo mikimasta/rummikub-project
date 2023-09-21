@@ -15,7 +15,6 @@ class HoverButton extends Button {
         setText(text);
         setStyle(defaultButtonStyle);
         setBackground(null);
-        setPrefSize(400, 50);
         
 
         setOnMouseEntered(ev -> {
