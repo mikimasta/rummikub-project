@@ -18,7 +18,6 @@ class HoverButton extends Button {
         
 
         setOnMouseEntered(ev -> {
-            System.out.println("as");
             mouseEntered = true;
             buttonHoverEffect(); 
 
