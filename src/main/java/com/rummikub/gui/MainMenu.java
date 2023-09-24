@@ -40,11 +40,11 @@ class MainMenu extends Pane {
         });
 
         //Color.web("#4C516D" - blue shade)
-        setBackground(new Background(new BackgroundFill(Color.DARKSLATEGRAY, null, null)));
+        setBackground(new Background(new BackgroundFill(Color.web("#4A6B3C"), null, null)));
         getStylesheets().add("styling.css");
 
         ImageView rummikubLogoIV = new ImageView(Images.rummikubLogo);
-        rummikubLogoIV.setX(100);
+        rummikubLogoIV.setX(400);
         rummikubLogoIV.setY(100);
         rummikubLogoIV.setPreserveRatio(true);
         rummikubLogoIV.setFitWidth(600);

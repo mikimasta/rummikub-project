@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 abstract class Images {
 
 
-    static final Image rummikubLogo = new Image("/rummi.png");
+    static final Image rummikubLogo = new Image("/logo.png");
     
 
-}
+} 

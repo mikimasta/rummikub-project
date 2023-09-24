@@ -9,7 +9,7 @@ class HoverButton extends Button {
      */
     private boolean mouseEntered = false;
     private String defaultButtonStyle = "-fx-font-size: 60; -fx-padding: 0;";
-    private String hoveredStyle = "-fx-font-size: 70; -fx-padding: 0; -fx-text-fill: gray;";
+    private String hoveredStyle = "-fx-font-size: 70; -fx-padding: 0; -fx-text-fill: #D5FBC5;";
     HoverButton(String text) {
 
         setText(text);
