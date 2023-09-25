@@ -7,7 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.layout.BackgroundFill;
 
 /**
- * This class represents the main menu screen of the game.
+ * This class represents the main menu screen of the game.<br>
+ * Extends the {@link Pane} class, allowing for use as a root node.
  */
 class MainMenu extends Pane {
 

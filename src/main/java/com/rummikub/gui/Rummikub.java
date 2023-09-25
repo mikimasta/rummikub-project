@@ -5,6 +5,10 @@ import javafx.application.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * Main entry point for the game. The main stage is created here. Contains some global variables<br>
+ * used throughout the application. Extends the {@link Application} class.
+ */
 public class Rummikub extends Application {
 
     /**
@@ -21,6 +25,10 @@ public class Rummikub extends Application {
 
 
 
+    /**
+     * Sets up the Main Menu screen.
+     * @param primaryStage stage  used
+     */
     @Override
     public void start(Stage primaryStage) {
 
