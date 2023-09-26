@@ -23,6 +23,11 @@ class Player {
         this.firstMoveMade = false;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     String getName() {
         return name;
     }
