@@ -1,22 +1,28 @@
 package com.rummikub.game;
 
-public class Tile {
-    private String color;
-    private int number;
+/**
+ * This class represents the tile, given its number and color. 
+ */
+class Tile {
 
-    // Constructor method to initialize a Tile with a given color and number
-    public Tile(String color, int number) {
+    private String color;
+    private byte  number;
+
+    /**
+     * constructs a tile with a given color and number
+     * @param color  color passed as a hex String
+     * @param number the number that the tile has
+     */
+    Tile(String color, byte number) {
         this.color = color;
         this.number = number;
     }
 
-    // Getter method to retrieve the color of the tile
     public String getColor(){
         return color;
     }
 
-    // Getter method to retrieve the number of the tile
-    public int getNumber(){
+    public byte getNumber(){
         return number;
     }
 }
