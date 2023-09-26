@@ -42,16 +42,16 @@ class Game {
     private void initializeTiles() {
         String[] colors = {"Red", "Orange", "Black", "Blue"};
         for (String color : colors) {
-         for (int i = 0; i < 2; i++) {
-            for (int number = 1; number <= 13; number++) {
+         for (byte i = 0; i < 2; i++) {
+            for (byte number = 1; number <= 13; number++) {
                 pool.add(new Tile(color, number));
             }
         }
         }
         //the interger 0 will be used in regard to a joker
         //two jokers are added into our game
-        pool.add(new Tile("Joker", 0));
-        pool.add(new Tile("Joker", 0));
+        pool.add(new Tile("Joker", (byte) 0));
+        pool.add(new Tile("Joker", (byte) 0));
     }
 
     /**
