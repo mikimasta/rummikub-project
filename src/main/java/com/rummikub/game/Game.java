@@ -1,5 +1,6 @@
 package com.rummikub.game;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -120,13 +121,8 @@ import java.util.List;
         return board;
     }
 
-    public static void main(String[] args) {
-    
-        Game game = new Game((byte) 4);
-        System.out.println(game.getCurrentPlayer());
+    static String printBoard(Tile[][] board) {
         String boardString = "";
-        Tile[][] board = game.getBoard();
-
         for (int row = 0; row < GRID_ROWS; ++row) {
             boardString += "\n";
             for (int col = 0; col < GRID_COLS; ++col) {
@@ -134,9 +130,15 @@ import java.util.List;
             }
 
         }
+        return boardString;
+    }
 
 
+    public static void main(String[] args) {
+    
+        Game game = new Game((byte) 4);
+        System.out.println(game.getCurrentPlayer());
 
-        System.out.print(boardString);
+        System.out.print(printBoard(game.getBoard()));
     }
 }
