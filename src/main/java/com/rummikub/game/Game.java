@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * This class is a memory representation of the game state. It executes and validates player moves.<br>
@@ -16,7 +17,7 @@ import java.util.List;
     private List<Player> players;
     private Tile[][]  board;
     private List<Tile> pool;
-    private Player currentPlayer;
+    private static Player currentPlayer;
 
     public static final byte GRID_ROWS = 10;
     public static final byte GRID_COLS = 15;
@@ -94,12 +95,8 @@ import java.util.List;
         return true;
     }
 
-    private Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-
-    private void makeMove(Player player, List<Tile> move) {
+    private void placeTile(Tile tile) {
+        assert tile != null;
     }
 
     private boolean isGameOver() {
@@ -111,10 +108,39 @@ import java.util.List;
        return false;
     }
 
-    private void playGame() {
+    
+
+    public void playGame() {
+
+        dealInitialTiles();
+
         while (!isGameOver()) {
-           //make moves here
+
+           currentPlayer.startMove();
+           while (!(currentPlayer.isMoveFinished())) {
+               
+               
+
+
+
+
+           }
+
+           isValidBoard();
+           
+           nextPlayer();
+            
         }
+    }
+
+    void nextPlayer() {
+       
+        try {
+            currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
+        } catch (IndexOutOfBoundsException e) {
+            currentPlayer = players.get(0);
+        }
+
     }
 
     public Tile[][] getBoard() {
@@ -137,8 +163,11 @@ import java.util.List;
     public static void main(String[] args) {
     
         Game game = new Game((byte) 4);
-        System.out.println(game.getCurrentPlayer());
+        System.out.println(currentPlayer + " starts the game.");
 
         System.out.print(printBoard(game.getBoard()));
+
+
+
     }
 }

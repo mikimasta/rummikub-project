@@ -12,6 +12,7 @@ class Player {
     private String name;
     private List<Tile> hand;
     private boolean firstMoveMade;
+    private boolean moveFinished;
 
 
     /**
@@ -21,6 +22,18 @@ class Player {
         this.name = name;
         this.hand = new ArrayList<>();
         this.firstMoveMade = false;
+    }
+
+    boolean isMoveFinished() {
+        return moveFinished;
+    }
+
+    void startMove() {
+        moveFinished = false;
+    }
+
+    void finishMove() {
+        moveFinished = true;
     }
 
     @Override
