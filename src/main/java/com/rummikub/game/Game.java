@@ -14,10 +14,10 @@ import java.util.Scanner;
  public class Game {
 
     //im unsure about how to do the board, like an array of tile arrays to show each run  or what?
-    private List<Player> players;
+    protected List<Player> players;
     private Tile[][]  board;
-    private List<Tile> pool;
-    private static Player currentPlayer;
+    protected List<Tile> pool;
+    protected static Player currentPlayer;
 
     public static final byte GRID_ROWS = 10;
     public static final byte GRID_COLS = 15;
@@ -76,7 +76,7 @@ import java.util.Scanner;
     /**
      * this method first shuffles the pool and then deals each player 14 tile
     */
-    private void dealInitialTiles() {
+    protected void dealInitialTiles() {
         Collections.shuffle(pool);
         for (Player player : players) {
             for (int i = 0; i < 14; i++) {
