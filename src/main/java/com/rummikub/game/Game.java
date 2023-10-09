@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * This class is a memory representation of the game state. It executes and validates player moves.<br>
@@ -15,7 +18,7 @@ import java.util.Scanner;
 
     //im unsure about how to do the board, like an array of tile arrays to show each run  or what?
     private List<Player> players;
-    private Tile[][]  board;
+    private static Tile[][]  board;
     private List<Tile> pool;
     private static Player currentPlayer;
 
@@ -90,9 +93,67 @@ import java.util.Scanner;
      * this method checks the state of the entire board after a move has been made.
      * @return  true if the board state complies with the rules, false otherwise.
      */
-    private boolean isValidBoard() {
-        // to do
-        return true;
+private boolean isValidBoard(Tile[][] gameBoard) {
+    // Check rows
+    for (int row = 0; row < gameBoard.length; row++) {
+        if (!isValidSetOrRun(Arrays.stream(gameBoard[row]).filter(Objects::nonNull).collect(Collectors.toList()))) {
+            return false;
+        }
+    }
+
+    // Check columns
+    for (int col = 0; col < gameBoard[0].length; col++) {
+        List<Tile> columnTiles = new ArrayList<>();
+        for (int row = 0; row < gameBoard.length; row++) {
+            Tile tile = gameBoard[row][col];
+            if (tile != null) {
+                columnTiles.add(tile);
+            }
+        }
+        if (!isValidSetOrRun(columnTiles)) {
+            return false;
+        }
+    }
+
+    // Check for the starting tile in the initial meld
+    boolean hasStartingTile = false;
+    for (int row = 0; row < gameBoard.length; row++) {
+        for (int col = 0; col < gameBoard[0].length; col++) {
+            Tile tile = gameBoard[row][col];
+            if (tile != null && tile.getNumber() == 1) {
+                hasStartingTile = true;
+                break;
+            }
+        }
+        if (hasStartingTile) {
+            break;
+        }
+    }
+
+    return hasStartingTile;
+}
+
+private boolean isValidSetOrRun(List<Tile> tiles) {
+    if (tiles.isEmpty()) {
+        return true; // An empty set or run is valid
+    }
+
+    // Group tiles by number
+    Map<Byte, List<Tile>> groupedByNumber = tiles.stream()
+            .collect(Collectors.groupingBy(Tile::getNumber));
+
+    // Check each group for valid sets or runs
+    for (List<Tile> group : groupedByNumber.values()) {
+        if (group.size() < 3) {
+            return false; // A set or run must have at least 3 tiles
+        }
+        // Check if the group forms a valid set (same number, different colors)
+        if (!group.stream().allMatch(t -> t.getColor().equals(group.get(0).getColor()))) {
+            return false;
+        }
+    }
+    System.out.println("its good");
+    return true;
     }
 
     private void placeTile(Tile tile) {
@@ -107,8 +168,6 @@ import java.util.Scanner;
         }
        return false;
     }
-
-    
 
     public void playGame() {
 
@@ -126,7 +185,7 @@ import java.util.Scanner;
 
            }
 
-           isValidBoard();
+           isValidBoard(board);
            
            nextPlayer();
             
@@ -166,7 +225,7 @@ import java.util.Scanner;
         System.out.println(currentPlayer + " starts the game.");
 
         System.out.print(printBoard(game.getBoard()));
-
+        game.isValidBoard(board);
 
 
     }
