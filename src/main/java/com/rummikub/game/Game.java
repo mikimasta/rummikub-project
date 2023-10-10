@@ -113,7 +113,9 @@ public class Game {
                 for (int j = 0; j < set.size(); j++) {
                     System.out.println(set.get(j).getNumber() + " " + set.get(j).getColor());
                 }
-                if(!checkTile(set)) return false; // check if given tile is either stairs or group, return false if not
+                if(!checkTile(set)) {
+                    return false; // check if given tile is either stairs or group, return false if not
+                }
             }
         }
         return true; // checked all tiles, all are correct
@@ -128,13 +130,17 @@ public class Game {
     boolean checkIfGroup(ArrayList<Tile> set){
 
         // up to 4 tiles (thats how many colors there are)
-        if (set.size() > 4) return false;
+        if (set.size() > 4) {
+            return false;
+        }
 
         // check if same number
         byte numOfFirst = set.get(0).getNumber();
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
-            if (numOfFirst != numTmp) return false;
+            if (numOfFirst != numTmp) {
+                return false;
+            }
         }
 
         // check if different colors
