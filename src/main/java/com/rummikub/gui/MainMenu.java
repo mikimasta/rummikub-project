@@ -21,6 +21,9 @@ class MainMenu extends Pane {
         HoverButton start = new HoverButton("Start");
         start.setLayoutX(Rummikub.xCenter - 200);
         start.setLayoutY(Rummikub.yCenter - 50);
+        start.setOnAction(e -> {
+            Rummikub.gameWindow.getScene().setRoot(new GameScreen());
+        });
         
         // settings button
         HoverButton settings = new HoverButton("Settings");

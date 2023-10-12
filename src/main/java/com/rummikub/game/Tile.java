@@ -1,5 +1,7 @@
 package com.rummikub.game;
 
+
+import javafx.scene.paint.Color;
 /**
  * This class represents the tile, given its number and color. 
  */
@@ -16,6 +18,10 @@ class Tile {
     Tile(String color, byte number) {
         this.color = color;
         this.number = number;
+    }
+
+    Tile(String joker, Color color) {
+
     }
 
     public String getColor(){

@@ -42,7 +42,7 @@ public class Game {
 
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {
-                board[row][col] = new Tile("lol", (byte) 0);
+                //board[row][col] = new Tile("lol", (byte) 0);
             }
         }
         players = new ArrayList<>();

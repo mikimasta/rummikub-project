@@ -11,8 +11,8 @@ public class App {
 
     public static void main(String[] args) {
 
-        //Rummikub.main(args);
-        Game.main(args);
+        Rummikub.main(args);
+        //Game.main(args);
 
     }
 

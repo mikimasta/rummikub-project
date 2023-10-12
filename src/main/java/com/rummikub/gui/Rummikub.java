@@ -36,7 +36,7 @@ public class Rummikub extends Application {
         gameWindow.setTitle("Rummikub");
         gameWindow.setWidth(WIDTH);
         gameWindow.setHeight(HEIGHT);
-        //gameWindow.setFullScreen(true);
+        gameWindow.setFullScreen(true);
         
         MainMenu root = new MainMenu();
 
