@@ -34,6 +34,12 @@ class GameScreen extends Pane {
         rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
         rack.addToRack(new TileGUI((byte) 11, Color.ORANGE));
         rack.addToRack(new TileGUI(Color.RED));
+        rack.addToRack(new TileGUI(Color.BLACK));
+
+        rack.getChildren().remove(1);
+        rack.getChildren().remove(2);
+        rack.getChildren().remove(3);
+
 
 
         GridPane players = new GridPane();

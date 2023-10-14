@@ -19,20 +19,24 @@ class RackGUI extends GridPane {
     private static final int MAX_TILES_PER_ROW;
     private int tilesInRow = 0;
     private static final int H_GAP = 5;
+    static double RACK_Y = 880;
+    static double RACK_X = Rummikub.xCenter - RACK_WIDTH / 2;
 
     static {
         double tilesNoGap = RACK_WIDTH / TileGUI.TILE_WIDTH;
         double pixelGap = tilesNoGap * H_GAP;
         double tileOverLimit = pixelGap / TileGUI.TILE_WIDTH;
-        System.out.println(tilesNoGap - tileOverLimit);
         MAX_TILES_PER_ROW = (int) (tilesNoGap - tileOverLimit);
+        System.out.println(MAX_TILES_PER_ROW);
     }
 
     RackGUI() {
 
+        setGridLinesVisible(true);
+
         setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-        setLayoutX(Rummikub.xCenter - RACK_WIDTH / 2);
-        setLayoutY(880);
+        setLayoutX(RACK_X);
+        setLayoutY(RACK_Y);
         setMaxSize(RACK_WIDTH, RACK_HEIGHT);
         setMinSize(RACK_WIDTH, RACK_HEIGHT);
         setPrefSize(RACK_WIDTH, RACK_HEIGHT);
@@ -52,7 +56,7 @@ class RackGUI extends GridPane {
 
         if (!(tilesInRow == 2 * MAX_TILES_PER_ROW)) {
 
-            if (tilesInRow < MAX_TILES_PER_ROW) {
+            if (tilesInRow <= MAX_TILES_PER_ROW) {
                 addRow(0, tile);
                 ++tilesInRow;
             } else {

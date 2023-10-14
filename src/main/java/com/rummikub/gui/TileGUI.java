@@ -1,6 +1,7 @@
 package com.rummikub.gui;
 
 import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
@@ -23,6 +24,12 @@ class TileGUI extends StackPane {
     static final double TILE_WIDTH;
     static final double TILE_HEIGHT = RackGUI.RACK_HEIGHT / 2;
     static final ImageView TILE_FACE;
+    
+    private double currentMouseX;
+    private double currentMouseY;
+
+    private double mouseX;
+    private double mouseY;
 
     static {
 
@@ -33,12 +40,51 @@ class TileGUI extends StackPane {
 
     }
 
-
-    TileGUI(byte number, Color color) {
+    private TileGUI() {
 
         setMinSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
         setMaxSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
         setPrefSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
+
+
+        setOnMousePressed(e -> {
+
+            mouseX = e.getSceneX() - getTranslateX();
+            mouseY = e.getSceneY() - getTranslateY();
+
+        });
+
+        setOnMouseDragged(ev -> {
+            setTranslateX(ev.getSceneX() - mouseX);
+            setTranslateY(ev.getSceneY() - mouseY);
+
+        });
+
+        setOnMouseReleased(e -> {
+
+            currentMouseX = e.getSceneX();
+            currentMouseY = e.getSceneY();
+
+            int colToSnap = (int) (Math.abs((RackGUI.RACK_X - currentMouseX))  / TILE_WIDTH);
+            int rowToSnap = (int) ((currentMouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+
+            System.out.println(rowToSnap);
+            System.out.println(colToSnap);
+            System.out.println(TILE_WIDTH);
+
+            GridPane grid = (GridPane) getParent();
+            
+
+            grid.add(this, colToSnap, rowToSnap);
+
+        });
+
+    }
+
+
+    TileGUI(byte number, Color color) {
+
+        this(); 
 
         ImageView tileFace = new ImageView(Images.tileFace);
         tileFace.setPreserveRatio(true);
@@ -53,13 +99,8 @@ class TileGUI extends StackPane {
         numText.setFill(color);
         numText.setTranslateY(-15);
         setAlignment(numText, Pos.CENTER);
-        
-
 
         getChildren().addAll(tileFace, numText);
-
-
-
 
     }
 
@@ -68,9 +109,7 @@ class TileGUI extends StackPane {
      */
     TileGUI(Color color) {
 
-        setMinSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
-        setMaxSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
-        setPrefSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
+        this();
 
         ImageView imageToSet = new ImageView();
         imageToSet.setPreserveRatio(true);
@@ -83,10 +122,12 @@ class TileGUI extends StackPane {
         getChildren().add(imageToSet);
     }
 
-    void add(TileGUI tile) {
-        
+    double getCurrentMouseX() {
+        return currentMouseX;
     }
 
-
+    double getCurrentMouseY() {
+        return currentMouseY;
+    }
 
 }

@@ -16,9 +16,9 @@ public class Rummikub extends Application {
      */
     static Stage gameWindow;
 
-    private static final int WIDTH = 1920;
+    static final int WIDTH = 1920;
 
-    private static final int HEIGHT = 1080;
+    static final int HEIGHT = 1080;
 
     static int xCenter = WIDTH / 2;
     static int yCenter = HEIGHT / 2;
