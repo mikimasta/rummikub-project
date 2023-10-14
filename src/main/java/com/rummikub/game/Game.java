@@ -1,6 +1,5 @@
 package com.rummikub.game;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 /**
  * This class is a memory representation of the game state. It executes and
@@ -92,19 +90,28 @@ public class Game {
         }
     }
 
-    /**
+     /**
      * this method checks the state of the entire board after a move has been made.
      * @param   gameBoard  the game board
      * @return  true if the board state complies with the rules, false otherwise.
      */
     public boolean isValidBoard(Tile[][] gameBoard) {
         System.out.println( printBoard(gameBoard) );
+        int count = 0;
         ArrayList<Tile> set = new ArrayList<>(); // Create an ArrayList to store number of tiles forming set
         for (int i = 0; i < gameBoard.length; i++){
+            count = 0;
+            set.clear();
             for (int y = 0; y < gameBoard[i].length; y++){ 
                 Tile tile = gameBoard[i][y];
-                if(tile.getNumber() != 0){ // assumed that null tiles have number of 0
-                    set.add(tile);
+                if ((tile.getNumber() != 0) && (count > 0) && (count < 3)){ //checks for subset of tiles of length 1 or 2
+                        return false; 
+                    }else{
+                        count +=1;
+                    }
+
+                if(tile.getNumber() != 0){ // assumed that null tiles have the number 0
+                    set.add(tile);                    
                 }
             }
             if (set.size() < 3){ 
@@ -121,6 +128,7 @@ public class Game {
         return true; // checked all tiles, all are correct
     }
 
+
     // check if given tile is either group or stairs, i.e. is it legal?
     boolean checkTile(ArrayList<Tile> set) {
         return checkIfGroup(set) || checkIfStairs(set);
@@ -130,17 +138,13 @@ public class Game {
     boolean checkIfGroup(ArrayList<Tile> set){
 
         // up to 4 tiles (thats how many colors there are)
-        if (set.size() > 4) {
-            return false;
-        }
+        if (set.size() > 4) return false;
 
         // check if same number
         byte numOfFirst = set.get(0).getNumber();
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
-            if (numOfFirst != numTmp) {
-                return false;
-            }
+            if (numOfFirst != numTmp) return false;
         }
 
         // check if different colors
@@ -256,3 +260,5 @@ public class Game {
     }
     
 }
+
+
