@@ -20,26 +20,38 @@ import javafx.scene.layout.StackPane;
 
 class TileGUI extends StackPane {
 
+    static final double TILE_WIDTH;
+    static final double TILE_HEIGHT = RackGUI.RACK_HEIGHT / 2;
+    static final ImageView TILE_FACE;
+
+    static {
+
+        TILE_FACE = new ImageView(Images.tileFace);
+        TILE_FACE.setPreserveRatio(true);
+        TILE_FACE.setFitHeight(TILE_HEIGHT);
+        TILE_WIDTH = TILE_FACE.getBoundsInLocal().getWidth();
+
+    }
+
+
     TileGUI(byte number, Color color) {
+
+        setMinSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
+        setMaxSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
+        setPrefSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
 
         ImageView tileFace = new ImageView(Images.tileFace);
         tileFace.setPreserveRatio(true);
-        tileFace.setFitHeight(150);
-        double tileWidth = tileFace.getLayoutBounds().getWidth();
+        tileFace.setFitHeight(TILE_HEIGHT);
         tileFace.setTranslateX(0);
         tileFace.setTranslateY(0);
-        setMinSize(tileWidth, 150);
-        setMaxSize(tileWidth, 150);
-        setPrefSize(tileWidth, 150);
-
-
 
 
         Text numText = new Text(String.valueOf(number));
         numText.setBoundsType(TextBoundsType.VISUAL);
-        numText.setStyle("-fx-font-size: 60pt");
+        numText.setStyle("-fx-font-size: 50pt");
         numText.setFill(color);
-        numText.setTranslateY(-20);
+        numText.setTranslateY(-15);
         setAlignment(numText, Pos.CENTER);
         
 
@@ -56,13 +68,25 @@ class TileGUI extends StackPane {
      */
     TileGUI(Color color) {
 
-        Image imageToSet;
-        if (color == Color.RED)
-            imageToSet = Images.jokerRed;
-        else
-            imageToSet = Images.jokerBlack;
+        setMinSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
+        setMaxSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
+        setPrefSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
 
-        setBackground(new Background(new BackgroundImage(imageToSet, null, null, null, null)));
+        ImageView imageToSet = new ImageView();
+        imageToSet.setPreserveRatio(true);
+        imageToSet.setFitHeight(TILE_HEIGHT);
+        if (color == Color.RED)
+            imageToSet.setImage(Images.jokerRed);
+        else
+            imageToSet.setImage(Images.jokerBlack);
+
+        getChildren().add(imageToSet);
     }
+
+    void add(TileGUI tile) {
+        
+    }
+
+
 
 }

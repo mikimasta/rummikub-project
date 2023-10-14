@@ -20,11 +20,21 @@ class GameScreen extends Pane {
         //setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
         RackGUI rack = new RackGUI();
+        rack.addToRack(new TileGUI((byte) 4, Color.RED));
+        rack.addToRack(new TileGUI((byte) 10, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 7, Color.BLACK));
+        rack.addToRack(new TileGUI((byte) 2, Color.BLUE));
+        rack.addToRack(new TileGUI((byte) 9, Color.RED));
+        rack.addToRack(new TileGUI((byte) 6, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 12, Color.BLACK));
+        rack.addToRack(new TileGUI((byte) 1, Color.BLUE));
+        rack.addToRack(new TileGUI((byte) 5, Color.RED));
+        rack.addToRack(new TileGUI((byte) 8, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 13, Color.BLACK));
+        rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
+        rack.addToRack(new TileGUI((byte) 11, Color.ORANGE));
+        rack.addToRack(new TileGUI(Color.RED));
 
-        TileGUI test = new TileGUI((byte) 14, Color.BLUE);
-        test.setLayoutX(500);
-        test.setLayoutY(300);
-        test.toFront();
 
         GridPane players = new GridPane();
 
@@ -38,11 +48,12 @@ class GameScreen extends Pane {
 
         ImageView rackIV = new ImageView(Images.rack);
         rackIV.setPreserveRatio(true);
-        rackIV.setFitWidth(800);
-        rackIV.setLayoutX(Rummikub.xCenter - 400);
-        rackIV.setLayoutY(880);
+        rackIV.setFitWidth(1000);
+        rackIV.setLayoutX(Rummikub.xCenter - 500);
+        rackIV.setLayoutY(888);
+        System.out.println(rackIV.getLayoutBounds().getHeight());
 
-        getChildren().addAll(rack, players, gameBoard, gb, rackIV, test);
+        getChildren().addAll(players, gameBoard, gb, rackIV, rack);
 
     }
 
