@@ -1,14 +1,11 @@
 package com.rummikub.gui;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextBoundsType;
-
-import javax.lang.model.util.ElementScanner6;
-
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 
 
 
@@ -27,6 +24,9 @@ class TileGUI extends StackPane {
     private int colToSnap;
     private int rowToSnap;
 
+    private int prevCol;
+    private int prevRow;
+
     static {
 
         TILE_FACE = new ImageView(Images.tileFace);
@@ -44,9 +44,19 @@ class TileGUI extends StackPane {
 
 
         setOnMousePressed(e -> {
+            toFront();
             mouseX = e.getSceneX() - getTranslateX();
             mouseY = e.getSceneY() - getTranslateY();
-            toFront();
+
+            double mouseRelToSceneX = e.getSceneX();
+            double mouseRelToSceneY = e.getSceneY();
+
+            if (isInRackBounds(mouseX, mouseY)) {
+                System.out.println("hi");
+                prevCol = (int) (Math.abs(RackGUI.RACK_X - mouseRelToSceneX + RackGUI.X_OFFSET) / TILE_WIDTH);
+                prevRow = (int) ((mouseRelToSceneY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+            }
+
 
         });
 
@@ -63,10 +73,11 @@ class TileGUI extends StackPane {
 
             if (isInRackBounds(mouseX, mouseY)) {
                 colToSnap = (int) (Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET) / TILE_WIDTH);
-                System.out.println(Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET));
+                System.out.println(colToSnap);
                 rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+                System.out.println(rowToSnap);
                 setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
-                //System.out.println(getXPos() + RackGUI.X_OFFSET);
+
                 setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
             }
 
@@ -77,7 +88,7 @@ class TileGUI extends StackPane {
             */
 
 
-            RackGUI.getInstance().update(); 
+            RackGUI.getInstance().updateRack(this);
 
         });
 
@@ -171,4 +182,10 @@ class TileGUI extends StackPane {
         return rowToSnap;
     }
 
+    public int getPrevCol() {
+        return prevCol;
+    }
+    public int getPrevRow() {
+        return prevRow;
+    }
 }

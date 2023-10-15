@@ -4,7 +4,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.Arrays;
 
@@ -113,26 +112,18 @@ class RackGUI extends Pane {
 
     }
 
-    void update() {
+    void updateRack(TileGUI tile) {
 
         System.out.println(Arrays.deepToString(tiles));
 
 
-        for (int i = 0; i < tiles.length; ++i) {
-            for (int j = 0; j < tiles[1].length; ++j) {
-
-                TileGUI tile = tiles[i][j];
                 if (tile != null) {
                     tile.setTranslateX(tile.getXPos());
                     tile.setTranslateY(tile.getYPos());
 
-                    tiles[i][j] = null;
+                    tiles[tile.getPrevRow()][tile.getPrevCol()] = null;
                     tiles[tile.getRowToSnap()][tile.getColToSnap()] = tile;
                 }
-
-            }
-
-        }
 
         System.out.println(Arrays.deepToString(tiles));
 

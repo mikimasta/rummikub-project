@@ -1,13 +1,12 @@
 package com.rummikub.gui;
 
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.image.ImageView;
 
 class GameScreen extends Pane {
 
@@ -21,24 +20,24 @@ class GameScreen extends Pane {
         //setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
         RackGUI rack = RackGUI.getInstance();
-/*
+
         rack.addToRack(new TileGUI(Color.BLACK));
         rack.addToRack(new TileGUI(Color.BLACK));
-        rack.addToRack(new TileGUI(Color.BLACK));
-        rack.addToRack(new TileGUI((byte) 9, Color.RED));
-        rack.addToRack(new TileGUI((byte) 7, Color.ORANGE));
-        rack.addToRack(new TileGUI((byte) 2, Color.RED));
-        rack.addToRack(new TileGUI((byte) 5, Color.BLACK));
-        rack.addToRack(new TileGUI((byte) 1, Color.ORANGE));
-        rack.addToRack(new TileGUI((byte) 6, Color.BLUE));
-        rack.addToRack(new TileGUI((byte) 10, Color.BLUE));
-        rack.addToRack(new TileGUI((byte) 11, Color.RED));
-        rack.addToRack(new TileGUI((byte) 4, Color.BLACK));
-        rack.addToRack(new TileGUI((byte) 8, Color.ORANGE));
-        rack.addToRack(new TileGUI((byte) 13, Color.BLACK));
-*/
-        rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
-        rack.addToRack(new TileGUI((byte) 12, Color.ORANGE));
+//        rack.addToRack(new TileGUI(Color.BLACK));
+//        rack.addToRack(new TileGUI((byte) 9, Color.RED));
+//        rack.addToRack(new TileGUI((byte) 7, Color.ORANGE));
+//        rack.addToRack(new TileGUI((byte) 2, Color.RED));
+//        rack.addToRack(new TileGUI((byte) 5, Color.BLACK));
+//        rack.addToRack(new TileGUI((byte) 1, Color.ORANGE));
+//        rack.addToRack(new TileGUI((byte) 6, Color.BLUE));
+//        rack.addToRack(new TileGUI((byte) 10, Color.BLUE));
+//        rack.addToRack(new TileGUI((byte) 11, Color.RED));
+//        rack.addToRack(new TileGUI((byte) 4, Color.BLACK));
+//        rack.addToRack(new TileGUI((byte) 8, Color.ORANGE));
+//        rack.addToRack(new TileGUI((byte) 13, Color.BLACK));
+//        rack.addToRack(new TileGUI((byte) 12, Color.ORANGE));
+//        rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
+
 
         GridPane players = new GridPane();
 
