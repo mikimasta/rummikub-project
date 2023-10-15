@@ -15,7 +15,7 @@ class RackGUI extends Pane {
     static final int RACK_HEIGHT = 188;
     private static final int MAX_TILES_PER_ROW;
     private int tileCount = 0;
-    static final int H_GAP = 5;
+    static final int H_GAP = 0;
     static final int X_OFFSET = 10;
     static double RACK_Y = 880;
     static double RACK_X = Rummikub.xCenter - RACK_WIDTH / 2;
@@ -30,7 +30,7 @@ class RackGUI extends Pane {
         double pixelGap = tilesNoGap * H_GAP;
         double tileOverLimit = pixelGap / TileGUI.TILE_WIDTH;
         MAX_TILES_PER_ROW = (int) (tilesNoGap - tileOverLimit);
-        //System.out.println(MAX_TILES_PER_ROW);
+        System.out.println(MAX_TILES_PER_ROW);
     }
 
     public static RackGUI getInstance() {
@@ -55,7 +55,8 @@ class RackGUI extends Pane {
         double yRect = 0;
         int tileCount = 0;
 
-        
+      
+        /*
         for (int i = 0; i < MAX_TILES_PER_ROW * 2; ++i) {
             //System.out.println(xRect);
 
@@ -77,6 +78,7 @@ class RackGUI extends Pane {
 
             }
         }
+        */
         
 
     }
@@ -93,8 +95,8 @@ class RackGUI extends Pane {
                 if (tiles[i][j] == null) {
 
                     tiles[i][j] = tile;
-                    tile.setPosX(j * (TileGUI.TILE_WIDTH + H_GAP) + X_OFFSET);
-                    tile.setPosY(i * RACK_HEIGHT / 2);
+                    tile.setXPos(j * (TileGUI.TILE_WIDTH + H_GAP) + X_OFFSET);
+                    tile.setYPos(i * RACK_HEIGHT / 2);
                     tile.setTranslateX(tile.getXPos());
                     tile.setTranslateY(tile.getYPos());
                     getChildren().add(tile);
@@ -113,6 +115,8 @@ class RackGUI extends Pane {
 
     void update() {
 
+        System.out.println(Arrays.deepToString(tiles));
+
 
         for (int i = 0; i < tiles.length; ++i) {
             for (int j = 0; j < tiles[1].length; ++j) {
@@ -121,11 +125,16 @@ class RackGUI extends Pane {
                 if (tile != null) {
                     tile.setTranslateX(tile.getXPos());
                     tile.setTranslateY(tile.getYPos());
+
+                    tiles[i][j] = null;
+                    tiles[tile.getRowToSnap()][tile.getColToSnap()] = tile;
                 }
 
             }
 
         }
+
+        System.out.println(Arrays.deepToString(tiles));
 
     }
 

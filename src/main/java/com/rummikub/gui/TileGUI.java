@@ -62,12 +62,12 @@ class TileGUI extends StackPane {
             mouseY = e.getSceneY();
 
             if (isInRackBounds(mouseX, mouseY)) {
-                colToSnap = (int) (Math.abs((RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET))  / TILE_WIDTH);
+                colToSnap = (int) (Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET) / TILE_WIDTH);
                 System.out.println(Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET));
                 rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
-                setPosX(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
+                setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
                 //System.out.println(getXPos() + RackGUI.X_OFFSET);
-                setPosY(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
+                setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
             }
 
             /*
@@ -155,12 +155,20 @@ class TileGUI extends StackPane {
         return yPos;
     } 
 
-    void setPosX(double xPos) {
+    void setXPos(double xPos) {
         this.xPos = xPos;
     }
 
-    void setPosY(double yPos){
+    void setYPos(double yPos){
         this.yPos = yPos;
+    }
+
+    int getColToSnap() {
+        return colToSnap;
+    }
+
+    int getRowToSnap() {
+        return rowToSnap;
     }
 
 }

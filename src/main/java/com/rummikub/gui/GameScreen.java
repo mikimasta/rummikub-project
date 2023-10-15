@@ -21,6 +21,9 @@ class GameScreen extends Pane {
         //setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
 
         RackGUI rack = RackGUI.getInstance();
+/*
+        rack.addToRack(new TileGUI(Color.BLACK));
+        rack.addToRack(new TileGUI(Color.BLACK));
         rack.addToRack(new TileGUI(Color.BLACK));
         rack.addToRack(new TileGUI((byte) 9, Color.RED));
         rack.addToRack(new TileGUI((byte) 7, Color.ORANGE));
@@ -33,6 +36,7 @@ class GameScreen extends Pane {
         rack.addToRack(new TileGUI((byte) 4, Color.BLACK));
         rack.addToRack(new TileGUI((byte) 8, Color.ORANGE));
         rack.addToRack(new TileGUI((byte) 13, Color.BLACK));
+*/
         rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
         rack.addToRack(new TileGUI((byte) 12, Color.ORANGE));
 
@@ -44,8 +48,6 @@ class GameScreen extends Pane {
         gb.setFill(Color.TRANSPARENT);
         gb.setStroke(Color.BLACK);
 
-        Line l = new Line(RackGUI.RACK_X + 65, 0, RackGUI.RACK_X + 65, 1080);
-
 
         ImageView rackIV = new ImageView(Images.rack);
         rackIV.setPreserveRatio(true);
@@ -54,27 +56,9 @@ class GameScreen extends Pane {
         rackIV.setLayoutY(888);
         //System.out.println(rackIV.getLayoutBounds().getHeight());
 
-        getChildren().addAll(players, gameBoard, gb, rackIV, rack, l);
+        getChildren().addAll(players, gameBoard, gb, rackIV, rack);
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
