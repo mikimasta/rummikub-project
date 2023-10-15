@@ -1,12 +1,8 @@
 package com.rummikub.game;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * This class is a memory representation of the game state. It executes and
@@ -96,7 +92,7 @@ public class Game {
      * @return  true if the board state complies with the rules, false otherwise.
      */
     public boolean isValidBoard(Tile[][] gameBoard) {
-        System.out.println( printBoard(gameBoard) );
+        //System.out.println( printBoard(gameBoard) );
         int count = 0;
         ArrayList<Tile> set = new ArrayList<>(); // Create an ArrayList to store number of tiles forming set
         for (int i = 0; i < gameBoard.length; i++){
@@ -240,7 +236,7 @@ public class Game {
         return board;
     }
 
-    static String printBoard(Tile[][] board) {
+    public static String printBoard(Tile[][] board) {
         String boardString = "";
         for (int row = 0; row < GRID_ROWS; ++row) {
             boardString += "\n";

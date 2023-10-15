@@ -1,20 +1,13 @@
 package com.rummikub.gui;
 
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
-import javafx.application.Platform;
-import javafx.geometry.HPos;
+
+import javax.lang.model.util.ElementScanner6;
+
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 
@@ -24,12 +17,15 @@ class TileGUI extends StackPane {
     static final double TILE_WIDTH;
     static final double TILE_HEIGHT = RackGUI.RACK_HEIGHT / 2;
     static final ImageView TILE_FACE;
-    
-    private double currentMouseX;
-    private double currentMouseY;
 
     private double mouseX;
     private double mouseY;
+
+    private double xPos;
+    private double yPos;
+
+    private int colToSnap;
+    private int rowToSnap;
 
     static {
 
@@ -48,9 +44,9 @@ class TileGUI extends StackPane {
 
 
         setOnMousePressed(e -> {
-
             mouseX = e.getSceneX() - getTranslateX();
             mouseY = e.getSceneY() - getTranslateY();
+            toFront();
 
         });
 
@@ -62,20 +58,26 @@ class TileGUI extends StackPane {
 
         setOnMouseReleased(e -> {
 
-            currentMouseX = e.getSceneX();
-            currentMouseY = e.getSceneY();
+            mouseX = e.getSceneX();
+            mouseY = e.getSceneY();
 
-            int colToSnap = (int) (Math.abs((RackGUI.RACK_X - currentMouseX))  / TILE_WIDTH);
-            int rowToSnap = (int) ((currentMouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+            if (isInRackBounds(mouseX, mouseY)) {
+                colToSnap = (int) (Math.abs((RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET))  / TILE_WIDTH);
+                System.out.println(Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET));
+                rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+                setPosX(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
+                //System.out.println(getXPos() + RackGUI.X_OFFSET);
+                setPosY(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
+            }
 
+            /*
             System.out.println(rowToSnap);
             System.out.println(colToSnap);
             System.out.println(TILE_WIDTH);
+            */
 
-            GridPane grid = (GridPane) getParent();
-            
 
-            grid.add(this, colToSnap, rowToSnap);
+            RackGUI.getInstance().update(); 
 
         });
 
@@ -116,18 +118,49 @@ class TileGUI extends StackPane {
         imageToSet.setFitHeight(TILE_HEIGHT);
         if (color == Color.RED)
             imageToSet.setImage(Images.jokerRed);
-        else
+        else if (color == Color.BLACK)
             imageToSet.setImage(Images.jokerBlack);
+        else 
+            System.out.println("A Joker with a given colors does not exist");
 
         getChildren().add(imageToSet);
     }
 
+    private boolean isInRackBounds(double x, double y) {
+
+        if (x > (RackGUI.RACK_X) && x < (RackGUI.RACK_X + RackGUI.RACK_WIDTH)) {
+            if (y > (RackGUI.RACK_Y) && y < (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT)) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+
     double getCurrentMouseX() {
-        return currentMouseX;
+        return mouseX;
     }
 
     double getCurrentMouseY() {
-        return currentMouseY;
+        return mouseY;
+    }
+
+    double getXPos() {
+        return xPos;
+    }
+
+    double getYPos() {
+        return yPos;
+    } 
+
+    void setPosX(double xPos) {
+        this.xPos = xPos;
+    }
+
+    void setPosY(double yPos){
+        this.yPos = yPos;
     }
 
 }

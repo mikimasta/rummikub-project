@@ -1,38 +1,48 @@
 package com.rummikub.gui;
 
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
-class RackGUI extends GridPane {
+import java.util.Arrays;
+
+
+class RackGUI extends Pane {
 
     static final int RACK_WIDTH = 1000;
     static final int RACK_HEIGHT = 188;
     private static final int MAX_TILES_PER_ROW;
-    private int tilesInRow = 0;
-    private static final int H_GAP = 5;
+    private int tileCount = 0;
+    static final int H_GAP = 5;
+    static final int X_OFFSET = 10;
     static double RACK_Y = 880;
     static double RACK_X = Rummikub.xCenter - RACK_WIDTH / 2;
+
+    private static RackGUI instance;
+
+
+    TileGUI[][] tiles;
 
     static {
         double tilesNoGap = RACK_WIDTH / TileGUI.TILE_WIDTH;
         double pixelGap = tilesNoGap * H_GAP;
         double tileOverLimit = pixelGap / TileGUI.TILE_WIDTH;
         MAX_TILES_PER_ROW = (int) (tilesNoGap - tileOverLimit);
-        System.out.println(MAX_TILES_PER_ROW);
+        //System.out.println(MAX_TILES_PER_ROW);
     }
 
-    RackGUI() {
+    public static RackGUI getInstance() {
+        if (instance == null)
+            instance = new RackGUI();
+        return instance;
+    }
 
-        setGridLinesVisible(true);
+    private RackGUI() {
+
+        tiles = new TileGUI[2][MAX_TILES_PER_ROW];
+        //System.out.println(Arrays.deepToString(tiles));
 
         setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
         setLayoutX(RACK_X);
@@ -40,31 +50,82 @@ class RackGUI extends GridPane {
         setMaxSize(RACK_WIDTH, RACK_HEIGHT);
         setMinSize(RACK_WIDTH, RACK_HEIGHT);
         setPrefSize(RACK_WIDTH, RACK_HEIGHT);
-        setHgap(H_GAP);
-        //setVgap(20);
 
-        ColumnConstraints cellWidth = new ColumnConstraints(TileGUI.TILE_WIDTH);
-        RowConstraints cellHeight = new RowConstraints(TileGUI.TILE_HEIGHT);
+        double xRect = 0;
+        double yRect = 0;
+        int tileCount = 0;
 
-        getColumnConstraints().add(cellWidth);
-        getRowConstraints().add(cellHeight);
+        
+        for (int i = 0; i < MAX_TILES_PER_ROW * 2; ++i) {
+            //System.out.println(xRect);
 
+            Rectangle cell = new Rectangle(TileGUI.TILE_WIDTH, TileGUI.TILE_HEIGHT);
+            cell.setTranslateX(xRect + 10);
+            cell.setTranslateY(yRect);
+            cell.setFill(Color.TRANSPARENT);
+            cell.setStroke(Color.BLACK);
+
+
+
+            getChildren().add(cell);
+            tileCount++;
+            xRect += TileGUI.TILE_WIDTH + 5;
+            if (tileCount == MAX_TILES_PER_ROW) {
+
+                xRect = 0;
+                yRect += TileGUI.TILE_HEIGHT;
+
+            }
+        }
+        
 
     }
+
     
     void addToRack(TileGUI tile) {
 
-        if (!(tilesInRow == 2 * MAX_TILES_PER_ROW)) {
+        assert tile != null;
+        boolean tileAdded = false;
 
-            if (tilesInRow <= MAX_TILES_PER_ROW) {
-                addRow(0, tile);
-                ++tilesInRow;
-            } else {
-                addRow(2, tile);
-                ++tilesInRow;
+        for (int i = 0; i < tiles[0].length; ++i) {
+            for (int j = 0; j < tiles[1].length; ++j) {
+
+                if (tiles[i][j] == null) {
+
+                    tiles[i][j] = tile;
+                    tile.setPosX(j * (TileGUI.TILE_WIDTH + H_GAP) + X_OFFSET);
+                    tile.setPosY(i * RACK_HEIGHT / 2);
+                    tile.setTranslateX(tile.getXPos());
+                    tile.setTranslateY(tile.getYPos());
+                    getChildren().add(tile);
+                    tile.toFront();
+                    tileAdded = true;
+                    break;
+                }
+
             }
-        } else
-            System.out.println("Your rack is full!");
+
+            if (tileAdded) break;
+
+        }
+
+    }
+
+    void update() {
+
+
+        for (int i = 0; i < tiles.length; ++i) {
+            for (int j = 0; j < tiles[1].length; ++j) {
+
+                TileGUI tile = tiles[i][j];
+                if (tile != null) {
+                    tile.setTranslateX(tile.getXPos());
+                    tile.setTranslateY(tile.getYPos());
+                }
+
+            }
+
+        }
 
     }
 
