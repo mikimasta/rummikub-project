@@ -161,27 +161,30 @@ boolean checkIfGroup(ArrayList<Tile> set) {
         }
     }
 
-    int nbColors = 1; // Number of colors
-    String colorOfFirst = set.get(0).getColor();
-    Set<String> colors = new HashSet<>();
-    colors.add(colorOfFirst);
+    int nbColors = 0;
     numFirst = set.get(0).getNumber();
+    Set<String> colors = new HashSet<>();
 
-    for (int i = 1; i < set.size(); i++) {
-        // Check for a valid group (different color, same number)
+    for (int i = 0; i < set.size(); i++) {
         if (!colors.contains(set.get(i).getColor()) && numFirst == set.get(i).getNumber()) {
             nbColors++;
             colors.add(set.get(i).getColor());
-        } else {
-            nbColors++;
-            if (nbColors < 3 || nbColors > 4) {
+            
+            if (nbColors > 4) { // group cannot be greater then the number of colors
                 return false;
             }
+        } else {
+            if (nbColors < 3){ // group can't be smaller than 3
+                return false;
+            }
+            nbColors = 1;
             colors.clear();
             colors.add(set.get(i).getColor());
             numFirst = set.get(i).getNumber();
-            nbColors = 1;
         }
+    }
+    if (nbColors > 4 || nbColors < 3) {
+        return false;
     }
     return true;
 }
@@ -283,3 +286,5 @@ boolean checkIfStairs(ArrayList<Tile> set) {
     }
     
 }
+
+
