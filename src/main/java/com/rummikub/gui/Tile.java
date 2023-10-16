@@ -29,8 +29,11 @@ public class Tile extends StackPane {
     private int colToSnap;
     private int rowToSnap;
 
-    private int prevCol;
-    private int prevRow;
+    private int prevColBoard;
+    private int prevRowBoard;
+
+    private int prevColRack;
+    private int prevRowRack;
 
     private Color color;
     private byte number;
@@ -60,13 +63,17 @@ public class Tile extends StackPane {
             double mouseRelToSceneY = e.getSceneY();
 
             if (isInRackBounds(mouseX, mouseY)) {
-                prevCol = (int) (Math.abs(RackGUI.RACK_X - mouseRelToSceneX + RackGUI.X_OFFSET) / TILE_WIDTH);
-                prevRow = (int) ((mouseRelToSceneY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+                prevColRack = (int) (Math.abs(RackGUI.RACK_X - mouseRelToSceneX + RackGUI.X_OFFSET) / TILE_WIDTH);
+                prevRowRack = (int) ((mouseRelToSceneY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+                //System.out.println("Rack coords: " + prevRowRack + " " + prevColRack);
+
             }
 
             if (isInBoardBounds(mouseX, mouseY)) {
-                prevCol = (int) (Math.abs(GameboardGUI.BOARD_X - mouseRelToSceneX) / TILE_WIDTH);
-                prevRow = (int) (Math.abs(GameboardGUI.BOARD_Y - mouseRelToSceneY) / TILE_HEIGHT);
+                prevColBoard = (int) (Math.abs(GameboardGUI.BOARD_X - mouseRelToSceneX) / TILE_WIDTH);
+                prevRowBoard = (int) (Math.abs(GameboardGUI.BOARD_Y - mouseRelToSceneY) / TILE_HEIGHT);
+                //System.out.println("Board coords: " + prevRowBoard + " " + prevColBoard);
+
             }
 
 
@@ -84,41 +91,51 @@ public class Tile extends StackPane {
             mouseY = e.getSceneY();
 
             if (isInRackBounds(mouseX, mouseY)) {
+
+
+
                 colToSnap = (int) (Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET) / TILE_WIDTH);
-                System.out.println(colToSnap);
+                //System.out.println(colToSnap);
                 rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
-                System.out.println(rowToSnap);
+                //System.out.println(rowToSnap);
 
-                setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
-                setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
+                if(RackGUI.getInstance().tiles[rowToSnap][colToSnap] == null) {
+
+                    setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
+                    setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
 
 
-                RackGUI.getInstance().update(this);
+                    if (addedToBoard) {
+                        GameboardGUI.getInstance().getChildren().remove(this);
+                        RackGUI.getInstance().getChildren().add(this);
+                        addedToBoard = false;
+                    }
 
-                if (addedToBoard) {
-                    GameboardGUI.getInstance().getChildren().remove(this);
-                    RackGUI.getInstance().getChildren().add(this);
-                    addedToBoard = false;
+                    RackGUI.getInstance().update(this);
                 }
 
             } else if (isInBoardBounds(mouseX, mouseY)) {
 
                 colToSnap = (int) (Math.abs(GameboardGUI.BOARD_X - mouseX) / TILE_WIDTH);
                 rowToSnap = (int) (Math.abs(GameboardGUI.BOARD_Y - mouseY) / TILE_HEIGHT);
-                System.out.println(rowToSnap);
-                System.out.print(colToSnap);
 
-                setXPos(colToSnap * TILE_WIDTH);
-                setYPos(rowToSnap * TILE_HEIGHT);
+                if (GameboardGUI.getInstance().getState()[rowToSnap][colToSnap] == null) {
 
-                GameboardGUI.getInstance().update(this);
-                
-                if (!addedToBoard) {
+                    System.out.println("Board snap at " + rowToSnap + " " + colToSnap);
 
-                    RackGUI.getInstance().getChildren().remove(this);
-                    GameboardGUI.getInstance().getChildren().add(this);
-                    addedToBoard = true;
+                    setXPos(colToSnap * TILE_WIDTH);
+                    setYPos(rowToSnap * TILE_HEIGHT);
 
+
+                    if (!addedToBoard) {
+
+                        RackGUI.getInstance().getChildren().remove(this);
+                        GameboardGUI.getInstance().getChildren().add(this);
+                        addedToBoard = true;
+
+                    }
+
+                    GameboardGUI.getInstance().update(this);
                 }
             }
 
@@ -246,10 +263,22 @@ public class Tile extends StackPane {
         return rowToSnap;
     }
 
-    public int getPrevCol() {
-        return prevCol;
+    public int getPrevColBoard() {
+        return prevColBoard;
     }
-    public int getPrevRow() {
-        return prevRow;
+
+    public int getPrevRowBoard() {
+        return prevRowBoard;
+    }
+
+    public int getPrevColRack() {
+        return prevColRack;
+    }
+
+    public int getPrevRowRack() {
+        return prevRowRack;
+    }
+    public boolean isAddedToBoard() {
+        return addedToBoard;
     }
 }

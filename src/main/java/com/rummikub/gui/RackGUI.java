@@ -5,8 +5,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
-
 
 public class RackGUI extends Pane {
 
@@ -17,7 +15,6 @@ public class RackGUI extends Pane {
     static final int X_OFFSET = 10;
     static double RACK_Y = 880;
     static double RACK_X = Rummikub.xCenter - RACK_WIDTH / 2;
-
     private static RackGUI instance;
 
 
@@ -84,25 +81,27 @@ public class RackGUI extends Pane {
 
     void update(Tile tile) {
 
-        System.out.println(Arrays.deepToString(tiles));
+        //System.out.println(Game.printBoard(tiles));
 
 
                 if (tiles[tile.getRowToSnap()][tile.getColToSnap()] == null) {
 
 
-                    tiles[tile.getPrevRow()][tile.getPrevCol()] = null;
+                    tiles[tile.getPrevRowRack()][tile.getPrevColRack()] = null;
                     tiles[tile.getRowToSnap()][tile.getColToSnap()] = tile;
 
                 } else {
 
-                    tile.setXPos(tile.getPrevCol() * Tile.TILE_WIDTH + X_OFFSET);
-                    tile.setYPos(tile.getPrevRow() * (RACK_HEIGHT / 2));
+
+                        tile.setXPos(tile.getPrevColRack() * Tile.TILE_WIDTH + X_OFFSET);
+                        tile.setYPos(tile.getPrevRowRack() * (RACK_HEIGHT / 2));
+
                 }
 
 
                     tile.setTranslateX(tile.getXPos());
                     tile.setTranslateY(tile.getYPos());
-        System.out.println(Arrays.deepToString(tiles));
+        //System.out.println(Game.printBoard(tiles));
 
     }
 
@@ -115,9 +114,10 @@ public class RackGUI extends Pane {
             for (int j = 0; j < hand[0].length; j++) {
 
                 Tile tile = hand[i][j];
+                tiles[i][j] = tile;
 
                 if (!(hand[i][j] == null)) {
-                    tiles[i][j] = tile;
+
                     tile.setXPos(j * (Tile.TILE_WIDTH + H_GAP) + X_OFFSET);
                     tile.setYPos(i * RACK_HEIGHT / 2);
                     tile.setTranslateX(tile.getXPos());

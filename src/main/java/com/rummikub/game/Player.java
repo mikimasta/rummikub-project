@@ -13,6 +13,7 @@ public class Player {
     private Tile[][] hand;
 
     public void setHand(Tile[][] hand) {
+
         this.hand = hand;
     }
 
@@ -64,4 +65,5 @@ public class Player {
     public void firstMoveMade() {
         this.firstMoveMade = true;
     }
+
 }

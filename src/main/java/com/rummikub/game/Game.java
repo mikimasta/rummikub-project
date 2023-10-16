@@ -12,10 +12,8 @@ import java.util.*;
  */
 public class Game {
 
-    // im unsure about how to do the board, like an array of tile arrays to show
-    // each run or what?
     private List<Player> players;
-    private Tile[][] board;
+    //private Tile[][] board;
     private List<Tile> pool;
     public Player currentPlayer;
 
@@ -47,7 +45,7 @@ public class Game {
         if (numPlayers > 4 || numPlayers < 2)
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
 
-        board = new Tile[GRID_ROWS][GRID_COLS];
+        //board = new Tile[GRID_ROWS][GRID_COLS];
 
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {
@@ -198,7 +196,7 @@ public class Game {
                 numFirst = set.get(i).getNumber();
             }
         }
-        if (nbColors > 4 || nbColors < 3) {
+        if (nbColors > 4) {
             return false;
         }
         return true;
@@ -238,7 +236,11 @@ public class Game {
         return true;
     }
 
+    public boolean isValidFirstMove(Tile[][] currentHand, Tile[][] prevHand){
 
+
+        return true;
+    }
      public boolean isGameOver() {
          for (Player player : players) {
             if (player.getHand() == null) {
@@ -257,16 +259,17 @@ public class Game {
         }
     }
 
-    public Tile[][] getBoard() {
-        return board;
-    }
 
-    static String printBoard(Tile[][] board) {
+
+    public static String printBoard(Tile[][] board) {
         String boardString = "";
-        for (int row = 0; row < GRID_ROWS; ++row) {
+        for (int row = 0; row < board.length; ++row) {
             boardString += "\n";
-            for (int col = 0; col < GRID_COLS; ++col) {
-                boardString += board[row][col].getNumber() + " ";
+            for (int col = 0; col < board[0].length; ++col) {
+                if (board[row][col] == null)
+                    boardString += "n" + " ";
+                else
+                    boardString += board[row][col].getNumber() + " ";
             }
         }
         return boardString;
@@ -276,9 +279,4 @@ public class Game {
         return pool;
     }
 
-    public static void main(String[] args) {
-    
-        Game game = new Game((byte) 4);
-        System.out.print(printBoard(game.getBoard()));
-    }
 }

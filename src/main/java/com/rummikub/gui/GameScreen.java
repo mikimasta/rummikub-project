@@ -44,29 +44,44 @@ class GameScreen extends Pane {
 
         getChildren().addAll(players, gameboard, rackIV, rack, endTurn);
 
-        //for (int i = 0; i < 13; ++i) rack.addToRack(Game.getInstance().getPool().remove(0));
 
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
+        //System.out.println("Starting player: " + Game.getInstance().currentPlayer);
+        //System.out.println(Game.getInstance().currentPlayer + "'s hand is " + Game.printBoard(Game.getInstance().currentPlayer.getHand()));
+        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+
 
         endTurn.setOnAction(e -> {
+            System.out.println("Current player: " + Game.getInstance().currentPlayer);
+
+            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
             System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
-
 
             if (gameboard.stateNotChanged())
                 rack.addToRack(Game.getInstance().getPool().remove(0));
 
             if (Game.getInstance().isValidBoard(gameboard.getState())) {
+                if(!Game.getInstance().currentPlayer.getFirstMoveMade() ){
+                    if(Game.getInstance().isValidFirstMove(rack.tiles, Game.getInstance().currentPlayer.getHand())){
+                        Game.getInstance().currentPlayer.firstMoveMade();
+                    }
+                    else{
+                        //break;
+                    }
+                }
                 Tile[][] rackTileCopy = new Tile[2][15];
                 for (int i = 0; i < rack.tiles.length; i++) {
                     rackTileCopy[i] = rack.tiles[i].clone();
                 }
+                //System.out.println("Hand to set for " + Game.getInstance().currentPlayer + ": " + Game.printBoard(rackTileCopy));
                 Game.getInstance().currentPlayer.setHand(rackTileCopy);
                 GameboardGUI.getInstance().setPrevState();
                 Game.getInstance().nextPlayer();
-                System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
+                //System.out.println("Current player is now: " + Game.getInstance().currentPlayer);
+                //System.out.println("Hand is : " + Game.printBoard(Game.getInstance().currentPlayer.getHand()));
                 rack.handToRack(Game.getInstance().currentPlayer.getHand());
-                System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
+                //System.out.println("Rack is : " + Game.printBoard(rack.tiles));
 
             } else {
                 System.out.println("Board is not in a valid state!");
