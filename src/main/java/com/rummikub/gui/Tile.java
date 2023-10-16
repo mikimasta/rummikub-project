@@ -9,11 +9,14 @@ import javafx.scene.text.TextBoundsType;
 
 
 
-class TileGUI extends StackPane {
+
+public class Tile extends StackPane {
 
     static final double TILE_WIDTH;
     static final double TILE_HEIGHT = RackGUI.RACK_HEIGHT / 2;
     static final ImageView TILE_FACE;
+
+    private Tile tile;
 
     private boolean addedToBoard = false;
 
@@ -29,6 +32,9 @@ class TileGUI extends StackPane {
     private int prevCol;
     private int prevRow;
 
+    private Color color;
+    private byte number;
+
     static {
 
         TILE_FACE = new ImageView(Images.tileFace);
@@ -38,7 +44,7 @@ class TileGUI extends StackPane {
 
     }
 
-    private TileGUI() {
+    private Tile() {
 
         setMinSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
         setMaxSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
@@ -56,6 +62,11 @@ class TileGUI extends StackPane {
             if (isInRackBounds(mouseX, mouseY)) {
                 prevCol = (int) (Math.abs(RackGUI.RACK_X - mouseRelToSceneX + RackGUI.X_OFFSET) / TILE_WIDTH);
                 prevRow = (int) ((mouseRelToSceneY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
+            }
+
+            if (isInBoardBounds(mouseX, mouseY)) {
+                prevCol = (int) (Math.abs(GameboardGUI.BOARD_X - mouseRelToSceneX) / TILE_WIDTH);
+                prevRow = (int) (Math.abs(GameboardGUI.BOARD_Y - mouseRelToSceneY) / TILE_HEIGHT);
             }
 
 
@@ -77,8 +88,8 @@ class TileGUI extends StackPane {
                 System.out.println(colToSnap);
                 rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
                 System.out.println(rowToSnap);
-                setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
 
+                setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
                 setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
 
 
@@ -92,8 +103,6 @@ class TileGUI extends StackPane {
 
             } else if (isInBoardBounds(mouseX, mouseY)) {
 
-                
-
                 colToSnap = (int) (Math.abs(GameboardGUI.BOARD_X - mouseX) / TILE_WIDTH);
                 rowToSnap = (int) (Math.abs(GameboardGUI.BOARD_Y - mouseY) / TILE_HEIGHT);
                 System.out.println(rowToSnap);
@@ -101,6 +110,8 @@ class TileGUI extends StackPane {
 
                 setXPos(colToSnap * TILE_WIDTH);
                 setYPos(rowToSnap * TILE_HEIGHT);
+
+                GameboardGUI.getInstance().update(this);
                 
                 if (!addedToBoard) {
 
@@ -127,9 +138,11 @@ class TileGUI extends StackPane {
     }
 
 
-    TileGUI(byte number, Color color) {
+    public Tile(Color color, byte number) {
 
-        this(); 
+        this();
+        this.color = color;
+        this.number = number;
 
         ImageView tileFace = new ImageView(Images.tileFace);
         tileFace.setPreserveRatio(true);
@@ -152,9 +165,9 @@ class TileGUI extends StackPane {
     /**
      * used to construct a joker
      */
-    TileGUI(Color color) {
+    public Tile(Color color) {
 
-        this();
+        this(color, (byte) 0);
 
         ImageView imageToSet = new ImageView();
         imageToSet.setPreserveRatio(true);
@@ -207,7 +220,15 @@ class TileGUI extends StackPane {
 
     double getYPos() {
         return yPos;
-    } 
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public byte getNumber() {
+        return number;
+    }
 
     void setXPos(double xPos) {
         this.xPos = xPos;

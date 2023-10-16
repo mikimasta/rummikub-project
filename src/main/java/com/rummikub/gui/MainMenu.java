@@ -1,10 +1,11 @@
 package com.rummikub.gui;
 
-import javafx.scene.layout.Pane;
+import com.rummikub.game.Game;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  * This class represents the main menu screen of the game.<br>
@@ -23,6 +24,7 @@ class MainMenu extends Pane {
         start.setLayoutY(Rummikub.yCenter - 50);
         start.setOnAction(e -> {
             Rummikub.gameWindow.getScene().setRoot(new GameScreen());
+            Game.getInstance();
         });
         
         // settings button

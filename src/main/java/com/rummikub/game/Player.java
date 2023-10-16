@@ -1,16 +1,21 @@
 package com.rummikub.game;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.rummikub.gui.RackGUI;
+import com.rummikub.gui.Tile;
 
 /**
  * This class represents a player instance and provides all the move methods needed <br>
  * for a player to make a move
  */
-class Player {
+public class Player {
 
     private String name;
-    private List<Tile> hand;
+    private Tile[][] hand;
+
+    public void setHand(Tile[][] hand) {
+        this.hand = hand;
+    }
+
     private boolean firstMoveMade;
     private boolean moveFinished;
 
@@ -20,19 +25,19 @@ class Player {
      */
     Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<>();
+        this.hand = new Tile[2][RackGUI.MAX_TILES_PER_ROW];
         this.firstMoveMade = false;
     }
 
-    boolean isMoveFinished() {
+    public boolean isMoveFinished() {
         return moveFinished;
     }
 
-    void startMove() {
+    public void startMove() {
         moveFinished = false;
     }
 
-    void finishMove() {
+    public void finishMove() {
         moveFinished = true;
     }
 
@@ -41,38 +46,22 @@ class Player {
         return name;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    List<Tile> getHand() {
+    public Tile[][] getHand() {
         return hand;
     }
     
-    boolean getFirstMoveMade() {
+    public boolean getFirstMoveMade() {
         return firstMoveMade;
     }
 
     /**
      * determines whether a first move has been made by a player
      */
-    void firstMoveMade() {
+    public void firstMoveMade() {
         this.firstMoveMade = true;
-    }
-
-    /**
-     * this method draws a tile, and adds it to the player's hand
-     * @param tile  tile drawn from the pool
-     */
-    void drawTile(Tile tile) {
-        hand.add(tile);
-    }
-
-    /**
-     * method that removes a tile from a player's hand
-     * @param tile  tile to be removed/played
-     */
-    void playTile(Tile tile) {
-        hand.remove(tile);
     }
 }

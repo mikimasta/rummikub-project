@@ -1,10 +1,10 @@
 package com.rummikub.game;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.rummikub.gui.Tile;
+import javafx.scene.paint.Color;
+
+import java.util.*;
+
 /**
  * This class is a memory representation of the game state. It executes and
  * validates player moves.<br>
@@ -17,10 +17,24 @@ public class Game {
     private List<Player> players;
     private Tile[][] board;
     private List<Tile> pool;
-    private static Player currentPlayer;
+    public Player currentPlayer;
+
+    private static Game instance;
+
 
     public static final byte GRID_ROWS = 1;
     public static final byte GRID_COLS = 13;
+
+
+    public static Game getInstance() {
+        if (instance == null)
+            instance = new Game((byte) 2);
+        return instance;
+    }
+
+    public static void endGame() {
+        instance = null;
+    }
 
     /**
      * constructs a Game instance with a given number of player. <br>
@@ -28,7 +42,7 @@ public class Game {
      * 
      * @param numPlayers number of players for the game
      */
-    Game(byte numPlayers) {
+    private Game(byte numPlayers) {
 
         if (numPlayers > 4 || numPlayers < 2)
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
@@ -60,8 +74,8 @@ public class Game {
      * in addition to two jokers, and adds them to the pool.
      */
     private void initializeTiles() {
-        String[] colors = { "Red", "Orange", "Black", "Blue" };
-        for (String color : colors) {
+        Color[] colors = {Color.RED, Color.BLUE, Color.BLACK, Color.ORANGE };
+        for (Color color : colors) {
             for (byte i = 0; i < 2; i++) {
                 for (byte number = 1; number <= 13; number++) {
                     pool.add(new Tile(color, number));
@@ -70,20 +84,25 @@ public class Game {
         }
         // the interger 0 will be used in regard to a joker
         // two jokers are added into our game
-        pool.add(new Tile("Joker", (byte) 0));
-        pool.add(new Tile("Joker", (byte) 0));
+        pool.add(new Tile(Color.RED));
+        pool.add(new Tile(Color.BLACK));
+
+        Collections.shuffle(pool);
     }
 
     /**
      * this method first shuffles the pool and then deals each player 14 tile
      */
-    private void dealInitialTiles() {
-        Collections.shuffle(pool);
+    public void dealInitialTiles() {
+
         for (Player player : players) {
+            Tile[][] tempHand = player.getHand();
             for (int i = 0; i < 14; i++) {
                 Tile drawnTile = pool.remove(0);
-                player.drawTile(drawnTile);
+                tempHand[0][i] = drawnTile;
+
             }
+            player.setHand(tempHand);
         }
     }
 
@@ -159,7 +178,7 @@ public class Game {
 
         int nbColors = 0;
         numFirst = set.get(0).getNumber();
-        Set<String> colors = new HashSet<>();
+        Set<Color> colors = new HashSet<>();
 
         for (int i = 0; i < set.size(); i++) {
             if (!colors.contains(set.get(i).getColor()) && (numFirst == set.get(i).getNumber() || numFirst == 0)) {
@@ -192,7 +211,7 @@ public class Game {
      */
     boolean checkIfStairs(ArrayList<Tile> set) {
         // Check if all same color
-        String colorOfFirst = set.get(0).getColor();
+        Color colorOfFirst = set.get(0).getColor();
         
         for (int i = 1; i < set.size(); i++) {
             if (!colorOfFirst.equals(set.get(i).getColor()) && set.get(i).getNumber() != 0) {
@@ -219,11 +238,8 @@ public class Game {
         return true;
     }
 
-    private void placeTile(Tile tile) {
-        assert tile != null;
-    }
 
-    private boolean isGameOver() {
+     public boolean isGameOver() {
          for (Player player : players) {
             if (player.getHand() == null) {
                 return true;
@@ -232,24 +248,8 @@ public class Game {
        return false;
     }
 
-    public void playGame() {
 
-        dealInitialTiles();
-
-        while (!isGameOver()) {
-
-           currentPlayer.startMove();
-           while (!(currentPlayer.isMoveFinished())) {
-               
-        
-           }
-           isValidBoard(board);
-           
-           nextPlayer();
-        }
-    }
-
-    void nextPlayer() {
+    public void nextPlayer() {
         try {
             currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
         } catch (IndexOutOfBoundsException e) {
@@ -272,12 +272,13 @@ public class Game {
         return boardString;
     }
 
+    public List<Tile> getPool() {
+        return pool;
+    }
+
     public static void main(String[] args) {
     
         Game game = new Game((byte) 4);
-        System.out.println(currentPlayer + " starts the game.");
         System.out.print(printBoard(game.getBoard()));
-
-    }
-    
+    }
 }
