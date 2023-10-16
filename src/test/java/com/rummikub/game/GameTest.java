@@ -9,24 +9,24 @@ public class GameTest {
     @Test
     public void testNextPlayer() {
         Game game = new Game((byte) 4);
-        Player firstPlayer = game.currentPlayer;
+        Player firstPlayer = Game.currentPlayer;
         game.nextPlayer();
-        Player secondPlayer = game.currentPlayer;
+        Player secondPlayer = Game.currentPlayer;
         assertNotEquals(firstPlayer, secondPlayer);
     }
     @Test
     public void testCircleGame() {
         Game game = new Game((byte) 2);
-        Player firstPlayer = game.currentPlayer;
-        game.nextPlayer();game.nextPlayer();
-        Player secondPlayer = game.currentPlayer;
+        Player firstPlayer = Game.currentPlayer;
+        game.nextPlayer();
+        Player secondPlayer = Game.currentPlayer;
         assertEquals(firstPlayer, secondPlayer);
     }
     @Test(expected = None.class)
     public void nextPlayerWhenOutOfBoundsTest() {
         //given
         Game game = new Game((byte) 4);
-        int currentIndex = game.players.indexOf(game.currentPlayer);
+        int currentIndex = game.players.indexOf(Game.currentPlayer);
         //when
         game.nextPlayer();
         //then no exception thrown
