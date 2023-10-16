@@ -15,6 +15,8 @@ class TileGUI extends StackPane {
     static final double TILE_HEIGHT = RackGUI.RACK_HEIGHT / 2;
     static final ImageView TILE_FACE;
 
+    private boolean addedToBoard = false;
+
     private double mouseX;
     private double mouseY;
 
@@ -52,7 +54,6 @@ class TileGUI extends StackPane {
             double mouseRelToSceneY = e.getSceneY();
 
             if (isInRackBounds(mouseX, mouseY)) {
-                System.out.println("hi");
                 prevCol = (int) (Math.abs(RackGUI.RACK_X - mouseRelToSceneX + RackGUI.X_OFFSET) / TILE_WIDTH);
                 prevRow = (int) ((mouseRelToSceneY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
             }
@@ -79,7 +80,37 @@ class TileGUI extends StackPane {
                 setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
 
                 setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
+
+
+                RackGUI.getInstance().update(this);
+
+                if (addedToBoard) {
+                    GameboardGUI.getInstance().getChildren().remove(this);
+                    RackGUI.getInstance().getChildren().add(this);
+                    addedToBoard = false;
+                }
+
+            } else if (isInBoardBounds(mouseX, mouseY)) {
+
+                
+
+                colToSnap = (int) (Math.abs(GameboardGUI.BOARD_X - mouseX) / TILE_WIDTH);
+                rowToSnap = (int) (Math.abs(GameboardGUI.BOARD_Y - mouseY) / TILE_HEIGHT);
+                System.out.println(rowToSnap);
+                System.out.print(colToSnap);
+
+                setXPos(colToSnap * TILE_WIDTH);
+                setYPos(rowToSnap * TILE_HEIGHT);
+                
+                if (!addedToBoard) {
+
+                    RackGUI.getInstance().getChildren().remove(this);
+                    GameboardGUI.getInstance().getChildren().add(this);
+                    addedToBoard = true;
+
+                }
             }
+
 
             /*
             System.out.println(rowToSnap);
@@ -87,8 +118,9 @@ class TileGUI extends StackPane {
             System.out.println(TILE_WIDTH);
             */
 
+            setTranslateX(getXPos());
+            setTranslateY(getYPos());
 
-            RackGUI.getInstance().updateRack(this);
 
         });
 
@@ -147,6 +179,17 @@ class TileGUI extends StackPane {
 
         return false;
 
+    }
+
+    private boolean isInBoardBounds(double x, double y) {
+
+        if (x > (GameboardGUI.BOARD_X) && x < (GameboardGUI.BOARD_X + GameboardGUI.BOARD_WIDTH)) {
+            if (y > (GameboardGUI.BOARD_Y) && y < (GameboardGUI.BOARD_Y + GameboardGUI.BOARD_HEIGHT)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

@@ -55,29 +55,6 @@ class RackGUI extends Pane {
         int tileCount = 0;
 
       
-        /*
-        for (int i = 0; i < MAX_TILES_PER_ROW * 2; ++i) {
-            //System.out.println(xRect);
-
-            Rectangle cell = new Rectangle(TileGUI.TILE_WIDTH, TileGUI.TILE_HEIGHT);
-            cell.setTranslateX(xRect + 10);
-            cell.setTranslateY(yRect);
-            cell.setFill(Color.TRANSPARENT);
-            cell.setStroke(Color.BLACK);
-
-
-
-            getChildren().add(cell);
-            tileCount++;
-            xRect += TileGUI.TILE_WIDTH + 5;
-            if (tileCount == MAX_TILES_PER_ROW) {
-
-                xRect = 0;
-                yRect += TileGUI.TILE_HEIGHT;
-
-            }
-        }
-        */
         
 
     }
@@ -112,20 +89,27 @@ class RackGUI extends Pane {
 
     }
 
-    void updateRack(TileGUI tile) {
+    void update(TileGUI tile) {
 
-        System.out.println(Arrays.deepToString(tiles));
+        //System.out.println(Arrays.deepToString(tiles));
 
 
-                if (tile != null) {
-                    tile.setTranslateX(tile.getXPos());
-                    tile.setTranslateY(tile.getYPos());
+                if (tiles[tile.getRowToSnap()][tile.getColToSnap()] == null) {
+
 
                     tiles[tile.getPrevRow()][tile.getPrevCol()] = null;
                     tiles[tile.getRowToSnap()][tile.getColToSnap()] = tile;
+
+                } else {
+
+                    tile.setXPos(tile.getPrevCol() * TileGUI.TILE_WIDTH + X_OFFSET);
+                    tile.setYPos(tile.getPrevRow() * (RACK_HEIGHT / 2));
                 }
 
-        System.out.println(Arrays.deepToString(tiles));
+
+                    tile.setTranslateX(tile.getXPos());
+                    tile.setTranslateY(tile.getYPos());
+        //System.out.println(Arrays.deepToString(tiles));
 
     }
 

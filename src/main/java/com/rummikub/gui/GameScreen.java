@@ -22,30 +22,27 @@ class GameScreen extends Pane {
         RackGUI rack = RackGUI.getInstance();
 
         rack.addToRack(new TileGUI(Color.BLACK));
+    
         rack.addToRack(new TileGUI(Color.BLACK));
-//        rack.addToRack(new TileGUI(Color.BLACK));
-//        rack.addToRack(new TileGUI((byte) 9, Color.RED));
-//        rack.addToRack(new TileGUI((byte) 7, Color.ORANGE));
-//        rack.addToRack(new TileGUI((byte) 2, Color.RED));
-//        rack.addToRack(new TileGUI((byte) 5, Color.BLACK));
-//        rack.addToRack(new TileGUI((byte) 1, Color.ORANGE));
-//        rack.addToRack(new TileGUI((byte) 6, Color.BLUE));
-//        rack.addToRack(new TileGUI((byte) 10, Color.BLUE));
-//        rack.addToRack(new TileGUI((byte) 11, Color.RED));
-//        rack.addToRack(new TileGUI((byte) 4, Color.BLACK));
-//        rack.addToRack(new TileGUI((byte) 8, Color.ORANGE));
-//        rack.addToRack(new TileGUI((byte) 13, Color.BLACK));
-//        rack.addToRack(new TileGUI((byte) 12, Color.ORANGE));
-//        rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
+        rack.addToRack(new TileGUI((byte) 9, Color.RED));
+        rack.addToRack(new TileGUI((byte) 7, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 2, Color.RED));
+        rack.addToRack(new TileGUI((byte) 5, Color.BLACK));
+        rack.addToRack(new TileGUI((byte) 1, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 6, Color.BLUE));
+        rack.addToRack(new TileGUI((byte) 10, Color.BLUE));
+        rack.addToRack(new TileGUI((byte) 11, Color.RED));
+        rack.addToRack(new TileGUI((byte) 4, Color.BLACK));
+        rack.addToRack(new TileGUI((byte) 8, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 13, Color.BLACK));
+        rack.addToRack(new TileGUI((byte) 12, Color.ORANGE));
+        rack.addToRack(new TileGUI((byte) 3, Color.BLUE));
 
 
         GridPane players = new GridPane();
 
-        GridPane gameBoard = new GridPane();
+        GameboardGUI gameBoard = GameboardGUI.getInstance(); 
 
-        Rectangle gb = new Rectangle(320, 90, 1280, 720);
-        gb.setFill(Color.TRANSPARENT);
-        gb.setStroke(Color.BLACK);
 
 
         ImageView rackIV = new ImageView(Images.rack);
@@ -55,7 +52,7 @@ class GameScreen extends Pane {
         rackIV.setLayoutY(888);
         //System.out.println(rackIV.getLayoutBounds().getHeight());
 
-        getChildren().addAll(players, gameBoard, gb, rackIV, rack);
+        getChildren().addAll(players, gameBoard, rackIV, rack);
 
     }
 
