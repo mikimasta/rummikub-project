@@ -286,5 +286,3 @@ boolean checkIfStairs(ArrayList<Tile> set) {
     }
     
 }
-
-
