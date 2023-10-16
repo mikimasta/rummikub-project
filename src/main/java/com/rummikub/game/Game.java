@@ -3,10 +3,12 @@ package com.rummikub.game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * This class is a memory representation of the game state. It executes and
@@ -90,113 +92,138 @@ public class Game {
         }
     }
 
-     /**
-     * this method checks the state of the entire board after a move has been made.
-     * @param   gameBoard  the game board
-     * @return  true if the board state complies with the rules, false otherwise.
-     */
-    public boolean isValidBoard(Tile[][] gameBoard) {
-        System.out.println( printBoard(gameBoard) );
-        int count = 0;
-        ArrayList<Tile> set = new ArrayList<>(); // Create an ArrayList to store number of tiles forming set
-        for (int i = 0; i < gameBoard.length; i++){
-            count = 0;
-            set.clear();
-            for (int y = 0; y < gameBoard[i].length; y++){ 
-                Tile tile = gameBoard[i][y];
-                if ((tile.getNumber() != 0) && (count > 0) && (count < 3)){ //checks for subset of tiles of length 1 or 2
-                        return false; 
-                    }else{
-                        count +=1;
-                    }
 
-                if(tile.getNumber() != 0){ // assumed that null tiles have the number 0
-                    set.add(tile);                    
-                }
+/**
+ * This method checks the state of the entire board after a move has been made.
+ * @param gameBoard the game board
+ * @return true if the board state complies with the rules, false otherwise.
+ */
+public boolean isValidBoard(Tile[][] gameBoard) {
+    int count;
+    ArrayList<Tile> set = new ArrayList<>();
+
+    for (int i = 0; i < gameBoard.length; i++) {
+        count = 0;
+        set.clear();
+
+        for (int y = 0; y < gameBoard[i].length; y++) {
+            Tile tile = gameBoard[i][y];
+            // Checks for illegal subset of tiles of length 1 or 2
+            if ((tile.getNumber() == 0) && (count > 0) && (count < 3)) {
+                return false; 
+            } else if (tile.getNumber() == 0) {
+                count = 0;
+            } else {
+                count++;
             }
-            if (set.size() < 3){ 
-                return false; // the block of tiles is too short 
-            }else{
-                for (int j = 0; j < set.size(); j++) {
-                    System.out.println(set.get(j).getNumber() + " " + set.get(j).getColor());
-                }
-                if(!checkTile(set)) {
-                    return false; // check if given tile is either stairs or group, return false if not
-                }
+
+            if (tile.getNumber() != 0) {
+                set.add(tile);
             }
         }
-        return true; // checked all tiles, all are correct
+
+        if (set.size() < 3 && set.size() != 0) {
+            return false; // The block of tiles is too short
+        } else if (set.size() > 2) {
+            if (!checkTile(set)) {
+                return false; // Check if given tile is either stairs or group, return false if not
+            }
+        }
     }
 
+    return true; // Checked all tiles, all are correct
+}
 
-    // check if given tile is either group or stairs, i.e. is it legal?
-    boolean checkTile(ArrayList<Tile> set) {
-        return checkIfGroup(set) || checkIfStairs(set);
+// Check if given tile is either group or stairs, i.e., is it legal?
+boolean checkTile(ArrayList<Tile> set) {
+    return checkIfGroup(set) || checkIfStairs(set);
+}
+
+/**
+ * Check if they all have the same number and different colors, i.e., they are a group.
+ * @param set Set of tiles
+ * @return true if the tiles form a group, false otherwise.
+ */
+boolean checkIfGroup(ArrayList<Tile> set) {
+    // Check if same number
+    int count = 1;
+    byte numFirst = set.get(0).getNumber();
+
+    for (int i = 1; i < set.size(); i++) {
+        byte numTmp = set.get(i).getNumber();
+
+        if (numFirst == numTmp) {
+            count++;
+        } else {
+            if ((count < 3) || (count > 4)) {
+                return false; // Group can't be smaller than 3 or bigger than 4
+            }
+            numFirst = numTmp;
+        }
     }
 
-    // check if they all have the same number and different colors, i.e. they are a group
-    boolean checkIfGroup(ArrayList<Tile> set){
+    int nbColors = 0;
+    numFirst = set.get(0).getNumber();
+    Set<String> colors = new HashSet<>();
 
-        // up to 4 tiles (thats how many colors there are)
-        if (set.size() > 4) return false;
-
-        // check if same number
-        byte numOfFirst = set.get(0).getNumber();
-        for (int i = 1; i < set.size(); i++) {
-            byte numTmp = set.get(i).getNumber();
-            if (numOfFirst != numTmp) return false;
-        }
-
-        // check if different colors
-        int[] colorsCount = {0, 0, 0, 0};
-        for (int i = 0; i < set.size(); i++) {
-            switch(set.get(i).getColor()) {
-                case "blue":
-                    colorsCount[0] += 1;
-                    break;
-                case "red":
-                    colorsCount[1] += 1;
-                    break;
-                case "green":
-                    colorsCount[2] += 1;
-                    break;
-                case "black":
-                    colorsCount[3] += 1;
-                    break;
-                default:
-                    System.out.println("given color wasn't expected "+set.get(i).getColor());
-                    // raise RunTimeError("given color wasn't expected "+set.get(i).getColor());
-            }
-        }
-        for (int i = 0; i < colorsCount.length; i++) { // check if there is a color with more than 1 representative
-            if (colorsCount[i] > 1 ) {
+    for (int i = 0; i < set.size(); i++) {
+        if (!colors.contains(set.get(i).getColor()) && numFirst == set.get(i).getNumber()) {
+            nbColors++;
+            colors.add(set.get(i).getColor());
+            
+            if (nbColors > 4) { // group cannot be greater then the number of colors
                 return false;
             }
+        } else {
+            if (nbColors < 3){ // group can't be smaller than 3
+                return false;
+            }
+            nbColors = 1;
+            colors.clear();
+            colors.add(set.get(i).getColor());
+            numFirst = set.get(i).getNumber();
         }
-        return true;
     }
+    if (nbColors > 4 || nbColors < 3) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Check if the set is stairs, i.e., same color, incrementing blocks.
+ * @param set Set of tiles
+ * @return true if the tiles form a run, false otherwise.
+ */
+boolean checkIfStairs(ArrayList<Tile> set) {
+    // Check if all same color
+    String colorOfFirst = set.get(0).getColor();
     
-    // check if the set is stairs, i.e. same color, incrementing blocks
-    boolean checkIfStairs(ArrayList<Tile> set){
-
-        // check if all same color
-        String colorOfFirst = set.get(0).getColor();
-        for (int i = 1; i < set.size(); i++) {
-            if (!colorOfFirst.equals(set.get(i).getColor())) {
-                return false;
-            }
+    for (int i = 1; i < set.size(); i++) {
+        if (!colorOfFirst.equals(set.get(i).getColor())) {
+            return false;
         }
-
-        // check if incrementing
-        byte numOfFirst = set.get(0).getNumber();
-        for (int i = 0; i < set.size(); i++) {
-            byte numTmp = set.get(i).getNumber();
-            if (numTmp - i != numOfFirst) {
-                return false;
-            }
-        }
-        return true;
     }
+
+    // Check if incrementing
+    int count = 1;
+    byte numOfFirst = set.get(0).getNumber();
+
+    for (int i = 1; i < set.size(); i++) {
+        byte numTmp = set.get(i).getNumber();
+        if (numOfFirst + (byte) 1 == numTmp) {
+            count++;
+        } else {
+            if (count < 3) {
+                return false; // Run smaller than 3
+            }
+            count = 1;
+        }
+        numOfFirst = numTmp;
+    }
+    return true;
+}
+
 
     private void placeTile(Tile tile) {
         assert tile != null;
@@ -260,5 +287,3 @@ public class Game {
     }
     
 }
-
-
