@@ -4,14 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-<<<<<<< HEAD
-=======
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
 import java.util.Set;
->>>>>>> 555cec7fa7059b09d4e5d115fb60efb1f24fb5e7
-
 /**
  * This class is a memory representation of the game state. It executes and
  * validates player moves.<br>
