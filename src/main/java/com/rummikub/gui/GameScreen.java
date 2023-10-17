@@ -74,7 +74,7 @@ class GameScreen extends Pane {
                 for (int i = 0; i < rack.tiles.length; i++) {
                     rackTileCopy[i] = rack.tiles[i].clone();
                 }
-                //System.out.println("Hand to set for " + Game.getInstance().currentPlayer + ": " + Game.printBoard(rackTileCopy));
+                System.out.println("Board:"  + Game.printBoard(GameboardGUI.getInstance().getState()));
                 Game.getInstance().currentPlayer.setHand(rackTileCopy);
                 GameboardGUI.getInstance().setPrevState();
                 Game.getInstance().nextPlayer();

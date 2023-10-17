@@ -1,24 +1,36 @@
-//package com.rummikub.game;
-//
-//
-//import com.rummikub.gui.Tile;
-//import javafx.scene.paint.Color;
-//import org.junit.Test;
-//import org.junit.Test.None;
-//
-//import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertNotEquals;
-//
-//
-//public class GameTest {
-//    @Test
-//    public void testNextPlayer() {
-//        Game game = new Game((byte) 4);
-//        Player firstPlayer = Game.currentPlayer;
-//        game.nextPlayer();
-//        Player secondPlayer = Game.currentPlayer;
-//        assertNotEquals(firstPlayer, secondPlayer);
-//    }
+package com.rummikub.game;
+
+
+import com.rummikub.gui.Tile;
+import javafx.scene.paint.Color;
+import org.junit.Test;
+import org.junit.Test.None;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import org.junit.After;
+import org.junit.Before;
+
+
+public class GameTest {
+Game game;
+@Before
+public void setUp(){
+    game = game.getInstance((byte)4);
+}
+
+@After
+public void tearDown(){
+   game.endGame();
+}
+   @Test
+   public void testNextPlayer() {
+       Player firstPlayer = game.currentPlayer;
+       game.nextPlayer();
+       Player secondPlayer = game.currentPlayer;
+       assertNotEquals(firstPlayer, secondPlayer);
+   }
 //    @Test
 //    public void testCircleGame() {
 //        Game game = new Game((byte) 2);
@@ -45,9 +57,9 @@
 //        }
 //        assertEquals(106 - (14 * game.players.size()), game.pool.size());
 //    }
-//
-//
-//
+
+
+
 //    // testing the method isValidBoard
 //    Game gaming = new Game((byte) 2);
 //    Tile t0 = new Tile(null, (byte) 0); // tile with number 0 is null
@@ -64,11 +76,11 @@
 //    Tile t11 = new Tile(Color.BLUE, (byte) 11);
 //    Tile t12 = new Tile(Color.BLUE, (byte) 12);
 //    Tile t13  = new Tile(Color.BLUE, (byte) 13);
-//
+
 //    Tile t14 = new Tile(Color.RED, (byte) 1);
 //    Tile t15 = new Tile(Color.RED, (byte) 1);
 //    Tile t16 = new Tile(Color.RED, (byte) 1);
-//
+
 //    @Test
 //    public void testRuns() {
 //        Tile[][]  board = {
@@ -76,7 +88,7 @@
 //        };
 //        assertEquals(true, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testNull() {
 //        Tile[][]  board = {
@@ -85,7 +97,7 @@
 //        };
 //        assertEquals(true, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testRun() {
 //        Tile[][]  board = {
@@ -93,7 +105,7 @@
 //        };
 //        assertEquals(true, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testRun1() {
 //        Tile[][]  board = {
@@ -101,7 +113,7 @@
 //        };
 //        assertEquals(true, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testAllEqual() {
 //        Tile[][]  board = {
@@ -110,7 +122,7 @@
 //        };
 //        assertEquals(false, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testGroup() {
 //        Tile[][]  board = {
@@ -120,7 +132,7 @@
 //        };
 //        assertEquals(true, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testGroupDoubleTile() {
 //        Tile[][]  board = {
@@ -128,7 +140,7 @@
 //        };
 //        assertEquals(false, gaming.isValidBoard(board));
 //    }
-//
+
 //    @Test
 //    public void testFalseBoard() {
 //        Tile[][]  board = {
@@ -136,7 +148,7 @@
 //        };
 //        assertEquals(false, gaming.isValidBoard(board));
 //    }
-//
-//}
-//
-//
+
+}
+
+

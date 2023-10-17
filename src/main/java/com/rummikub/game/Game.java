@@ -24,9 +24,9 @@ public class Game {
     public static final byte GRID_COLS = 13;
 
 
-    public static Game getInstance() {
+    public static Game getInstance(byte numPlayers) {
         if (instance == null)
-            instance = new Game((byte) 2);
+            instance = new Game(numPlayers);
         return instance;
     }
 
