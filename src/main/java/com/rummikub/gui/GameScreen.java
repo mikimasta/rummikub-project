@@ -15,6 +15,7 @@ class GameScreen extends Pane {
 
     RackGUI rack;
     GameboardGUI gameboard;
+    PlayersGUI players;
 
     GameScreen() {
 
@@ -25,7 +26,8 @@ class GameScreen extends Pane {
 
         rack = RackGUI.getInstance();
 
-        GridPane players = new GridPane();
+        players = new PlayersGUI(Game.getInstance().getPlayers());
+
 
         gameboard = GameboardGUI.getInstance(); 
 
