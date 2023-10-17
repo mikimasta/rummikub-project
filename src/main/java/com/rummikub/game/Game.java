@@ -179,7 +179,7 @@ public class Game {
         Set<Color> colors = new HashSet<>();
 
         for (int i = 0; i < set.size(); i++) {
-            if (!colors.contains(set.get(i).getColor()) && (numFirst == set.get(i).getNumber() || numFirst == 0)) {
+            if ((!colors.contains(set.get(i).getColor()) || set.get(i).getColor().equals("joker")) && (numFirst == set.get(i).getNumber() || numFirst == 0)) {                nbColors++;
                 nbColors++;
                 colors.add(set.get(i).getColor());
                 
