@@ -68,7 +68,7 @@ class GameboardGUI extends Pane {
         }
 
     }
-
+    
     public Tile[][] getState() {
         return state;
     }
