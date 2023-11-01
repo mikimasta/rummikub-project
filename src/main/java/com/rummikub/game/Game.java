@@ -116,11 +116,14 @@ public class Game {
      */
     public boolean isValidBoard(Tile[][] gameBoard) {
         // TODO
+        //make board into arrray list of array list
+        //put each sub array list into check array list if it ever gives false return false
         return true; // Checked all tiles, all are correct
     }
 
     // Check if given tile is either group or stairs, i.e., is it legal?
-    boolean checkTile(ArrayList<Tile> set) {
+    boolean checkSubSet(ArrayList<Tile> set) {
+        //check if size three
         return checkIfGroup(set) || checkIfStairs(set);
     }
 
