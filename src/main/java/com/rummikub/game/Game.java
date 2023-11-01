@@ -184,7 +184,7 @@ public class Game {
         Set<Color> colors = new HashSet<>();
 
         for (int i = 0; i < set.size(); i++) {
-            if (!colors.contains(set.get(i).getColor()) && (numFirst == set.get(i).getNumber() || numFirst == 0)) {
+            if ((!colors.contains(set.get(i).getColor()) || set.get(i).getColor().equals("joker")) && (numFirst == set.get(i).getNumber() || numFirst == 0)) {                nbColors++;
                 nbColors++;
                 colors.add(set.get(i).getColor());
                 
@@ -241,12 +241,58 @@ public class Game {
         return true;
     }
 
+    /**
+     * checks 
+     * @param currentHand current state of the board after moved was made
+     * @param prevHand previous state of the board
+     * @return
+     */
     public boolean isValidFirstMove(Tile[][] currentHand, Tile[][] prevHand){
+        int sumCurrHand = sumPointsOfATile(currentHand);
+        int sumPrevHand = sumPointsOfATile(prevHand);
 
-
-        return true;
+        return sumCurrHand - sumPrevHand > 30;
     }
-     public boolean isGameOver() {
+
+    
+    private int sumPointsOfATile(Tile[][] tile) {
+        int sum = 0;
+
+        for (int row = 0; row < tile.length; row++) {
+            for (int col = 0; col < tile[row].length; col++) {
+                Tile piece = tile[row][col];
+                if (piece != null) {
+                    if (piece.getNumber() == 0) { // its a joker; potential value only used if its stairs
+                        Tile tile1, tile2;
+                        int potentialValue;
+                        if(col == 0) {
+                            tile1 = tile[row][col+1];
+                            tile2 = tile[row][col+2];
+                            potentialValue = (int)tile1.getNumber()-1;                        
+                        }
+                        else if(col == tile[row].length-1) {
+                            tile1 = tile[row][tile[row].length-2];
+                            tile2 = tile[row][tile[row].length-3];
+                            potentialValue = (int)tile1.getNumber()+1; 
+                        }
+                        else {
+                            tile1 = tile[row][col-1];
+                            tile2 = tile[row][col+1];
+                            potentialValue = (int)tile1.getNumber()+1; 
+                        }
+                        if(tile1.getNumber() == tile2.getNumber()) { // its a group
+                            sum += (int)tile1.getNumber();
+                        } else sum += potentialValue; // its stairs
+                    }
+                    else sum += piece.getNumber();
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    public boolean isGameOver() {
          for (Player player : players) {
             if (player.getHand() == null) {
                 return true;
