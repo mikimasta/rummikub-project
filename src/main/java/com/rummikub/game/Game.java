@@ -115,39 +115,7 @@ public class Game {
      * @return true if the board state complies with the rules, false otherwise.
      */
     public boolean isValidBoard(Tile[][] gameBoard) {
-        int count;
-        ArrayList<Tile> set = new ArrayList<>();
-
-        for (int i = 0; i < gameBoard.length; i++) {
-            count = 0;
-            set.clear();
-
-            for (int y = 0; y < gameBoard[i].length; y++) {
-                Tile tile = gameBoard[i][y];
-                // Checks for illegal subset of tiles of length 1 or 2
-                if ((tile == null) && (count > 0) && (count < 3)) {
-                    System.out.println("test des valides");
-                    return false; 
-                } else if (tile == null) {
-                    count = 0;
-                } else {
-                    count++;
-                }
-
-                if (tile != null) {
-                    set.add(tile);
-                }
-            }
-
-            if (set.size() < 3 && set.size() != 0) {
-                return false; // The block of tiles is too short
-            } else if (set.size() > 2) {
-                if (!checkTile(set)) {
-                    return false; // Check if given tile is either stairs or group, return false if not
-                }
-            }
-        }
-
+        // TODO
         return true; // Checked all tiles, all are correct
     }
 
@@ -162,48 +130,7 @@ public class Game {
      * @return true if the tiles form a group, false otherwise.
      */
     boolean checkIfGroup(ArrayList<Tile> set) {
-        // Check if same number
-        int count = 1;
-        byte numFirst = set.get(0).getNumber();
-
-        for (int i = 1; i < set.size(); i++) {
-            byte numTmp = set.get(i).getNumber();
-
-            if (numFirst == numTmp || numFirst == 0) { 
-                count++;
-            } else {
-                if ((count < 3) || (count > 4)) {
-                    return false; // Group can't be smaller than 3 or bigger than 4
-                }
-                numFirst = numTmp;
-            }
-        }
-
-        int nbColors = 0;
-        numFirst = set.get(0).getNumber();
-        Set<Color> colors = new HashSet<>();
-
-        for (int i = 0; i < set.size(); i++) {
-            if ((!colors.contains(set.get(i).getColor()) || set.get(i).getColor().equals("joker")) && (numFirst == set.get(i).getNumber() || numFirst == 0)) {                nbColors++;
-                nbColors++;
-                colors.add(set.get(i).getColor());
-                
-                if (nbColors > 4) { // group cannot be greater then the number of colors
-                    return false;
-                }
-            } else {
-                if (nbColors < 3){ // group can't be smaller than 3
-                    return false;
-                }
-                nbColors = 1;
-                colors.clear();
-                colors.add(set.get(i).getColor());
-                numFirst = set.get(i).getNumber();
-            }
-        }
-        if (nbColors > 4) {
-            return false;
-        }
+        // TODO
         return true;
     }
 
@@ -213,31 +140,7 @@ public class Game {
      * @return true if the tiles form a run, false otherwise.
      */
     boolean checkIfStairs(ArrayList<Tile> set) {
-        // Check if all same color
-        Color colorOfFirst = set.get(0).getColor();
-        
-        for (int i = 1; i < set.size(); i++) {
-            if (!colorOfFirst.equals(set.get(i).getColor()) && set.get(i).getNumber() != 0) {
-                return false;
-            }
-        }
-
-        // Check if incrementing
-        int count = 1;
-        byte numOfFirst = set.get(0).getNumber();
-
-        for (int i = 1; i < set.size(); i++) {
-            byte numTmp = set.get(i).getNumber();
-            if (numOfFirst + (byte) 1 == numTmp || numTmp == 0) {
-                count++;
-            } else {
-                if (count < 3) {
-                    return false; // Run smaller than 3
-                }
-                count = 1;
-            }
-            numOfFirst = numTmp;
-        }
+        //TODO
         return true;
     }
 
@@ -251,7 +154,9 @@ public class Game {
         int sumCurrHand = sumPointsOfATile(currentHand);
         int sumPrevHand = sumPointsOfATile(prevHand);
 
-        return sumCurrHand - sumPrevHand > 30;
+        System.out.println("hey");
+
+        return sumCurrHand - sumPrevHand >= 30;
     }
 
     
