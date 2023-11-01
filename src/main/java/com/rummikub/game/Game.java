@@ -1,5 +1,6 @@
 package com.rummikub.game;
 
+import com.rummikub.gui.MainMenu;
 import com.rummikub.gui.Tile;
 import javafx.scene.paint.Color;
 
@@ -26,12 +27,16 @@ public class Game {
 
     public static Game getInstance() {
         if (instance == null)
-            instance = new Game((byte) 2);
+            instance = new Game(MainMenu.NUM_OF_PLAYERS);
         return instance;
     }
 
     public static void endGame() {
         instance = null;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 
     /**
