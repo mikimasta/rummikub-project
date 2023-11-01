@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -80,6 +79,7 @@ class GameScreen extends Pane {
                 Game.getInstance().currentPlayer.setHand(rackTileCopy);
                 GameboardGUI.getInstance().setPrevState();
                 Game.getInstance().nextPlayer();
+                players.update();
                 //System.out.println("Current player is now: " + Game.getInstance().currentPlayer);
                 //System.out.println("Hand is : " + Game.printBoard(Game.getInstance().currentPlayer.getHand()));
                 rack.handToRack(Game.getInstance().currentPlayer.getHand());
