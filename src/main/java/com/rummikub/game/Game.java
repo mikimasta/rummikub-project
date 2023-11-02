@@ -297,4 +297,43 @@ public class Game {
         return pool;
     }
 
+    // this method just save group or run to arraylist. Does not check whether the group or run are legal.
+    // like if the row is [1,2,3,0,6,6,6,0,7,8,9], then save {1,2,3}, {6,6,6}, {7,8,9}, 0=null
+    // if add to isValidBoard method add boolean;
+    public ArrayList<Tile> getSubset(Tile[][] gameBoard){
+
+        ArrayList<Tile> set = new ArrayList<>();
+        ArrayList<Tile> subset = new ArrayList<>();
+        int a = 0;
+        // boolean valid = false;
+
+        for(int r = 0; r < gameBoard.length; r++){
+            for(int l = 0; l < gameBoard[r].length; l++){
+
+                if(gameBoard[r][l] != null){
+                    set.add(gameBoard[r][l]);
+
+                } else if(gameBoard[r][l] == null){
+
+                    if(checkSet(set)){
+                        subset.addAll(a,set);
+                        set.clear();
+                        a++;
+                        // valid = true;
+                    } 
+                } 
+            }
+        } // return valid;
+        
+        return subset;
+
+    }
+
+    public boolean checkSet(ArrayList<Tile> set){
+        if(set.size() < 3){
+            return false;
+        }
+        return true;
+    }
+
 }
