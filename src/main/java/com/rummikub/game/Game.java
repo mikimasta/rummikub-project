@@ -117,13 +117,41 @@ public class Game {
     public boolean isValidBoard(Tile[][] gameBoard) {
         // TODO
         //make board into arrray list of array list
-        //put each sub array list into check array list if it ever gives false return false
+        boolean currentSet = false;
+        ArrayList<Tile> set = new ArrayList<>();
+        ArrayList<ArrayList<Tile>> allSets = new ArrayList<>();
+
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard[i].length; j++) {
+                if(gameBoard[i][j] != null){
+                    currentSet = true;
+                    set.add(gameBoard[i][j]);
+                }
+                if(gameBoard[i][j] == null && currentSet == true){
+                    allSets.add(set);
+                    set = new ArrayList<>();
+                    currentSet = false;
+                }
+                
+            }
+        } 
+        //check each subset if its a valid group or set.
+        for(int k = 0; k < allSets.size(); k++){
+            ArrayList<Tile> subSet = allSets.get(k);
+            if(!checkSubSet(subSet)){
+                return false;
+            }
+        }
         return true; // Checked all tiles, all are correct
     }
 
+
+
     // Check if given tile is either group or stairs, i.e., is it legal?
     boolean checkSubSet(ArrayList<Tile> set) {
-        //check if size three
+        if(set.size() < 3){
+            return false;
+        }
         return checkIfGroup(set) || checkIfStairs(set);
     }
 
@@ -133,7 +161,25 @@ public class Game {
      * @return true if the tiles form a group, false otherwise.
      */
     boolean checkIfGroup(ArrayList<Tile> set) {
-        // TODO
+        byte groupNumber = set.get(0).getNumber();
+        ArrayList<Color> groupColor = new ArrayList<Color>();
+        for(int i = 0; i < set.size(); i++){
+            Tile currentTile = set.get(i);
+            //check in the number on the tile is the same as the rest of the group
+            if(currentTile.getNumber() != groupNumber && currentTile.getNumber() != 0){
+                return false;
+            }
+            //if not a joker check if its colors is already in the group
+            if(currentTile.getNumber() != 0){
+            if(groupColor.contains(currentTile.getColor()) ){
+                return false;
+            }
+            else{
+                groupColor.add(currentTile.getColor());
+            }
+        }
+        }
+
         return true;
     }
 
@@ -142,8 +188,21 @@ public class Game {
      * @param set Set of tiles
      * @return true if the tiles form a run, false otherwise.
      */
-    boolean checkIfStairs(ArrayList<Tile> set) {
-        //TODO
+    static boolean checkIfStairs(ArrayList<Tile> set) {
+        Color groupColor = set.get(0).getColor();
+        byte count = set.get(0).getNumber();
+        for(int i = 0; i < set.size(); i++){
+        Tile currentTile = set.get(i);
+        //check if the color of the tile is same as the rest of the group
+        if(currentTile.getColor() != groupColor || currentTile.getNumber() != 0){
+            return false;
+        }
+        //check if the number of the set is increacing 
+        if(currentTile.getNumber() != count && currentTile.getNumber() != 0){
+            return false;
+        }
+        count++;
+        }
         return true;
     }
 

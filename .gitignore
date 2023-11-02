@@ -15,3 +15,5 @@ bin
 .project
 .vscode/settings.json
 .DS_Store
+.DS_Store
+src/.DS_Store
