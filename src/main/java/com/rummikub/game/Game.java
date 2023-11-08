@@ -30,6 +30,11 @@ public class Game {
             instance = new Game(MainMenu.NUM_OF_PLAYERS);
         return instance;
     }
+     public static Game getInstance(byte numPlayers) {
+        if (instance == null)
+            instance = new Game(numPlayers);
+        return instance;
+    }
 
     public static void endGame() {
         instance = null;

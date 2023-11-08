@@ -1,16 +1,127 @@
-//package com.rummikub.game;
-//
-//
-//import com.rummikub.gui.Tile;
-//import javafx.scene.paint.Color;
-//import org.junit.Test;
-//import org.junit.Test.None;
-//
-//import static org.junit.Assert.assertEquals;
-//import static org.junit.Assert.assertNotEquals;
-//
-//
-//public class GameTest {
+package com.rummikub.game;
+import com.rummikub.gui.Tile;
+import javafx.scene.paint.Color;
+import org.junit.Test;
+import org.junit.Test.None;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import org.junit.Before;
+import org.junit.After;
+
+
+public class GameTest {
+    private Game game;
+
+    @Before
+    public void setUp(){
+
+        game = Game.getInstance((byte)4);
+    }
+    @After
+    public void tearDown(){
+        Game.endGame();
+    }
+
+
+/*
+    @Test
+    public void testDealInitialTiles() {
+        for (Player player : game.players) {
+            int count = 0;
+            for (int row = 0; row < player.getHand().length; row++) {
+                for (int col = 0; col < player.getHand()[row].length; col++) {
+                    if (player.getHand()[row][col] != null) {
+                        count++;
+                    }
+                }
+            }
+            assertEquals(14, count);
+        }
+        assertEquals(106 - (14 * game.players.size()), game.pool.size());
+    }
+    @Test
+    public void testNextPlayer() {
+        Player firstPlayer = game.currentPlayer;
+        game.nextPlayer();
+        Player secondPlayer = game.currentPlayer;
+        assertNotEquals(firstPlayer, secondPlayer);
+    }
+    @Test
+    public void testCircleGame() {
+        Player firstPlayer = game.currentPlayer;
+        game.nextPlayer();
+        Player secondPlayer = game.currentPlayer;
+        assertEquals(firstPlayer, secondPlayer);
+    }
+    @Test(expected = None.class)
+    public void nextPlayerWhenOutOfBoundsTest() {
+        //given
+        int currentIndex = game.players.indexOf(game.currentPlayer);
+        //when
+        game.nextPlayer();
+        //then no exception thrown
+    }
+*/
+    @Test
+    public void testIsValidBoard() {
+
+        Tile[][] emptyBoard = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
+        assertTrue(game.isValidBoard(emptyBoard));
+
+        Tile[][] validGroupBoard = createValidGroupBoard();
+        assertTrue(game.isValidBoard(validGroupBoard));
+
+        Tile[][] validRunBoard = createValidRunBoard();
+        assertTrue(game.isValidBoard(validRunBoard));
+
+        Tile[][] invalidBoard = createInvalidBoard();
+        assertFalse(game.isValidBoard(invalidBoard));
+
+        Tile[][] mixedBoard = createMixedBoard();
+        assertFalse(game.isValidBoard(mixedBoard));
+    }
+
+    private Tile[][] createValidGroupBoard() {
+        Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
+        board[0][0] = new Tile(Color.RED, (byte) 1);
+        board[0][1] = new Tile(Color.BLUE, (byte) 1);
+        board[0][2] = new Tile(Color.BLACK, (byte) 1);
+        return board;
+    }
+
+    private Tile[][] createValidRunBoard() {
+        Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
+        board[0][0] = new Tile(Color.RED, (byte) 1);
+        board[0][1] = new Tile(Color.RED, (byte) 2);
+        board[0][2] = new Tile(Color.RED, (byte) 3);
+        return board;
+    }
+
+    private Tile[][] createInvalidBoard() {
+        Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
+        board[0][0] = new Tile(Color.RED, (byte) 1);
+        board[0][1] = new Tile(Color.BLUE, (byte) 1);
+        return board;
+    }
+
+    private Tile[][] createMixedBoard() {
+        Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
+        board[0][0] = new Tile(Color.RED, (byte) 1);
+        board[0][1] = new Tile(Color.RED, (byte) 2);
+        board[0][3] = new Tile(Color.RED, (byte) 4); // Gap in the run
+        board[0][4] = new Tile(Color.RED, (byte) 5);
+        return board;
+    }
+
+}
+
+
+/*
+*/
+
+
 //    @Test
 //    public void testNextPlayer() {
 //        Game game = new Game((byte) 4);
@@ -138,5 +249,3 @@
 //    }
 //
 //}
-//
-//
