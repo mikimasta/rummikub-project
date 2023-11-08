@@ -191,24 +191,27 @@ public class Game {
      * @param set Set of tiles
      * @return true if the tiles form a run, false otherwise.
      */
-    static boolean checkIfStairs(ArrayList<Tile> set) {
-        Color groupColor = set.get(0).getColor();
-        byte count = set.get(0).getNumber();
-        for(int i = 0; i < set.size(); i++){
-        Tile currentTile = set.get(i);
-        //check if the color of the tile is same as the rest of the group
-        if(currentTile.getColor() != groupColor || currentTile.getNumber() != 0){
-            return false;
+    boolean checkIfStairs(ArrayList<Tile> set){
+
+        // check if all same color
+        Color colorOfFirst = set.get(0).getColor();
+        for (int i = 1; i < set.size(); i++) {
+            if (!colorOfFirst.equals(set.get(i).getColor()) && !set.get(i).getColor().equals("any") && !colorOfFirst.equals("any")) {
+                return false;
+            }
         }
-        //check if the number of the set is increacing 
-        if(currentTile.getNumber() != count && currentTile.getNumber() != 0){
-            return false;
-        }
-        count++;
+
+        // check if incrementing
+        byte numOfFirst = set.get(0).getNumber();
+        for (int i = 1; i < set.size(); i++) {
+            byte numTmp = set.get(i).getNumber();
+            if (numTmp - 1 != numOfFirst && numOfFirst != 0 && numTmp != 0) {
+                return false;
+            }
+            numOfFirst = numTmp;
         }
         return true;
     }
-
     /**
      * checks 
      * @param currentHand current state of the board after moved was made
