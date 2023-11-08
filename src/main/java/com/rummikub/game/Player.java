@@ -25,7 +25,7 @@ public class Player {
      */
     Player(String name) {
         this.name = name;
-        this.hand = new Tile[2][RackGUI.MAX_TILES_PER_ROW];
+        this.hand = new Tile[2][15];
         this.firstMoveMade = false;
     }
 

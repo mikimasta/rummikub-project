@@ -1,5 +1,4 @@
 package com.rummikub.game;
-import com.rummikub.gui.Tile;
 import javafx.scene.paint.Color;
 import org.junit.Test;
 import org.junit.Test.None;
@@ -85,33 +84,33 @@ public class GameTest {
 
     private Tile[][] createValidGroupBoard() {
         Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile(Color.RED, (byte) 1);
-        board[0][1] = new Tile(Color.BLUE, (byte) 1);
-        board[0][2] = new Tile(Color.BLACK, (byte) 1);
+        board[0][0] = new Tile((byte) 1, Color.RED);
+        board[0][1] = new Tile((byte) 1, Color.BLUE);
+        board[0][2] = new Tile((byte) 1, Color.BLACK);
         return board;
     }
 
     private Tile[][] createValidRunBoard() {
         Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile(Color.RED, (byte) 1);
-        board[0][1] = new Tile(Color.RED, (byte) 2);
-        board[0][2] = new Tile(Color.RED, (byte) 3);
+        board[0][0] = new Tile((byte) 1, Color.RED);
+        board[0][1] = new Tile((byte) 2, Color.RED);
+        board[0][2] = new Tile((byte) 3, Color.RED);
         return board;
     }
 
     private Tile[][] createInvalidBoard() {
         Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile(Color.RED, (byte) 1);
-        board[0][1] = new Tile(Color.BLUE, (byte) 1);
+        board[0][0] = new Tile((byte) 1, Color.RED);
+        board[0][1] = new Tile((byte) 1, Color.BLUE);
         return board;
     }
 
     private Tile[][] createMixedBoard() {
         Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile(Color.RED, (byte) 1);
-        board[0][1] = new Tile(Color.RED, (byte) 2);
-        board[0][3] = new Tile(Color.RED, (byte) 4); // Gap in the run
-        board[0][4] = new Tile(Color.RED, (byte) 5);
+        board[0][0] = new Tile((byte) 1, Color.RED);
+        board[0][1] = new Tile((byte) 2, Color.RED);
+        board[0][3] = new Tile((byte) 4, Color.RED); // Gap in the run
+        board[0][4] = new Tile((byte) 5, Color.RED);
         return board;
     }
 
