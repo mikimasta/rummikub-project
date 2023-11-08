@@ -1,16 +1,14 @@
 package com.rummikub.gui;
 
-import javafx.geometry.Pos;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.geometry.Pos;
 import javafx.scene.text.TextBoundsType;
+import com.rummikub.game.Tile;
 
-
-
-
-public class Tile extends StackPane {
+class TileGUI extends StackPane {
 
     static final double TILE_WIDTH;
     static final double TILE_HEIGHT = RackGUI.RACK_HEIGHT / 2;
@@ -35,8 +33,6 @@ public class Tile extends StackPane {
     private int prevColRack;
     private int prevRowRack;
 
-    private Color color;
-    private byte number;
 
     static {
 
@@ -47,7 +43,12 @@ public class Tile extends StackPane {
 
     }
 
-    private Tile() {
+    public Tile getTile() {
+        return tile;
+    }
+
+
+    private TileGUI() {
 
         setMinSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
         setMaxSize(TILE_WIDTH, RackGUI.RACK_HEIGHT / 2);
@@ -155,11 +156,12 @@ public class Tile extends StackPane {
     }
 
 
-    public Tile(Color color, byte number) {
+    public TileGUI(Tile tile) {
 
         this();
-        this.color = color;
-        this.number = number;
+
+        if (tile.getNumber() != 0) {
+
 
         ImageView tileFace = new ImageView(Images.tileFace);
         tileFace.setPreserveRatio(true);
@@ -168,35 +170,32 @@ public class Tile extends StackPane {
         tileFace.setTranslateY(0);
 
 
-        Text numText = new Text(String.valueOf(number));
+        Text numText = new Text(String.valueOf(tile.getNumber()));
         numText.setBoundsType(TextBoundsType.VISUAL);
         numText.setStyle("-fx-font-size: 50pt");
-        numText.setFill(color);
+        numText.setFill(tile.getColor());
         numText.setTranslateY(-15);
         setAlignment(numText, Pos.CENTER);
-
         getChildren().addAll(tileFace, numText);
 
-    }
+        } else {
 
-    /**
-     * used to construct a joker
-     */
-    public Tile(Color color) {
-
-        this(color, (byte) 0);
-
-        ImageView imageToSet = new ImageView();
-        imageToSet.setPreserveRatio(true);
-        imageToSet.setFitHeight(TILE_HEIGHT);
-        if (color == Color.RED)
-            imageToSet.setImage(Images.jokerRed);
-        else if (color == Color.BLACK)
-            imageToSet.setImage(Images.jokerBlack);
-        else 
-            System.out.println("A Joker with a given colors does not exist");
+            ImageView imageToSet = new ImageView();
+            imageToSet.setPreserveRatio(true);
+            imageToSet.setFitHeight(TILE_HEIGHT);
+            if (tile.getColor() == Color.RED)
+                imageToSet.setImage(Images.jokerRed);
+            else if (tile.getColor() == Color.BLACK)
+                imageToSet.setImage(Images.jokerBlack);
+            else 
+                System.out.println("A Joker with a given colors does not exist");
 
         getChildren().add(imageToSet);
+
+
+        }
+
+
     }
 
     private boolean isInRackBounds(double x, double y) {
@@ -239,14 +238,6 @@ public class Tile extends StackPane {
         return yPos;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
-    public byte getNumber() {
-        return number;
-    }
-
     void setXPos(double xPos) {
         this.xPos = xPos;
     }
@@ -281,4 +272,7 @@ public class Tile extends StackPane {
     public boolean isAddedToBoard() {
         return addedToBoard;
     }
+
+
 }
+

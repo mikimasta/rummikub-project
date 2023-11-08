@@ -7,6 +7,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import com.rummikub.game.Tile;
 
 import java.util.Arrays;
 
@@ -49,28 +50,29 @@ class GameScreen extends Pane {
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
         //System.out.println("Starting player: " + Game.getInstance().currentPlayer);
         //System.out.println(Game.getInstance().currentPlayer + "'s hand is " + Game.printBoard(Game.getInstance().currentPlayer.getHand()));
-        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+        //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
 
         endTurn.setOnAction(e -> {
             System.out.println("Current player: " + Game.getInstance().currentPlayer);
 
-            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+            //////////////////System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
             System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
 
             if (gameboard.stateNotChanged())
-                rack.addToRack(Game.getInstance().getPool().remove(0));
+                rack.addToRack(new TileGUI(Game.getInstance().getPool().remove(0)));
 
             if (Game.getInstance().isValidBoard(gameboard.getState())) {
-                if(!Game.getInstance().currentPlayer.getFirstMoveMade() ){
-                    if(Game.getInstance().isValidFirstMove(rack.tiles, Game.getInstance().currentPlayer.getHand())){
+                if (!Game.getInstance().currentPlayer.getFirstMoveMade() ) {
+                    if (Game.getInstance().isValidFirstMove(rack.tiles, Game.getInstance().currentPlayer.getHand())) {
                         Game.getInstance().currentPlayer.firstMoveMade();
                     }
                     else{
                         //break;
                     }
                 }
+
                 Tile[][] rackTileCopy = new Tile[2][15];
                 for (int i = 0; i < rack.tiles.length; i++) {
                     rackTileCopy[i] = rack.tiles[i].clone();
@@ -88,9 +90,6 @@ class GameScreen extends Pane {
             } else {
                 System.out.println("Board is not in a valid state!");
             }
-
-
-
 
 
 

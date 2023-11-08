@@ -1,7 +1,6 @@
 package com.rummikub.game;
 
 import com.rummikub.gui.MainMenu;
-import com.rummikub.gui.Tile;
 import javafx.scene.paint.Color;
 
 import java.util.*;
@@ -82,18 +81,18 @@ public class Game {
      * in addition to two jokers, and adds them to the pool.
      */
     private void initializeTiles() {
-        Color[] colors = {Color.RED, Color.BLUE, Color.BLACK, Color.ORANGE };
+        Color[] colors = { Color.RED, Color.BLUE, Color.BLACK, Color.ORANGE };
         for (Color color : colors) {
             for (byte i = 0; i < 2; i++) {
                 for (byte number = 1; number <= 13; number++) {
-                    pool.add(new Tile(color, number));
+                    pool.add(new Tile(number, color));
                 }
             }
         }
         // the interger 0 will be used in regard to a joker
         // two jokers are added into our game
-        pool.add(new Tile(Color.RED));
-        pool.add(new Tile(Color.BLACK));
+        pool.add(new Tile((byte) 0, Color.RED));
+        pool.add(new Tile((byte) 0, Color.BLACK));
 
         Collections.shuffle(pool);
     }
@@ -120,7 +119,6 @@ public class Game {
      * @return true if the board state complies with the rules, false otherwise.
      */
     public boolean isValidBoard(Tile[][] gameBoard) {
-        // TODO
         //make board into arrray list of array list
         boolean currentSet = false;
         ArrayList<Tile> set = new ArrayList<>();
@@ -220,8 +218,6 @@ public class Game {
     public boolean isValidFirstMove(Tile[][] currentHand, Tile[][] prevHand){
         int sumCurrHand = sumPointsOfATile(currentHand);
         int sumPrevHand = sumPointsOfATile(prevHand);
-
-        System.out.println("hey");
 
         return sumCurrHand - sumPrevHand >= 30;
     }

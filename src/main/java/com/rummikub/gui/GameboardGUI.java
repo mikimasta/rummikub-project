@@ -3,6 +3,7 @@ package com.rummikub.gui;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import com.rummikub.game.Tile;
 
 class GameboardGUI extends Pane {
 
@@ -12,8 +13,8 @@ class GameboardGUI extends Pane {
     private static final int MAX_TILES_PER_ROW = 20;
     private static final int MAX_TILES_PER_COL = 7;
 
-    static final double BOARD_WIDTH = Tile.TILE_WIDTH * MAX_TILES_PER_ROW;
-    static final double BOARD_HEIGHT = Tile.TILE_HEIGHT * MAX_TILES_PER_COL;
+    static final double BOARD_WIDTH = TileGUI.TILE_WIDTH * MAX_TILES_PER_ROW;
+    static final double BOARD_HEIGHT = TileGUI.TILE_HEIGHT * MAX_TILES_PER_COL;
 
     static final double BOARD_X = Rummikub.xCenter - BOARD_WIDTH / 2;
     static final double BOARD_Y = 90;
@@ -40,9 +41,9 @@ class GameboardGUI extends Pane {
             for (int j = 0; j < MAX_TILES_PER_ROW; ++j) {
 
 
-            Rectangle cell = new Rectangle(Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
-            cell.setTranslateX(j * Tile.TILE_WIDTH);
-            cell.setTranslateY(i * Tile.TILE_HEIGHT);
+            Rectangle cell = new Rectangle(TileGUI.TILE_WIDTH, TileGUI.TILE_HEIGHT);
+            cell.setTranslateX(j * TileGUI.TILE_WIDTH);
+            cell.setTranslateY(i * TileGUI.TILE_HEIGHT);
             cell.setFill(Color.TRANSPARENT);
             cell.setStroke(Color.BLACK);
 
@@ -77,7 +78,7 @@ class GameboardGUI extends Pane {
         return prevState;
     }
 
-    public void update(Tile tile) {
+    public void update(TileGUI tile) {
 
         //System.out.println(Arrays.deepToString(state));
 
@@ -86,10 +87,10 @@ class GameboardGUI extends Pane {
 
 
             state[tile.getPrevRowBoard()][tile.getPrevColBoard()] = null;
-            state[tile.getRowToSnap()][tile.getColToSnap()] = tile;
+            state[tile.getRowToSnap()][tile.getColToSnap()] = tile.getTile();
 
         } else {
-                tile.setXPos(tile.getPrevColBoard() * Tile.TILE_WIDTH);
+                tile.setXPos(tile.getPrevColBoard() * TileGUI.TILE_WIDTH);
                 tile.setYPos(tile.getPrevRowBoard() * (RackGUI.RACK_HEIGHT / 2));
 
 

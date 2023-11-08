@@ -1,7 +1,6 @@
 package com.rummikub.game;
 
 import com.rummikub.gui.RackGUI;
-import com.rummikub.gui.Tile;
 
 /**
  * This class represents a player instance and provides all the move methods needed <br>
