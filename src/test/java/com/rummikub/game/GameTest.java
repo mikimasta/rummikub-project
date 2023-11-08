@@ -13,15 +13,15 @@ import org.junit.After;
 public class GameTest {
     private Game game;
 
-    @Before
-    public void setUp(){
+    // @Before
+    // public void setUp(){
 
-        game = Game.getInstance((byte)4);
-    }
-    @After
-    public void tearDown(){
-        Game.endGame();
-    }
+    //     game = Game.getInstance((byte)4);
+    // }
+    // @After
+    // public void tearDown(){
+    //     Game.endGame();
+    // }
 
 
 /*
@@ -65,7 +65,7 @@ public class GameTest {
 */
     @Test
     public void testIsValidBoard() {
-
+        game = Game.getInstance((byte)4);
         Tile[][] emptyBoard = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
         assertTrue(game.isValidBoard(emptyBoard));
 
@@ -92,16 +92,16 @@ public class GameTest {
 
     private Tile[][] createValidRunBoard() {
         Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile((byte) 1, Color.RED);
-        board[0][1] = new Tile((byte) 2, Color.RED);
-        board[0][2] = new Tile((byte) 3, Color.RED);
+        board[0][0] = new Tile( (byte) 1, Color.RED);
+        board[0][1] = new Tile( (byte) 2, Color.RED);
+        board[0][2] = new Tile( (byte) 3, Color.RED);
         return board;
     }
 
     private Tile[][] createInvalidBoard() {
         Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile((byte) 1, Color.RED);
-        board[0][1] = new Tile((byte) 1, Color.BLUE);
+        board[0][0] = new Tile((byte) 1, Color.RED) ;
+        board[0][1] = new Tile( (byte) 1,Color.BLUE);
         return board;
     }
 
