@@ -1,7 +1,5 @@
 package com.rummikub.game;
 
-import com.rummikub.gui.RackGUI;
-
 /**
  * This class represents a player instance and provides all the move methods needed <br>
  * for a player to make a move
@@ -27,6 +25,27 @@ public class Player {
         this.name = name;
         this.hand = new Tile[2][15];
         this.firstMoveMade = false;
+    }
+
+    public void draw(Tile tile) {
+
+        boolean tileAdded = false;
+
+        for (int i = 0; i < hand[0].length; i++) {
+            for (int j = 0; j < hand[1].length; j++) {
+
+                if (hand[i][j] == null) {
+                    hand[i][j] = tile;
+                    tileAdded = true;
+                    break;
+                }
+
+            }
+            if (tileAdded) break;
+        }
+
+        System.out.println(Game.printBoard(hand));
+
     }
 
     public boolean isMoveFinished() {

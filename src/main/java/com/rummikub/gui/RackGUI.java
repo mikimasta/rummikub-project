@@ -1,10 +1,10 @@
 package com.rummikub.gui;
 
+import com.rummikub.game.Tile;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import com.rummikub.game.Tile;
 
 
 public class RackGUI extends Pane {
@@ -26,7 +26,7 @@ public class RackGUI extends Pane {
         double pixelGap = tilesNoGap * H_GAP;
         double tileOverLimit = pixelGap / TileGUI.TILE_WIDTH;
         MAX_TILES_PER_ROW = (int) (tilesNoGap - tileOverLimit);
-        System.out.println(MAX_TILES_PER_ROW);
+        //System.out.println(MAX_TILES_PER_ROW);
     }
 
     public static RackGUI getInstance() {
@@ -50,54 +50,13 @@ public class RackGUI extends Pane {
 
     }
 
-    
-    public void addToRack(TileGUI tile) {
-
-        assert tile != null;
-        boolean tileAdded = false;
-
-        for (int i = 0; i < tiles[0].length; ++i) {
-            for (int j = 0; j < tiles[1].length; ++j) {
-
-                if (tiles[i][j] == null) {
-
-                    tiles[i][j] = tile.getTile();
-                    tile.setXPos(j * (TileGUI.TILE_WIDTH + H_GAP) + X_OFFSET);
-                    tile.setYPos(i * RACK_HEIGHT / 2);
-                    tile.setTranslateX(tile.getXPos());
-                    tile.setTranslateY(tile.getYPos());
-                    getChildren().add(tile);
-                    tile.toFront();
-                    tileAdded = true;
-                    break;
-                }
-
-            }
-
-            if (tileAdded) break;
-
-        }
-
-    }
 
     void update(TileGUI tile) {
 
         //System.out.println(Game.printBoard(tiles));
 
 
-                if (tiles[tile.getRowToSnap()][tile.getColToSnap()] == null) {
 
-
-                    tiles[tile.getPrevRowRack()][tile.getPrevColRack()] = null;
-                    tiles[tile.getRowToSnap()][tile.getColToSnap()] = tile.getTile();
-
-                } else {
-
-
-                        tile.setXPos(tile.getPrevColRack() * TileGUI.TILE_WIDTH + X_OFFSET);
-                        tile.setYPos(tile.getPrevRowRack() * (RACK_HEIGHT / 2));
-
-                }
 
 
                     tile.setTranslateX(tile.getXPos());
@@ -115,8 +74,9 @@ public class RackGUI extends Pane {
             for (int j = 0; j < hand[0].length; j++) {
 
                 if (!(hand[i][j] == null)) {
+                    //Game.getInstance().currentPlayer.getHand()[i][j] = hand[i][j];
                     TileGUI tile = new TileGUI(hand[i][j]);
-                    tiles[i][j] = tile.getTile();
+                    //tiles[i][j] = tile.getTile();
 
                     tile.setXPos(j * (TileGUI.TILE_WIDTH + H_GAP) + X_OFFSET);
                     tile.setYPos(i * RACK_HEIGHT / 2);

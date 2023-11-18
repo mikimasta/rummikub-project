@@ -137,7 +137,11 @@ public class Game {
                 }
                 
             }
-        } 
+        }
+
+        if (set.size() != 0)
+            allSets.add(set);
+
         //check each subset if its a valid group or set.
         for(int k = 0; k < allSets.size(); k++){
             ArrayList<Tile> subSet = allSets.get(k);

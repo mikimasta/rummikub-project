@@ -85,15 +85,11 @@ class GameboardGUI extends Pane {
 
         if (state[tile.getRowToSnap()][tile.getColToSnap()] == null) {
 
-
-            state[tile.getPrevRowBoard()][tile.getPrevColBoard()] = null;
             state[tile.getRowToSnap()][tile.getColToSnap()] = tile.getTile();
 
         } else {
                 tile.setXPos(tile.getPrevColBoard() * TileGUI.TILE_WIDTH);
                 tile.setYPos(tile.getPrevRowBoard() * (RackGUI.RACK_HEIGHT / 2));
-
-
         }
 
 

@@ -1,12 +1,13 @@
 package com.rummikub.gui;
 
-import javafx.scene.layout.StackPane;
+import com.rummikub.game.Game;
+import com.rummikub.game.Tile;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.geometry.Pos;
 import javafx.scene.text.TextBoundsType;
-import com.rummikub.game.Tile;
 
 class TileGUI extends StackPane {
 
@@ -81,6 +82,7 @@ class TileGUI extends StackPane {
         });
 
         setOnMouseDragged(ev -> {
+            this.toFront();
             setTranslateX(ev.getSceneX() - mouseX);
             setTranslateY(ev.getSceneY() - mouseY);
 
@@ -100,7 +102,10 @@ class TileGUI extends StackPane {
                 rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
                 //System.out.println(rowToSnap);
 
-                if(RackGUI.getInstance().tiles[rowToSnap][colToSnap] == null) {
+                if (Game.getInstance().currentPlayer.getHand()[rowToSnap][colToSnap] == null) {
+
+                    Game.getInstance().currentPlayer.getHand()[getPrevRowRack()][getPrevColRack()] = null;
+                    Game.getInstance().currentPlayer.getHand()[rowToSnap][colToSnap] = this.getTile();
 
                     setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
                     setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
@@ -109,6 +114,8 @@ class TileGUI extends StackPane {
                     if (addedToBoard) {
                         GameboardGUI.getInstance().getChildren().remove(this);
                         RackGUI.getInstance().getChildren().add(this);
+                        this.toFront();
+                        GameboardGUI.getInstance().getState()[getPrevRowBoard()][getPrevColBoard()] = null;
                         addedToBoard = false;
                     }
 
@@ -122,7 +129,7 @@ class TileGUI extends StackPane {
 
                 if (GameboardGUI.getInstance().getState()[rowToSnap][colToSnap] == null) {
 
-                    System.out.println("Board snap at " + rowToSnap + " " + colToSnap);
+                    //System.out.println("Board snap at " + rowToSnap + " " + colToSnap);
 
                     setXPos(colToSnap * TILE_WIDTH);
                     setYPos(rowToSnap * TILE_HEIGHT);
@@ -132,8 +139,11 @@ class TileGUI extends StackPane {
 
                         RackGUI.getInstance().getChildren().remove(this);
                         GameboardGUI.getInstance().getChildren().add(this);
+                        Game.getInstance().currentPlayer.getHand()[getPrevRowRack()][getPrevColRack()] = null;
                         addedToBoard = true;
 
+                    } else {
+                        GameboardGUI.getInstance().getState()[getPrevRowBoard()][getPrevColBoard()] = null;
                     }
 
                     GameboardGUI.getInstance().update(this);
@@ -159,6 +169,8 @@ class TileGUI extends StackPane {
     public TileGUI(Tile tile) {
 
         this();
+
+        this.tile = tile;
 
         if (tile.getNumber() != 0) {
 
