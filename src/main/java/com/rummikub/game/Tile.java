@@ -10,6 +10,8 @@ public class Tile {
     private byte number;
     private Color color;
 
+    private boolean locked = false;
+
     Tile(byte number, Color color) {
         this.number = number;
         this.color = color;
@@ -22,6 +24,14 @@ public class Tile {
 
     public Color getColor() {
         return color;
+    }
+
+    public void lock() {
+        this.locked = true;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
 }

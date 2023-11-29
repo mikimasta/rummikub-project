@@ -69,10 +69,11 @@ class GameScreen extends Pane {
 //                }
 
                 GameboardGUI.getInstance().setPrevState();
+                GameboardGUI.getInstance().lockTiles();
                 Game.getInstance().nextPlayer();
                 players.update();
-
                 rack.handToRack(Game.getInstance().currentPlayer.getHand());
+
             } else {
                 System.out.println("Board is not in a valid state!");
             }

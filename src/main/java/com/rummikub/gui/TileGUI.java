@@ -18,6 +18,7 @@ class TileGUI extends StackPane {
     private Tile tile;
 
     private boolean addedToBoard = false;
+    private boolean locked = false;
 
     private double mouseX;
     private double mouseY;
@@ -95,7 +96,7 @@ class TileGUI extends StackPane {
 
             if (isInRackBounds(mouseX, mouseY)) {
 
-
+                
 
                 colToSnap = (int) (Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET) / TILE_WIDTH);
                 //System.out.println(colToSnap);
@@ -104,11 +105,13 @@ class TileGUI extends StackPane {
 
                 if (Game.getInstance().currentPlayer.getHand()[rowToSnap][colToSnap] == null) {
 
-                    Game.getInstance().currentPlayer.getHand()[getPrevRowRack()][getPrevColRack()] = null;
-                    Game.getInstance().currentPlayer.getHand()[rowToSnap][colToSnap] = this.getTile();
+                    if (!tile.isLocked()) {
 
-                    setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
-                    setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
+                        Game.getInstance().currentPlayer.getHand()[getPrevRowRack()][getPrevColRack()] = null;
+                        Game.getInstance().currentPlayer.getHand()[rowToSnap][colToSnap] = this.getTile();
+
+                        setXPos(colToSnap * TILE_WIDTH + (colToSnap * RackGUI.H_GAP) + RackGUI.X_OFFSET);
+                        setYPos(rowToSnap * (RackGUI.RACK_HEIGHT / 2));
 
 
                     if (addedToBoard) {
@@ -117,6 +120,7 @@ class TileGUI extends StackPane {
                         this.toFront();
                         GameboardGUI.getInstance().getState()[getPrevRowBoard()][getPrevColBoard()] = null;
                         addedToBoard = false;
+                        }
                     }
 
                     RackGUI.getInstance().update(this);

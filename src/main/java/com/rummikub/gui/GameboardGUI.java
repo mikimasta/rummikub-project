@@ -112,4 +112,12 @@ class GameboardGUI extends Pane {
 
     }
 
+    public void lockTiles() {
+        for (int i = 0; i < state.length; i++) {
+            for (int j = 0; j < state[1].length; j++) {
+                if (state[i][j] != null) state[i][j].lock();
+            }
+        }
+    }
+
 }
