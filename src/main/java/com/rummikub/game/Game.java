@@ -184,7 +184,7 @@ public class Game {
             else{
                 groupColor.add(currentTile.getColor());
             }
-        }
+            }
         }
 
         return true;
