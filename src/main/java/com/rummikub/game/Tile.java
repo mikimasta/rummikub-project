@@ -9,6 +9,7 @@ public class Tile {
 
     private byte number;
     private Color color;
+    private String colorString;
 
     private boolean locked = false;
 
@@ -24,6 +25,10 @@ public class Tile {
 
     public Color getColor() {
         return color;
+    }
+    
+    public String getColorString() {
+        return colorString;
     }
 
     public void lock() {
