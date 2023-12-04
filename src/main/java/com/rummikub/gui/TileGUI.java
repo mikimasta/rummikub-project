@@ -91,6 +91,7 @@ class TileGUI extends StackPane {
 
         setOnMouseReleased(e -> {
 
+
             mouseX = e.getSceneX();
             mouseY = e.getSceneY();
 
@@ -164,6 +165,8 @@ class TileGUI extends StackPane {
             setTranslateX(getXPos());
             setTranslateY(getYPos());
 
+
+            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
         });
 

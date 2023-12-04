@@ -44,7 +44,7 @@ public class Player {
             if (tileAdded) break;
         }
 
-        System.out.println(Game.printBoard(hand));
+        //System.out.println(Game.printBoard(hand));
 
     }
 
