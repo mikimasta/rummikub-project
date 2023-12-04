@@ -1,7 +1,6 @@
 package com.rummikub.gui;
 
 import com.rummikub.game.Game;
-import com.rummikub.game.Test;
 
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
