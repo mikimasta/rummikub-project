@@ -1,7 +1,6 @@
 package com.rummikub.gui;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  * abstract class containing images we use
@@ -15,6 +14,7 @@ abstract class Images {
     static final Image jokerRed = new Image("/jokerRed.png");
     static final Image jokerBlack = new Image("/jokerBlack.png");
     static final Image rack = new Image("/rack.png");
+    static final Image rummikubLogoOnBoard = new Image("/logoOnBoard.png");
     
 
 } 

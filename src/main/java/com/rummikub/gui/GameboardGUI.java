@@ -1,5 +1,6 @@
 package com.rummikub.gui;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -36,23 +37,18 @@ class GameboardGUI extends Pane {
         setLayoutX(BOARD_X);
         setLayoutY(BOARD_Y);
 
+        ImageView logo = new ImageView(Images.rummikubLogoOnBoard);
+        logo.setOpacity(0.3);
+        logo.setPreserveRatio(true);
+        logo.setFitWidth(400);
+        logo.setLayoutX(BOARD_WIDTH / 2 - logo.getFitWidth() / 2);
+        logo.setLayoutY(BOARD_HEIGHT / 2 - logo.getFitHeight());
 
-        for (int i = 0; i < MAX_TILES_PER_COL; ++i) {
-            for (int j = 0; j < MAX_TILES_PER_ROW; ++j) {
+        Rectangle border = new Rectangle(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+        border.setStroke(Color.GREY);
+        border.setFill(Color.TRANSPARENT);
 
-
-            Rectangle cell = new Rectangle(TileGUI.TILE_WIDTH, TileGUI.TILE_HEIGHT);
-            cell.setTranslateX(j * TileGUI.TILE_WIDTH);
-            cell.setTranslateY(i * TileGUI.TILE_HEIGHT);
-            cell.setFill(Color.TRANSPARENT);
-            cell.setStroke(Color.BLACK);
-
-
-
-            getChildren().add(cell);
-        }
-       
-        }
+        getChildren().addAll(logo, border);
 
     }
 
