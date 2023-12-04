@@ -154,7 +154,7 @@ public class GameTest {
         Tile tile3 = new Tile((byte) 11, Color.BLACK);
         board[0][0] = tile1;
         board[0][1] = tile2;
-        board[0][3] = tile3;
+        board[0][2] = tile3;
         
         assertEquals(true, game.isValidBoard(board));
     }

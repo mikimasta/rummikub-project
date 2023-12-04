@@ -1,11 +1,8 @@
 package com.rummikub.game;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.IntStream;
 import javafx.scene.paint.Color;
-import java.util.HashSet;
 
 
 
@@ -32,8 +29,8 @@ static int groupCounter = 0;
         }
         // the interger 0 will be used in regard to a joker
         // two jokers are added into our game
-        rummikubTiles.add(new Tile((byte) 0, Color.RED));
-        rummikubTiles.add(new Tile((byte) 0, Color.BLACK));
+        //rummikubTiles.add(new Tile((byte) 0, Color.RED));
+        //rummikubTiles.add(new Tile((byte) 0, Color.BLACK));
 
         ArrayList<ArrayList<Tile>> result = findGroupsAndRuns(rummikubTiles);
 
