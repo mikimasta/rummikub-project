@@ -16,8 +16,18 @@ public class Tile {
     Tile(byte number, Color color) {
         this.number = number;
         this.color = color;
-    }
 
+
+        if (color.equals(Color.ORANGE)) {
+            this.colorString = "orange";
+        } else if (color.equals(Color.RED)) {
+            this.colorString = "red";
+        } else if (color.equals(Color.BLACK)) {
+            this.colorString = "black";
+        } else if (color.equals(Color.BLUE)) {
+            this.colorString = "blue";
+        }
+    }
 
     public byte getNumber() {
         return number;

@@ -122,29 +122,29 @@ public class Game {
         ArrayList<Tile> set = new ArrayList<>();
 
         for (int i = 0; i < gameBoard.length; i++) {
-            for (int j = 0; j < gameBoard[i].length; j++) {
-                if(gameBoard[i][j] != null){
-                    currentSet = true;
-                    set.add(gameBoard[i][j]);
-                }
-                if(gameBoard[i][j] == null && currentSet == true){
-                    allSets.add(set);
-                    set = new ArrayList<>();
-                    currentSet = false;
-                }
-                
-            }
-        }
+            set.clear();
 
-        if (set.size() != 0)
-            allSets.add(set);
-
-        //check each subset if its a valid group or set.
-        for(int k = 0; k < allSets.size(); k++){
-            ArrayList<Tile> subSet = allSets.get(k);
-            if(!checkSubSet(subSet)){
-                return false;
+            for (int y = 0; y < gameBoard[i].length; y++) {
+                Tile tile = gameBoard[i][y];
+                // Checks for illegal subset of tiles of length 1 or 2
+                if ((tile == null) && (set.size() > 0) && (set.size() < 3)) {
+                    return false; 
+                } else if (tile == null && set.size() > 2) {
+                    if (!checkTile(set)) {
+                        return false; // Check if given tile is either stairs or group, return false if not
+                    }
+                    set.clear();
+                } else {
+                }
+                if (tile != null) {
+                    set.add(tile);
+                }
             }
+
+            if (set.size() < 3 && set.size() != 0) {
+                return false; // The block of tiles is too short
+            } 
+
         }
         return true; // Checked all tiles, all are correct
     }
@@ -159,24 +159,41 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a group false otherwise
      */
-    boolean checkIfGroup(ArrayList<Tile> set) {
-        byte groupNumber = set.get(0).getNumber();
-        ArrayList<Color> groupColor = new ArrayList<Color>();
-        for(int i = 0; i < set.size(); i++){
-            Tile currentTile = set.get(i);
-            //check in the number on the tile is the same as the rest of the group
-            if(currentTile.getNumber() != groupNumber && currentTile.getNumber() != 0){
+    boolean checkIfGroup(ArrayList<Tile> set){
+
+        // up to 4 tiles (thats how many colors there are)
+        if (set.size() > 4) {
+            return false;
+        } 
+
+        // check if same number
+        byte numOfFirst = set.get(0).getNumber();
+        for (int i = 1; i < set.size(); i++) {
+            byte numTmp = set.get(i).getNumber();
+            if (numOfFirst == -1){ // tile is a joker
+                numOfFirst = numTmp;
+            }else if (numOfFirst != -1 && numOfFirst != numTmp && numTmp != -1){
                 return false;
-            }
-            //if not a joker check if its colors is already in the group
-            if(currentTile.getNumber() != 0){
-            if(groupColor.contains(currentTile.getColor()) ){
-                return false;
-            }
-            else{
-                groupColor.add(currentTile.getColor());
             }
         }
+        // check if different colors
+        int red = 0, green = 0, blue = 0, black = 0; 
+        for (int i = 0; i < set.size() ; i++){
+            if (set.get(i).getNumber() != -1){ // tile is not a joker
+                Color color = set.get(i).getColor();
+                if (color == Color.RED){
+                    red++;
+                }else if (color == Color.GREEN){
+                    green++;
+                }else if (color == Color.BLUE){
+                    blue++;
+                }else if (color == Color.BLACK){
+                    black++;
+                }
+            }
+        }
+        if (red > 1 || green > 1 || blue > 1 || black > 1){
+            return false;
         }
 
         return true;
@@ -192,22 +209,32 @@ public class Game {
         // check if all same color
         Color colorOfFirst = set.get(0).getColor();
         for (int i = 1; i < set.size(); i++) {
-            if (!colorOfFirst.equals(set.get(i).getColor()) && !set.get(i).getColor().equals("any") && !colorOfFirst.equals("any")) {
+            Color color = set.get(i).getColor();
+            if (set.get(0).getNumber() == -1){ // first tile is a joker
+                colorOfFirst = color;
+            }else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
                 return false;
             }
         }
 
         // check if incrementing
-        byte numOfFirst = set.get(0).getNumber();        
+        byte numOfFirst = set.get(0).getNumber();
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
-            if (numTmp - 1 != numOfFirst && numOfFirst != 0 && numTmp != 0) {
+            if (numOfFirst == -1) { // first number is a joker
+                numOfFirst = (byte) (numTmp - 1);
+            }
+            if (numTmp == -1) { // current number is a joker
+                numTmp = (byte) (numOfFirst + 1);
+            }
+            if (numTmp - 1 != numOfFirst || numTmp > 13 || numOfFirst < 1) {
                 return false;
             }
             numOfFirst = numTmp;
         }
         return true;
     }
+    
     /**
      * checks 
      * @param currentHand current state of the board after moved was made
@@ -335,7 +362,7 @@ public class Game {
         }
         return true;
     }
-
+    
     /**
      * sorting method to order tiles by runs
      * @param rack 2D array representing the rack of the player
@@ -425,5 +452,6 @@ public class Game {
 
         return rack;
     }
+    
 
 }

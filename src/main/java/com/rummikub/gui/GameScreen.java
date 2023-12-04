@@ -1,6 +1,8 @@
 package com.rummikub.gui;
 
 import com.rummikub.game.Game;
+import com.rummikub.game.Test;
+
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -32,15 +34,15 @@ class GameScreen extends Pane {
         endTurn.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH + 50);
         endTurn.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 50);
 
-        Button orderByStairs = new HoverButton("Order By Stairs");
-        orderByStairs.setPrefSize(400, 100);
-        orderByStairs.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH );
+        Button orderByStairs = new HoverButton("111");
+        orderByStairs.setPrefSize(300, 60);
+        orderByStairs.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH + 100);
         orderByStairs.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 250);
 
-        Button orderByGroup = new HoverButton("Order By Group");
-        orderByGroup.setPrefSize(400, 100);
-        orderByGroup.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH );
-        orderByGroup.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 150);
+        Button orderByGroup = new HoverButton("123");
+        orderByGroup.setPrefSize(300, 60);
+        orderByGroup.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH + 100);
+        orderByGroup.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 350);
 
         ImageView rackIV = new ImageView(Images.rack);
         rackIV.setPreserveRatio(true);
@@ -57,15 +59,12 @@ class GameScreen extends Pane {
         //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
         orderByStairs.setOnAction(e -> {
-            System.out.println("okay dude");
             Game.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
         
         orderByGroup.setOnAction(e -> {
-            System.out.println("okay dude");
-            //Game.orderRackByGroup(rack.handToRack(Game.getInstance().currentPlayer.getHand()));
-            Game.orderRackByGroup(rack.getInstance().tiles);
+            Game.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
 
@@ -91,10 +90,10 @@ class GameScreen extends Pane {
 
                 GameboardGUI.getInstance().setPrevState();
                 GameboardGUI.getInstance().lockTiles();
+                //System.out.println(Game.printBoard(Game.getInstance().currentPlayer.getHand()));
                 Game.getInstance().nextPlayer();
                 players.update();
                 rack.handToRack(Game.getInstance().currentPlayer.getHand());
-
             } else {
                 System.out.println("Board is not in a valid state!");
             }
