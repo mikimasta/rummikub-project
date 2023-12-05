@@ -179,7 +179,7 @@ class TileGUI extends StackPane {
 
         this.tile = tile;
 
-        if (tile.getNumber() != 0) {
+        if (tile.getNumber() != -1) {
 
 
         ImageView tileFace = new ImageView(Images.tileFace);

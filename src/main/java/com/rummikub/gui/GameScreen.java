@@ -14,6 +14,7 @@ class GameScreen extends Pane {
     RackGUI rack;
     GameboardGUI gameboard;
     PlayersGUI players;
+    TimerGUI timer;
 
     GameScreen() {
 
@@ -27,6 +28,8 @@ class GameScreen extends Pane {
         players = new PlayersGUI(Game.getInstance().getPlayers());
 
         gameboard = GameboardGUI.getInstance(); 
+
+        timer = new TimerGUI();
 
         Button endTurn = new HoverButton("End Turn");
         endTurn.setPrefSize(400, 100);
@@ -50,7 +53,7 @@ class GameScreen extends Pane {
         rackIV.setLayoutY(888);
         //System.out.println(rackIV.getLayoutBounds().getHeight());
 
-        getChildren().addAll(players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs);
+        getChildren().addAll(timer, players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs);System.exit(0);
 
 
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
@@ -73,6 +76,8 @@ class GameScreen extends Pane {
             //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
             //System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
+
+            timer.resetTimer();
 
             if (gameboard.stateNotChanged())
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
