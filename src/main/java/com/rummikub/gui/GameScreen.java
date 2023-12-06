@@ -53,7 +53,7 @@ class GameScreen extends Pane {
         rackIV.setLayoutY(888);
         //System.out.println(rackIV.getLayoutBounds().getHeight());
 
-        getChildren().addAll(timer, players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs);System.exit(0);
+        getChildren().addAll(timer, players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs);
 
 
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
@@ -77,7 +77,6 @@ class GameScreen extends Pane {
 
             //System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
 
-            timer.resetTimer();
 
             if (gameboard.stateNotChanged())
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
@@ -91,6 +90,7 @@ class GameScreen extends Pane {
 //                        //break;
 //                    }
 //                }
+                timer.resetTimer();
 
                 GameboardGUI.getInstance().setPrevState();
                 GameboardGUI.getInstance().lockTiles();
@@ -98,6 +98,10 @@ class GameScreen extends Pane {
                 Game.getInstance().nextPlayer();
                 players.update();
                 rack.handToRack(Game.getInstance().currentPlayer.getHand());
+                if (Game.getInstance().isGameOver() == true){
+                    System.out.println("you won !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    //Game.calculateEndScore(Game.getInstance().currentPlayer.getHand());
+                }
             } else {
                 System.out.println("Board is not in a valid state!");
             }

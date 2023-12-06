@@ -128,7 +128,6 @@ public class Game {
                 Tile tile = gameBoard[i][y];
                 // Checks for illegal subset of tiles of length 1 or 2
                 if ((tile == null) && (set.size() > 0) && (set.size() < 3)) {
-                    System.out.println("case 1");
                     return false; 
                 } else if (tile == null && set.size() > 2) {
                     if (!checkTile(set)) {
@@ -143,7 +142,6 @@ public class Game {
             }
 
             if (set.size() < 3 && set.size() != 0) {
-                System.out.println("case 2");
                 return false; // The block of tiles is too short
             } 
 
@@ -152,7 +150,7 @@ public class Game {
     }
 
     // check if given tile is either group or stairs, i.e. is it legal?
-    boolean checkTile(ArrayList<Tile> set) {
+    static boolean checkTile(ArrayList<Tile> set) {
         return checkIfGroup(set) || checkIfStairs(set);
     }
 
@@ -161,7 +159,7 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a group false otherwise
      */
-    boolean checkIfGroup(ArrayList<Tile> set){
+    static boolean checkIfGroup(ArrayList<Tile> set){
 
         // up to 4 tiles (thats how many colors there are)
         if (set.size() > 4) {
@@ -175,7 +173,6 @@ public class Game {
             if (numOfFirst == -1){ // tile is a joker
                 numOfFirst = numTmp;
             }else if (numOfFirst != -1 && numOfFirst != numTmp && numTmp != -1){
-                System.out.println("case 3");
                 return false;
             }
         }
@@ -196,7 +193,6 @@ public class Game {
             }
         }
         if (red > 1 || green > 1 || blue > 1 || black > 1){
-            System.out.println("case 4");
             return false;
         }
 
@@ -208,7 +204,7 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a run, false otherwise
      */
-    boolean checkIfStairs(ArrayList<Tile> set){
+    static boolean checkIfStairs(ArrayList<Tile> set){
 
         // check if all same color
         Color colorOfFirst = set.get(0).getColor();
@@ -217,7 +213,6 @@ public class Game {
             if (set.get(0).getNumber() == -1){ // first tile is a joker
                 colorOfFirst = color;
             }else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
-                System.out.println("case 5");
                 return false;
             }
         }
@@ -228,14 +223,11 @@ public class Game {
             byte numTmp = set.get(i).getNumber();
             if (numOfFirst == -1) { // first number is a joker
                 numOfFirst = (byte) (numTmp - 1);
-                System.out.println("num of first is : " + numOfFirst);
             }
             if (numTmp == -1) { // current number is a joker
                 numTmp = (byte) (numOfFirst + 1);
-                System.out.println("num of second is : " + numTmp);
             }
             if (numTmp - 1 != numOfFirst || numTmp > 13 || numOfFirst < 1) {
-                System.out.println("case 6s");
                 return false;
             }
             numOfFirst = numTmp;
@@ -461,5 +453,46 @@ public class Game {
         return rack;
     }
     
+    /**
+     * sorting method to order tiles by groups
+     * @param set rack of tiles of the player
+     * @return the ordered by groups tiles of the player
+     */
+    public static ArrayList<Tile> orderRackByGroup(ArrayList<Tile> set){
+        set.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
+        return set;
+    }
+
+    /**
+     * sorting method to order tiles by runs
+     * @param set rack of tiles of the player
+     * @return the oredered by runs tiles of the player
+     */
+    public static ArrayList<Tile> orderRackByStairs(ArrayList<Tile> set){        
+        set.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
+        return set;
+    }
+
+    /**
+     * method to calculate the ending score of a player.
+     * @param rack rack of tiles of a player
+     * @return  the end score of players that lost, score is negative
+     */
+    public int calculateEndScore(Tile[][] rack) {
+        int count = 0;
+        for (int i = 0; i < rack.length; i++) {
+            for (int y = 0; y < rack[0].length; y++) {
+                if (rack[i][y] != null){
+                    if (rack[i][y].getNumber() == (byte) -1){ // if tile is a joker +30
+                        count += 30;
+                    }else{
+                        count += rack[i][y].getNumber();
+                    }
+                }
+                
+            }
+        }
+        return -count;
+    }
 
 }
