@@ -5,20 +5,70 @@ import java.util.Comparator;
 public class GameTree {
  
     static Game game;
+    static ArrayList<ArrayList<ArrayList<Tile>>> solutionsPerHand;
     static ArrayList<ArrayList<ArrayList<Tile>>> solutions;
-    public GameTree() {
+    static ArrayList<Tile> hand;
+    static ArrayList<Tile> allTilesBoard;
+
+    public GameTree(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
        
         this.game = Game.getInstance((byte)2);
-        this.solutions = new ArrayList<>();
+        this.solutionsPerHand = new ArrayList<>();
+        this.hand = hand;
+
+        this.allTilesBoard = new ArrayList<>();
+
+        for (ArrayList<Tile> list : board) {
+            allTilesBoard.addAll(list);
+        }
 
     }
 
+    static ArrayList<ArrayList<ArrayList<Tile>>> getSolution() {
+        segmentHandSolutionsHelper(hand, hand.size());
 
+        return solutions;
+
+    }
+
+    private static void segmentHandSolutionsHelper(ArrayList<Tile> hand, int size) {
+        if (size == 0) {
+          
+            // Check the result of getSolutionsPerHand() on the current segment
+            ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerHand(hand, allTilesBoard);
+            if (!segmentSolution.isEmpty()) {
+                // If it's not empty, you can choose to terminate early
+                solutions = segmentSolution;
+                System.out.println("Solution found. Stopping further segmentation.");
+                return;
+            }
+            return;
+        }
+
+        // Recursive case: generate segments by considering each tile
+        for (int i = 0; i < size; i++) {
+            // Create a sublist representing the current segment
+            ArrayList<Tile> segment = new ArrayList<>(hand.subList(i, size));
+            
+
+            // Check the result of getSolutionsPerHand() on the current segment
+            ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerHand(segment, allTilesBoard);
+            if (!segmentSolution.isEmpty()) {
+                // If it's not empty, you can choose to terminate early
+                solutions = segmentSolution;
+                System.out.println("Solution found. Stopping further segmentation.");
+                return;
+            }
+
+            // Recursively call with a reduced size (hand - 1)
+            segmentHandSolutionsHelper(hand, size - 1);
+        }
+    }
     
 
 
    
-    ArrayList<ArrayList<ArrayList<Tile>>>  getSolutionsPerHand(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
+    static ArrayList<ArrayList<ArrayList<Tile>>>  getSolutionsPerHand(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
         ArrayList<Tile> allTiles = new ArrayList<Tile>();
         allTiles.addAll(hand);
         allTiles.addAll(allTilesBoard);
@@ -33,10 +83,10 @@ public class GameTree {
 
 
 
-    private ArrayList<ArrayList<ArrayList<Tile>>> generatePossibleMovesPerHand(ArrayList<Tile> allTiles){
+    private static ArrayList<ArrayList<ArrayList<Tile>>> generatePossibleMovesPerHand(ArrayList<Tile> allTiles){
         //ArrayList<ArrayList<ArrayList<Tile>>> allBoards = new ArrayList<>();
         generateAllMovesHelper(allTiles, new ArrayList<>());
-        return solutions;
+        return solutionsPerHand;
     }
 
     static void generateAllMovesHelper(ArrayList<Tile> tiles, ArrayList<ArrayList<Tile>> currentBoard) {
@@ -44,7 +94,7 @@ public class GameTree {
             if (isValid(currentBoard)) {
         
                 ArrayList<ArrayList<Tile>> deepCopy = deepCopyBoard(currentBoard);
-                solutions.add(deepCopy);
+                solutionsPerHand.add(deepCopy);
               
             }
             return;
@@ -56,17 +106,10 @@ public class GameTree {
             // Try adding the tile to the current row
             currentBoard.get(i).add(tile);
 
-            // Debug print statement
-            //System.out.println("Trying tile " + tile.toString() + " in row " + i);
+     
     
             // Check if the current row is valid as a group or run
             if (currentBoard.get(i).size() < 3 || (game.checkIfGroup(currentBoard.get(i)) || game.checkIfStairs(currentBoard.get(i)))) {
-                
-                // Debug print statement
-                // System.out.println("Valid configuration so far: ");
-                // for(int k = 0; k < currentBoard.get(i).size(); k++ ){
-                //     System.out.println(k + " " +currentBoard.get(i).get(k).toString());
-                // }
                 
                 // Recursively explore with the remaining tiles
                 ArrayList<Tile> remainingTiles = new ArrayList<>(tiles.subList(1, tiles.size()));

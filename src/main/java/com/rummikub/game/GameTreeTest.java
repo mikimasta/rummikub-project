@@ -22,15 +22,19 @@ public class GameTreeTest {
         board.add(tile7);
         board.add(tile8);
         board.add(tile9);
+
+        ArrayList<ArrayList<Tile>> fullBoard = new ArrayList<>();
+        fullBoard.add(board);
         // Add tiles to hand and board
         Tile tile5 = new Tile((byte) 1, Color.BLACK);
+        Tile tile6 = new Tile((byte) 5, Color.BLUE);
 
         hand.add(tile5);
+        hand.add(tile6);
         // ...
 
-        GameTree gameTree = new GameTree();
-        ArrayList<ArrayList<ArrayList<Tile>>> solutions = gameTree.getSolutionsPerHand(hand, board);
-        System.out.print(solutions);
+        GameTree gameTree = new GameTree(hand, fullBoard);
+        ArrayList<ArrayList<ArrayList<Tile>>> solutions = GameTree.getSolution();
         //Print or process the generated solutions
         for (ArrayList<ArrayList<Tile>> solution : solutions) {
             System.out.println("Solution:");
