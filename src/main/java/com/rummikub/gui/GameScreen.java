@@ -77,12 +77,12 @@ class GameScreen extends Pane {
 
             //System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
 
-            timer.resetTimer();
 
             if (gameboard.stateNotChanged())
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
 
             if (Game.getInstance().isValidBoard(gameboard.getState())) {
+                timer.resetTimer();
 //                if (!Game.getInstance().currentPlayer.getFirstMoveMade() ) {
 //                    if (Game.getInstance().isValidFirstMove(rack.tiles, Game.getInstance().currentPlayer.getHand())) {
 //                        Game.getInstance().currentPlayer.firstMoveMade();
