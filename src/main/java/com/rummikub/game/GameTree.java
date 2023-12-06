@@ -2,47 +2,58 @@ package com.rummikub.game;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameTree {
-/* Create a method that transform the board into set of valid sets
- */
-    public static void main(String[] args) {
-        Tile[][] board = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
-        board[0][0] = new Tile((byte) 1, Color.RED);
-        board[0][1] = new Tile((byte) 1, Color.BLUE);
-        board[0][2] = new Tile((byte) 1, Color.BLACK);
-        boardToSet(board);
-    }
+/* Method that transform the board into set of valid sets*/
     public static ArrayList<String> boardToSet(Tile[][] gameBoard){
-            ArrayList<String> board = new ArrayList<>();
-            String set = new String();
-            String setKey = new String();
-
+        ArrayList<String> board = new ArrayList<>();
+        String set;
+        int count = 0;
 
         for (int i = 0; i < gameBoard.length; i++) {
-            setKey = "";
             set = "";
-            String color = "";
+            String color;
             for (int y = 0; y < gameBoard[i].length; y++) {
                 Tile tile = gameBoard[i][y];
-                if(tile.getColor()==Color.RED){
-                    color = "Red";
-                }else if(tile.getColor()==Color.BLUE){
-                    color = "Blue";
-                }else if(tile.getColor()==Color.BLACK){
-                    color = "Black";
-                }else if(tile.getColor()==Color.ORANGE){
-                    color = "Orange";
-                }else{
-                    color = "None";
-                }
                 if (tile != null) {
-                    set += ("("+ tile.getNumber()+","+color+")");
-                    System.out.println("error");
+                    if (tile.getColor() == Color.RED) {
+                        color = "Red";
+                    } else if (tile.getColor() == Color.BLUE) {
+                        color = "Blue";
+                    } else if (tile.getColor() == Color.BLACK) {
+                        color = "Black";
+                    } else if (tile.getColor() == Color.ORANGE) {
+                        color = "Orange";
+                    } else {
+                        color = "None";
+                    }
+                    set += ("(" + tile.getNumber() + "," + color + ").");
+                    count++;
+                }
+                if ((tile == null) && (count > 2)) {
+                    count = 0;
+                    String[] objects = set.replaceAll("[,]", "").split("\\.");
+                    Arrays.sort(objects, (s1, s2) -> {
+                        int num1 = Integer.parseInt(s1.replaceAll("[^0-9]", ""));
+                        int num2 = Integer.parseInt(s2.replaceAll("[^0-9]", ""));
+                        String word1 = s1.replaceAll("[^a-zA-Z]", "");
+                        String word2 = s2.replaceAll("[^a-zA-Z]", "");
+
+                        if (num1 != num2) {
+                            return Integer.compare(num1, num2);
+                        } else {
+                            return word1.compareTo(word2);
+                        }
+                    });
+                    StringBuilder setKeyString = new StringBuilder();
+                    for (String element : objects) {
+                        setKeyString.append(element.replaceAll("[()]", ""));
+                    }
+                    board.add(setKeyString.toString());
+                    set = "";
                 }
             }
-            System.out.println(set);
-
 
         }
         return board;
