@@ -216,7 +216,7 @@ public class Game {
             Color color = set.get(i).getColor();
             if (set.get(0).getNumber() == -1){ // first tile is a joker
                 colorOfFirst = color;
-            }else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
+            } else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
                 System.out.println("case 5");
                 return false;
             }

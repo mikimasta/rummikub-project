@@ -25,12 +25,13 @@ public class MainMenu extends Pane {
      */
     MainMenu() {
 
-
+        /*
         ComboBox<Integer> comboBox = new ComboBox<>(FXCollections.observableArrayList(2, 3, 4));
         comboBox.setValue(2);
         comboBox.setLayoutX(1100);
         comboBox.setLayoutY(500);
         getChildren().add(comboBox);
+        */
         // start button
         //
         HoverButton start = new HoverButton("Start");
@@ -39,11 +40,11 @@ public class MainMenu extends Pane {
         start.setOnAction(e -> {
 
 
-            NUM_OF_PLAYERS = (byte) ((int)  comboBox.getValue());
+            //NUM_OF_PLAYERS = (byte) ((int)  comboBox.getValue());
 
 
 
-            Rummikub.gameWindow.getScene().setRoot(new GameScreen());
+            Rummikub.gameWindow.getScene().setRoot(new ModeSelection());
             Game.getInstance();
 
         });

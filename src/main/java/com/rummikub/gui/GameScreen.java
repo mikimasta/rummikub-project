@@ -39,12 +39,12 @@ class GameScreen extends Pane {
         Button orderByStairs = new HoverButton("111");
         orderByStairs.setPrefSize(300, 60);
         orderByStairs.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH + 100);
-        orderByStairs.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 250);
+        orderByStairs.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 150);
 
         Button orderByGroup = new HoverButton("123");
         orderByGroup.setPrefSize(300, 60);
         orderByGroup.setLayoutX(RackGUI.RACK_X + RackGUI.RACK_WIDTH + 100);
-        orderByGroup.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 350);
+        orderByGroup.setLayoutY(RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2 - 250);
 
         ImageView rackIV = new ImageView(Images.rack);
         rackIV.setPreserveRatio(true);
@@ -71,12 +71,6 @@ class GameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            //System.out.println("Current player: " + Game.getInstance().currentPlayer);
-
-            //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
-
-            //System.out.println(Arrays.deepToString(Game.getInstance().currentPlayer.getHand()));
-
 
             if (gameboard.stateNotChanged())
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
@@ -94,27 +88,19 @@ class GameScreen extends Pane {
 
                 GameboardGUI.getInstance().setPrevState();
                 GameboardGUI.getInstance().lockTiles();
-                //System.out.println(Game.printBoard(Game.getInstance().currentPlayer.getHand()));
                 Game.getInstance().nextPlayer();
                 players.update();
                 rack.handToRack(Game.getInstance().currentPlayer.getHand());
+
             } else {
+
                 System.out.println("Board is not in a valid state!");
             }
-
-
-
-
         });
 
-
-
-
-
     }
 
-
-    }
+}
 
 
 
