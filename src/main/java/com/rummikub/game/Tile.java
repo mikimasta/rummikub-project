@@ -12,7 +12,7 @@ public class Tile {
 
     private boolean locked = false;
 
-    Tile(byte number, Color color) {
+    public Tile(byte number, Color color) {
         this.number = number;
         this.color = color;
     }

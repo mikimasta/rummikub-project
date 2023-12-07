@@ -363,4 +363,57 @@ public class Game {
         return true;
     }
 
+    public ArrayList<String> boardToSet(Tile[][] gameBoard){
+        ArrayList<String> board = new ArrayList<>();
+        String set;
+        int count = 0;
+
+        for (int i = 0; i < gameBoard.length; i++) {
+            set = "";
+            String color;
+            for (int y = 0; y < gameBoard[i].length; y++) {
+                Tile tile = gameBoard[i][y];
+                if (tile != null) {
+                    if (tile.getColor() == Color.RED) {
+                        color = "Red";
+                    } else if (tile.getColor() == Color.BLUE) {
+                        color = "Blue";
+                    } else if (tile.getColor() == Color.BLACK) {
+                        color = "Black";
+                    } else if (tile.getColor() == Color.ORANGE) {
+                        color = "Orange";
+                    } else {
+                        color = "None";
+                    }
+                    set += ("(" + tile.getNumber() + "," + color + ").");
+                    count++;
+                }
+                if ((tile == null) && (count > 2)) {
+                    count = 0;
+                    String[] objects = set.replaceAll("[,]", "").split("\\.");
+                    Arrays.sort(objects, (s1, s2) -> {
+                        int num1 = Integer.parseInt(s1.replaceAll("[^0-9]", ""));
+                        int num2 = Integer.parseInt(s2.replaceAll("[^0-9]", ""));
+                        String word1 = s1.replaceAll("[^a-zA-Z]", "");
+                        String word2 = s2.replaceAll("[^a-zA-Z]", "");
+
+                        if (num1 != num2) {
+                            return Integer.compare(num1, num2);
+                        } else {
+                            return word1.compareTo(word2);
+                        }
+                    });
+                    StringBuilder setKeyString = new StringBuilder();
+                    for (String element : objects) {
+                        setKeyString.append(element.replaceAll("[()]", ""));
+                    }
+                    board.add(setKeyString.toString());
+                    set = "";
+                }
+            }
+
+        }
+        return board;
+    }
+
 }

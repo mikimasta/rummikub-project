@@ -14,9 +14,9 @@ public class UniqueKeyGenerator {
 
                 String[] dataSets = line.split(";");
                 String dataSet = dataSets[0];
-                //System.out.println(dataSet);
+
                 String[] objects = dataSet.replaceAll("[{}]", "").replaceAll("[,]", "").split("\\.");
-                //Arrays.sort(objects, Comparator.comparing(s -> Integer.parseInt(s.replaceAll("\\D", ""))));
+
                 Arrays.sort(objects, (s1, s2) -> {
                     int num1 = Integer.parseInt(s1.replaceAll("[^0-9]", ""));
                     int num2 = Integer.parseInt(s2.replaceAll("[^0-9]", ""));
