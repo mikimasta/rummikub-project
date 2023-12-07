@@ -75,8 +75,8 @@ public class GameTreeTest {
         fullBoard.add(set1);
         fullBoard.add(set2);
         fullBoard.add(set3);
-        fullBoard.add(set4);
-        fullBoard.add(set5);
+        //fullBoard.add(set4);
+        //fullBoard.add(set5);
         fullBoard.add(set6);
 
         ArrayList<Tile> hand = new ArrayList<>();

@@ -56,7 +56,7 @@ public class GameTree {
             if (!segmentSolution.isEmpty()) {
                 // If a solution is found, you can choose to terminate early
                 solutions = segmentSolution;
-                System.out.println("Solution found. Stopping further segmentation.");
+                //System.out.println("Solution found. Stopping further segmentation.");
                 return;
             }
             return;
@@ -73,7 +73,7 @@ public class GameTree {
             if (!segmentSolution.isEmpty()) {
                 // If a solution is found, you can choose to terminate early
                 solutions = segmentSolution;
-                System.out.println("Solution found. Stopping further segmentation.");
+                //System.out.println("Solution found. Stopping further segmentation.");
                 return;
             }
 
