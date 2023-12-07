@@ -220,20 +220,20 @@ public class Game {
         byte numOfFirst = set.get(0).getNumber();
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
-            if (numOfFirst == -1) { // first number is a joker
-                numOfFirst = (byte) (numTmp - 1);
+            if (numOfFirst == 0) {
+               numOfFirst = numTmp;
+            } else {
+                // If there is no joker, numbers should increment
+                if (numTmp - 1 != numOfFirst && numTmp != 0) {
+                    System.out.println("ici 3");
+                    return false;
+                }
+                numOfFirst = numTmp;
             }
-            if (numTmp == -1) { // current number is a joker
-                numTmp = (byte) (numOfFirst + 1);
-            }
-            if (numTmp - 1 != numOfFirst || numTmp > 13 || numOfFirst < 1) {
-                return false;
-            }
-            numOfFirst = numTmp;
         }
         return true;
     }
-    
+
     /**
      * checks 
      * @param currentHand current state of the board after moved was made
