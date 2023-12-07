@@ -16,11 +16,6 @@ public class Tile {
     Tile(byte number, Color color) {
         this.number = number;
         this.color = color;
-<<<<<<< Updated upstream
-=======
-        this.colorString = color.toString();
-    }
->>>>>>> Stashed changes
 
         if (number ==(byte) -1){
             this.colorString = "z";
