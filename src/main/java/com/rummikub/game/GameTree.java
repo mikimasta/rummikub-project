@@ -9,7 +9,12 @@ public class GameTree {
     static ArrayList<ArrayList<ArrayList<Tile>>> solutions;
     static ArrayList<Tile> hand;
     static ArrayList<Tile> allTilesBoard;
-
+     
+    /**
+     * Constructor for initializing the GameTree with a current state of the game via the hand and board.
+     * @param hand The player's hand.
+     * @param board The current state of the game board.
+     */
     public GameTree(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
        
         this.game = Game.getInstance((byte)2);
@@ -17,12 +22,17 @@ public class GameTree {
         this.hand = hand;
 
         this.allTilesBoard = new ArrayList<>();
-
+        // Flatten the 2D board into a single list of tiles
         for (ArrayList<Tile> list : board) {
             allTilesBoard.addAll(list);
         }
 
     }
+
+     /**
+     * Entry point to get solutions
+     * @return The best solutions in the form of a board using as many hand tiles as possible
+     */
 
     static ArrayList<ArrayList<ArrayList<Tile>>> getSolution() {
         segmentHandSolutionsHelper(hand, hand.size());
@@ -31,13 +41,20 @@ public class GameTree {
 
     }
 
+     /**
+     * Helper method to recursively segment the hand and find solutions.
+     * @param hand The current segment of the player's hand.
+     * @param size The size of the current segment.
+     */
     private static void segmentHandSolutionsHelper(ArrayList<Tile> hand, int size) {
+       
+       //Base case: all segment options are depleted 
         if (size == 0) {
           
             // Check the result of getSolutionsPerHand() on the current segment
             ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerHand(hand, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
-                // If it's not empty, you can choose to terminate early
+                // If a solution is found, you can choose to terminate early
                 solutions = segmentSolution;
                 System.out.println("Solution found. Stopping further segmentation.");
                 return;
@@ -54,7 +71,7 @@ public class GameTree {
             // Check the result of getSolutionsPerHand() on the current segment
             ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerHand(segment, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
-                // If it's not empty, you can choose to terminate early
+                // If a solution is found, you can choose to terminate early
                 solutions = segmentSolution;
                 System.out.println("Solution found. Stopping further segmentation.");
                 return;
@@ -65,32 +82,49 @@ public class GameTree {
         }
     }
     
-
-
+     /**
+     * Get solutions for a given hand segment.
+     * @param hand The current segment of the player's hand.
+     * @param allTilesBoard All tiles on the game board.
+     * @return The solutions for the given hand.
+     */
    
     static ArrayList<ArrayList<ArrayList<Tile>>>  getSolutionsPerHand(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
+        //Combine the hand segement and board into one set of tiles
         ArrayList<Tile> allTiles = new ArrayList<Tile>();
         allTiles.addAll(hand);
         allTiles.addAll(allTilesBoard);
         
+        // Sort all tiles based on color and then number (aka by group)
         allTiles.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
 
+        // Generate all possible moves for the sorted tiles
         ArrayList<ArrayList<ArrayList<Tile>>> allMoves = generatePossibleMovesPerHand(allTiles);
 
         return allMoves;
 
      }
 
-
+     /**
+     * Generate possible moves for a given  hand segment.
+     * @param allTiles The combined tiles from the hand and the game board.
+     * @return The possible moves for the given hand.
+     */
 
     private static ArrayList<ArrayList<ArrayList<Tile>>> generatePossibleMovesPerHand(ArrayList<Tile> allTiles){
-        //ArrayList<ArrayList<ArrayList<Tile>>> allBoards = new ArrayList<>();
         generateAllMovesHelper(allTiles, new ArrayList<>());
         return solutionsPerHand;
     }
 
+     /**
+     * Helper method to recursively generate all possible moves for a given set of tiles.
+     * @param tiles The remaining tiles to be placed on the board.
+     * @param currentBoard The current state of the game board.
+     */
     static void generateAllMovesHelper(ArrayList<Tile> tiles, ArrayList<ArrayList<Tile>> currentBoard) {
+        //Base case:  All tiles are used and places on the board
         if (tiles.isEmpty()) {
+            //Only recored solution if it valid
             if (isValid(currentBoard)) {
         
                 ArrayList<ArrayList<Tile>> deepCopy = deepCopyBoard(currentBoard);
@@ -108,7 +142,7 @@ public class GameTree {
 
      
     
-            // Check if the current row is valid as a group or run
+            // Check if the current row is valid as a group or run unless it is under 3 tiles
             if (currentBoard.get(i).size() < 3 || (game.checkIfGroup(currentBoard.get(i)) || game.checkIfStairs(currentBoard.get(i)))) {
                 
                 // Recursively explore with the remaining tiles
@@ -125,7 +159,7 @@ public class GameTree {
         newRow.add(tiles.get(0));
         currentBoard.add(newRow);
     
-        // Check if the new row is valid as a group or run
+        // Check if the current row is valid as a group or run unless it is under 3 tiles
         if (newRow.size() < 3 || (game.checkIfGroup(newRow) || game.checkIfStairs(newRow))) {
             // Recursively explore with the remaining tiles
             ArrayList<Tile> remainingTiles = new ArrayList<>(tiles.subList(1, tiles.size()));
@@ -136,33 +170,45 @@ public class GameTree {
         currentBoard.remove(currentBoard.size() - 1);
     }
     
-    
-
+     /**
+     * Check if the current state of the game board is valid.
+     * @param currentBoard The current state of the game board.
+     * @return True if the current board is valid, false otherwise.
+     */
     private static boolean isValid(ArrayList<ArrayList<Tile>> currentBoard){
-        //check each subset if its a valid group or set.
-        for(int k = 0; k < currentBoard.size(); k++){
+        for (int k = 0; k < currentBoard.size(); k++) {
             ArrayList<Tile> subSet = currentBoard.get(k);
-            if(!game.checkSubSet(subSet)){
-                return false;
-            }
-        }
-        return true; // Checked all tiles, all are correct
+
+            if (subSet.size() > 2) {
+                if (!game.checkTile(subSet)) {
+                    return false; // Check if given tile is either stairs or group, return false if not
+                }
+            } 
+         else if (subSet.size() < 3 && subSet.size() != 0) {
+            return false;
+        } 
+
+    }
+    return true; // Checked all tiles, all are correct
     }
 
+
+    /**
+     * Deep copy a given game board.
+     * @param originalBoard The original game board to be copied.
+     * @return The deep copy of the game board.
+     */
     public static ArrayList<ArrayList<Tile>> deepCopyBoard(ArrayList<ArrayList<Tile>> originalBoard) {
         if (originalBoard == null) {
             return null;
         }
 
         ArrayList<ArrayList<Tile>> newBoard = new ArrayList<>();
-
+        // Iterate through each row and tile, creating a new copy
         for (ArrayList<Tile> row : originalBoard) {
             ArrayList<Tile> newRow = new ArrayList<>();
             for (Tile tile : row) {
-                // Assuming Tile has a copy constructor or implements Cloneable
                 Tile newTile = new Tile(tile.getNumber(), tile.getColor());
-                // Or use clone method if Tile implements Cloneable
-                // Tile newTile = tile.clone();
                 newRow.add(newTile);
             }
             newBoard.add(newRow);
