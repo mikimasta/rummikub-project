@@ -45,7 +45,6 @@ public class Rummikub extends Application {
         gameWindow.setScene(scene);
 
         gameWindow.show();
-    
     }
 
     public static void main(String[] args) {
