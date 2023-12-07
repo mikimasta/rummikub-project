@@ -55,4 +55,13 @@ class HoverButton extends Button {
 
     }
 
+    public String getHoveredStyle() {
+        return hoveredStyle;
+    }
+
+    public void lock() {
+        setOnMouseExited(e -> {});
+        setOnMouseEntered(ev -> {});
+    }
+
 }

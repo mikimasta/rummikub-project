@@ -15,6 +15,7 @@ class GameScreen extends Pane {
     GameboardGUI gameboard;
     PlayersGUI players;
     TimerGUI timer;
+    HoverButton quit;
 
     GameScreen() {
 
@@ -30,6 +31,14 @@ class GameScreen extends Pane {
         gameboard = GameboardGUI.getInstance(); 
 
         timer = new TimerGUI();
+
+        quit = new HoverButton("Quit");
+        quit.setLayoutY(1000);
+        quit.setLayoutX(50);
+        quit.setOnAction(e -> {
+            Game.endGame();
+            Rummikub.gameWindow.getScene().setRoot(new MainMenu());
+        });
 
         Button endTurn = new HoverButton("End Turn");
         endTurn.setPrefSize(400, 100);
@@ -53,7 +62,7 @@ class GameScreen extends Pane {
         rackIV.setLayoutY(888);
         //System.out.println(rackIV.getLayoutBounds().getHeight());
 
-        getChildren().addAll(timer, players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs);
+        getChildren().addAll(timer, players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs, quit);
 
 
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
@@ -72,31 +81,49 @@ class GameScreen extends Pane {
 
         endTurn.setOnAction(e -> {
 
-            if (gameboard.stateNotChanged())
+            if (gameboard.stateNotChanged()) {
+
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
-
-            if (Game.getInstance().isValidBoard(gameboard.getState())) {
-                timer.resetTimer();
-//                if (!Game.getInstance().currentPlayer.getFirstMoveMade() ) {
-//                    if (Game.getInstance().isValidFirstMove(rack.tiles, Game.getInstance().currentPlayer.getHand())) {
-//                        Game.getInstance().currentPlayer.firstMoveMade();
-//                    }
-//                    else{
-//                        //break;
-//                    }
-//                }
-
-                GameboardGUI.getInstance().setPrevState();
-                GameboardGUI.getInstance().lockTiles();
-                Game.getInstance().nextPlayer();
-                players.update();
-                rack.handToRack(Game.getInstance().currentPlayer.getHand());
+                finishMove();
 
             } else {
 
-                System.out.println("Board is not in a valid state!");
+
+                if (Game.getInstance().isValidBoard(gameboard.getState())) {
+
+                    if (!Game.getInstance().currentPlayer.getFirstMoveMade()) {
+
+                        if (Game.getInstance().isValidFirstMove(gameboard.getState())) {
+
+                            Game.getInstance().currentPlayer.firstMoveMade();
+
+                            finishMove();
+
+                        } else {
+                            System.out.println("First move needs to be over 30.");
+                        }
+                    } else {
+
+                        finishMove();
+                    }
+
+                } else {
+
+                    System.out.println("Board is not in a valid state!");
+                }
             }
         });
+
+    }
+
+    void finishMove() {
+
+        GameboardGUI.getInstance().setPrevState();
+        GameboardGUI.getInstance().lockTiles();
+        Game.getInstance().nextPlayer();
+        players.update();
+        rack.handToRack(Game.getInstance().currentPlayer.getHand());
+        timer.resetTimer();
 
     }
 
