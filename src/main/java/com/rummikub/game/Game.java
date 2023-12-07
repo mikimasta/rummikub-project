@@ -134,7 +134,6 @@ public class Game {
                         return false; // Check if given tile is either stairs or group, return false if not
                     }
                     set.clear();
-                } else {
                 }
                 if (tile != null) {
                     set.add(tile);
@@ -369,16 +368,7 @@ public class Game {
      * @return the oredered by runs tiles of the player
      */
     public static Tile[][] orderRackByStairs(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>();
-        
-        // 2D array to arraylist
-        for (Tile[] row : rack) {
-            for (Tile tile : row) {
-                if (tile != null) {
-                    tileList.add(tile);
-                }
-            }
-        }
+        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
 
         //sort the arraylist
         tileList.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
@@ -389,21 +379,7 @@ public class Game {
             tileList.add(null);
         }
 
-        // Clear the rack
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[i].length; y++) {
-                rack[i][y] = null;
-            }
-        }
-
-        // populate the 2D array with the sorted tiles
-        int x = 0;
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[0].length; y++) {
-                rack[i][y] = tileList.get(x);
-                x++;
-            }
-        }
+        BaselineAgent.arrayListToRack(tileList, rack);
 
         return rack;
     }
@@ -414,16 +390,7 @@ public class Game {
      * @return the ordered by groups tiles of the player
      */
     public static Tile[][] orderRackByGroup(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>();
-        
-        // 2D array to arraylist
-        for (Tile[] row : rack) {
-            for (Tile tile : row) {
-                if (tile != null) {
-                    tileList.add(tile);
-                }
-            }
-        }
+        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
 
         //sort the arraylist
         tileList.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
@@ -434,21 +401,7 @@ public class Game {
             tileList.add(null);
         }
 
-        // Clear the rack
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[i].length; y++) {
-                rack[i][y] = null;
-            }
-        }
-
-        // populate the 2D array with the sorted tiles        
-        int x = 0;
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[0].length; y++) {
-                rack[i][y] = tileList.get(x);
-                x++;
-            }
-        }
+        rack = BaselineAgent.arrayListToRack(tileList, rack);
 
         return rack;
     }

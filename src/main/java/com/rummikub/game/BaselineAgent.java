@@ -1,14 +1,12 @@
 package com.rummikub.game;
 
 import java.util.ArrayList;
-import com.rummikub.game.Game;
 
 import javafx.scene.paint.Color;
 
 public class BaselineAgent {
     
-
-    public void baselineAgent(Tile[][] rack){
+    public ArrayList<Tile> baselineAgent(Tile[][] rack){
 
         ArrayList<Tile> groups = new ArrayList<>(TwodArrayToArrayList(rack)); 
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
@@ -58,11 +56,52 @@ public class BaselineAgent {
         actualMoveRun = findLargestMove(listOfMovesRuns);
         printListTiles(actualMoveRun);
 
-        if (actualMoveGroup.size() > actualMoveRun.size()) {
-            //return actualMoveGroup;
-        }else{
-            //return actualMoveRun;
+        if (isTwoMovesPossible(actualMoveRun, actualMoveGroup)) { // two moves are possible
+            ArrayList<Tile> twoMoves = new ArrayList<>();
+            twoMoves.addAll(actualMoveRun); 
+            twoMoves.add(null);
+            twoMoves.addAll(actualMoveGroup);
+            printListTiles(actualMoveGroup); System.out.print("AND ");
+            printListTiles(actualMoveRun);
+            return twoMoves;
+        }else{ // two moves are not possible do largest move
+            if (actualMoveGroup.size() > actualMoveRun.size()) {
+                printListTiles(actualMoveGroup);
+                return actualMoveGroup;
+            }else{
+                printListTiles(actualMoveRun);
+                return actualMoveRun;
+            }
         }
+        // no moves possible
+    }
+
+    public static Tile[][] arrayListToRack(ArrayList<Tile> list, Tile[][] rack) {
+        // Clear the rack
+        for (int i = 0; i < rack.length; i++) {
+            for (int y = 0; y < rack[i].length; y++) {
+                rack[i][y] = null;
+            }
+        }
+
+        // populate the 2D array with the sorted tiles        
+        int x = 0;
+        for (int i = 0; i < rack.length; i++) {
+            for (int y = 0; y < rack[0].length; y++) {
+                rack[i][y] = list.get(x);
+                x++;
+            }
+        }
+        return rack;
+    }
+
+    boolean isTwoMovesPossible(ArrayList<Tile> runMove, ArrayList<Tile> groupMove) {
+        for (Tile tile : runMove) {
+            if (groupMove.contains(tile)) {
+                return false; // only one move is possible
+            }
+        }
+        return true; // two moves are possible
     }
     
     ArrayList<Tile> findLargestMove(ArrayList<ArrayList<Tile>> listOfMovesRuns) {
@@ -75,7 +114,7 @@ public class BaselineAgent {
         return largestMove;
     }
         
-    ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
+    public static ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
         ArrayList<Tile> arrList = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length; j++) {
@@ -92,6 +131,7 @@ public class BaselineAgent {
         for (int i = 0; i < list.size(); i++) {
             s += list.get(i).getNumber() + " " + list.get(i).getColorString() + " - ";
         }
+        System.out.println(s);
         return s;
     }
 
@@ -113,7 +153,7 @@ public class BaselineAgent {
         Tile t4R = new Tile((byte) 4, Color.RED);
         Tile t7R = new Tile((byte) 7, Color.RED);
 
-        Tile[][]  rack = {{t4R, n, t10R, n, t1R, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
+        Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
         test.baselineAgent(rack);
 
     }
