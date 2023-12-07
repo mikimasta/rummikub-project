@@ -60,19 +60,6 @@ class GameScreen extends Pane {
         //System.out.println(Game.getInstance().currentPlayer + "'s hand is " + Game.printBoard(Game.getInstance().currentPlayer.getHand()));
         //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
-<<<<<<< Updated upstream
-        orderByStairs.setOnAction(e -> {
-            Game.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
-            rack.handToRack(Game.getInstance().currentPlayer.getHand());
-        });
-        
-        orderByGroup.setOnAction(e -> {
-            Game.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
-            rack.handToRack(Game.getInstance().currentPlayer.getHand());
-        });
-=======
->>>>>>> Stashed changes
-
         endTurn.setOnAction(e -> {
             //System.out.println("Current player: " + Game.getInstance().currentPlayer);
 
