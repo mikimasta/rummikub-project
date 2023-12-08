@@ -1,9 +1,11 @@
 package com.rummikub.game;
 
-import com.rummikub.gui.MainMenu;
 import javafx.scene.paint.Color;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * This class is a memory representation of the game state. It executes and
@@ -13,7 +15,6 @@ import java.util.*;
 public class Game {
 
     private List<Player> players;
-    //private Tile[][] board;
     private List<Tile> pool;
     public Player currentPlayer;
 
@@ -23,10 +24,11 @@ public class Game {
     public static final byte GRID_ROWS = 1;
     public static final byte GRID_COLS = 13;
 
+    public static byte NUM_OF_PLAYERS;
 
     public static Game getInstance() {
         if (instance == null)
-            instance = new Game(MainMenu.NUM_OF_PLAYERS);
+            instance = new Game(NUM_OF_PLAYERS);
         return instance;
     }
      public static Game getInstance(byte numPlayers) {
@@ -211,7 +213,7 @@ public class Game {
             Color color = set.get(i).getColor();
             if (set.get(0).getNumber() == -1){ // first tile is a joker
                 colorOfFirst = color;
-            }else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
+            } else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
                 return false;
             }
         }
@@ -235,16 +237,59 @@ public class Game {
     }
 
     /**
-     * checks 
-     * @param currentHand current state of the board after moved was made
-     * @param prevHand previous state of the board
+     * checks whether the first move made is valid or not (>= 30)
+     * @param board current state of the board after moved was made
      * @return
      */
-    public boolean isValidFirstMove(Tile[][] currentHand, Tile[][] prevHand){
-        int sumCurrHand = sumPointsOfATile(currentHand);
-        int sumPrevHand = sumPointsOfATile(prevHand);
+    public boolean isValidFirstMove(Tile[][] board) {
 
-        return sumCurrHand - sumPrevHand >= 30;
+        int total = 0;
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                Tile t = board[i][j];
+
+                if (t != null && !t.isLocked()) {
+
+                    if (t.getNumber() == -1) {
+
+                        if (board[i][j + 1] != null) {
+                            
+                            if (board[i][j - 1] != null) {
+
+                                if (board[i][j + 1] == board[i][j - 1]) {
+                                    total += board[i][j + 1].getNumber();
+                                } else {
+                                    total += board[i][j - 1].getNumber() + 1;
+                                }
+
+                            } else {
+                                if (board[i][j + 1] == board[i][j + 2]) {
+                                    total += board[i][j + 1].getNumber();
+                                } else {
+                                    total += board[i][j + 1].getNumber() - 1;
+                                }
+                            }
+
+                        } else {
+
+                            if (board[i][j - 1] == board[i][j - 2]) {
+                                total += board[i][j - 1].getNumber();
+                            } else {
+                                total += board[i][j - 1].getNumber() + 1;
+                            }
+
+                        }
+
+                    } else {
+                        total += t.getNumber();
+                    }
+                } 
+            }
+        }
+
+        return total >= 30;
+
     }
 
     

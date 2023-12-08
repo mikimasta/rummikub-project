@@ -1,16 +1,10 @@
 package com.rummikub.gui;
 
-import java.util.Scanner;
-import java.util.Timer;
-
-import com.rummikub.game.Game;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.control.ComboBox;
-import javafx.collections.FXCollections;
 
 /**
  * This class represents the main menu screen of the game.<br>
@@ -18,19 +12,11 @@ import javafx.collections.FXCollections;
  */
 public class MainMenu extends Pane {
 
-    public static byte NUM_OF_PLAYERS;
-
     /**
      * Creates a main menu instance, setting up all the buttons and environment
      */
     MainMenu() {
 
-
-        ComboBox<Integer> comboBox = new ComboBox<>(FXCollections.observableArrayList(2, 3, 4));
-        comboBox.setValue(2);
-        comboBox.setLayoutX(1100);
-        comboBox.setLayoutY(500);
-        getChildren().add(comboBox);
         // start button
         //
         HoverButton start = new HoverButton("Start");
@@ -38,13 +24,7 @@ public class MainMenu extends Pane {
         start.setLayoutY(Rummikub.yCenter - 50);
         start.setOnAction(e -> {
 
-
-            NUM_OF_PLAYERS = (byte) ((int)  comboBox.getValue());
-
-
-
-            Rummikub.gameWindow.getScene().setRoot(new GameScreen());
-            Game.getInstance();
+            Rummikub.gameWindow.getScene().setRoot(new ModeSelection());
 
         });
         
