@@ -26,9 +26,13 @@ public class Tile {
             this.colorString = "black";
         } else if (color.equals(Color.BLUE)) {
             this.colorString = "blue";
+        }else if(color.equals(Color.BROWN)){
+            this.colorString = "null";
         }
     }
-
+    public void printTile(){
+        System.out.println(getNumber()+""+getColor());
+    }
     public byte getNumber() {
         return number;
     }

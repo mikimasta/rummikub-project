@@ -1,6 +1,5 @@
-package com.rummikub.game.AI;
+package com.rummikub.game;
 import javafx.scene.paint.Color;
-import com.rummikub.game.Tile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ValidSets {
+public class ValidSetsNB {
+    public static void main(String[] args) {
+        System.out.println(getNBForKey("-1None1Black2Black"));
+    }
+
     private static final HashMap<String, ArrayList<Tile>> immutableMap = generateImmutableHashMap();
     private static HashMap<String, ArrayList<Tile>> generateImmutableHashMap() {
         HashMap<String, ArrayList<Tile>> validSets =new HashMap<>();
@@ -18,11 +21,11 @@ public class ValidSets {
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
-                String[] neighbours = parts[2].replaceAll("[{}]", "").split("\\.");
+                String[] sets = parts[2].replaceAll("[{}]", "").split("\\.");
                 ArrayList<Tile> nb= new ArrayList<>();
-                for (String neighbour : neighbours) {
-                    if (!neighbour.isEmpty()) {
-                        String[] numColor = neighbour.replaceAll("[()]", "").split(",");
+                for (String set : sets) {
+                    if (!set.isEmpty()) {
+                        String[] numColor = set.replaceAll("[()]", "").split(",");
                         Tile tile = new Tile(Byte.parseByte(numColor[0]), getColorFromString(numColor[1]));
                         nb.add(tile);
                     } else {
@@ -44,7 +47,7 @@ public class ValidSets {
         return immutableMap;
     }
 
-    public static ArrayList<Tile> getValueForKey(String key) {
+    public static ArrayList<Tile> getNBForKey(String key) {
         return immutableMap.get(key);
     }
 
@@ -57,10 +60,9 @@ public class ValidSets {
             return Color.BLACK;
         } else if (str.equalsIgnoreCase("Orange")) {
             return Color.ORANGE;
-        } else if (str.equalsIgnoreCase("None")) {
-            return null;
-        } else {
-            return null;
+        } else{
+            return Color.BROWN;
         }
     }
 }
+
