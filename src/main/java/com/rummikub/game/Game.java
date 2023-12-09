@@ -467,6 +467,14 @@ public class Game {
         return arrList;
     }
 
+    public static ArrayList<Tile> orderSetGroup(ArrayList<Tile> set) {
+        set.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
+        return set;
+    }
 
+    public static ArrayList<Tile> orderSetStairs(ArrayList<Tile> rack) {
+        rack.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
+        return rack;
+    }
 
 }

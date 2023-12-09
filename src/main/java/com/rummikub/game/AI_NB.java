@@ -16,21 +16,25 @@ public class AI_NB {
         ArrayList<ArrayList<Tile>> newBoard = (ArrayList<ArrayList<Tile>>) baselineResult[0];
         ArrayList<Tile> newRack = (ArrayList<Tile>) baselineResult[1];
         int count = (int) baselineResult[2];
-        int tilesadd = count;
+        ArrayList<Move> moves = (ArrayList<Move>) baselineResult[3];
+
         do {
             baselineResult = BaselineAgentNB.baselineAgentNB(newRack, Game.boardListToSetKey(newBoard));
             newBoard = (ArrayList<ArrayList<Tile>>) baselineResult[0];
             newRack = (ArrayList<Tile>) baselineResult[1];
             count = (int) baselineResult[2];
-            tilesadd = tilesadd + count;
+            moves.addAll((ArrayList<Move>)baselineResult[3]);
 
         } while (count != 0);
-        if(tilesadd == 0){ //no tiles from the hand are valid
+
+        if(moves.size() == 0){ //no tiles from the hand are valid
             System.out.println("no tiles from the hand can be added to the board");
             //newRack.add(Player.draw); //draw a tile from the pool
         }
         System.out.println("Final board");
         System.out.println(Game.boardListToSetKey(newBoard));
+        System.out.println("Possible moves");
+        System.out.println(moves);
     }
 
     public static void main(String[] args) {
@@ -43,6 +47,7 @@ public class AI_NB {
         set1.add(tile3);
 
         ArrayList<Tile> set2 = new ArrayList<>();
+
         Tile tile4 = new Tile((byte) 1, Color.ORANGE);
         Tile tile5 = new Tile((byte) 2,Color.ORANGE);
         Tile tile6 = new Tile((byte) 3, Color.ORANGE);
@@ -121,9 +126,9 @@ public class AI_NB {
         hand.add(tile26);
         hand.add(tile27);
         hand.add(tile28);
-        hand.add(tile29);
-        hand.add(tile30);
         hand.add(tile31);
+        hand.add(tile30);
+        hand.add(tile29);
         possibleMoves(hand,fullBoard);
     }
 

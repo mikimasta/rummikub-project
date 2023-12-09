@@ -114,6 +114,17 @@ public class GameTest {
         return board;
     }
 
+    @Test
+    public void orderSet(){
+
+    }
+    @Test
+    public void testCircleGame() {
+        Player firstPlayer = game.currentPlayer;
+        game.nextPlayer();
+        Player secondPlayer = game.currentPlayer;
+        assertEquals(firstPlayer, secondPlayer);
+    }
 }
 
 
