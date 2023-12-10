@@ -116,4 +116,26 @@ class GameboardGUI extends Pane {
         }
     }
 
+
+    public void renderAIMove() {
+
+        for (int i = 0; i < state.length; i++) {
+            for (int j = 0; j < state[0].length; j++) {
+                
+                Tile t = state[i][j];
+
+                if (t != null && !t.isLocked()) {
+
+                    TileGUI tGui = new TileGUI(t); 
+                    tGui.setLayoutX(j * TileGUI.TILE_WIDTH);
+                    tGui.setLayoutY(i * TileGUI.TILE_HEIGHT);
+
+                    getChildren().add(tGui);
+                }
+
+            }
+        }
+
+    }
+
 }

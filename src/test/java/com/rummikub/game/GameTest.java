@@ -1,13 +1,10 @@
 package com.rummikub.game;
+
 import javafx.scene.paint.Color;
 import org.junit.Test;
-import org.junit.Test.None;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+
 import static org.junit.Assert.assertFalse;
-import org.junit.Before;
-import org.junit.After;
+import static org.junit.Assert.assertTrue;
 
 
 public class GameTest {
@@ -65,7 +62,7 @@ public class GameTest {
 */
     @Test
     public void testIsValidBoard() {
-        game = Game.getInstance((byte)4);
+        game = Game.getInstance();
         Tile[][] emptyBoard = new Tile[Game.GRID_ROWS][Game.GRID_COLS];
         assertTrue(game.isValidBoard(emptyBoard));
 

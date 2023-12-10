@@ -1,17 +1,16 @@
 package com.rummikub.gui;
 
-import java.util.ArrayList;
-
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
-
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 
 class AIGameScreen extends Pane {
 
