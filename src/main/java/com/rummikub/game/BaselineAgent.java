@@ -11,7 +11,7 @@ public class BaselineAgent {
      * @param rack rack of tiles
      * @return the best move to make based on that rack
      */
-    public ArrayList<Tile> baselineAgent(Tile[][] rack){
+    public static ArrayList<Tile> baselineAgent(Tile[][] rack){
 
         ArrayList<Tile> groups = new ArrayList<>(TwodArrayToArrayList(rack)); 
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups

@@ -19,6 +19,7 @@ class ModeSelection extends Pane {
     private HoverButton vsAI;
     private HoverButton back;
     private HoverButton start;
+    private HoverButton startAI;
 
     ModeSelection() {
        
@@ -33,6 +34,16 @@ class ModeSelection extends Pane {
             Rummikub.gameWindow.getScene().setRoot(new GameScreen());
             Game.getInstance();
         });
+
+        startAI = new HoverButton("AIStart");
+        startAI.setLayoutX(1450);
+        start.setLayoutY(300);
+        startAI.setOnAction(e -> {
+
+            Rummikub.gameWindow.getScene().setRoot(new AIGameScreen());
+            Game.getInstance();
+        });
+
         vsHuman = new HoverButton("Player vs. Player");
         vsHuman.setLayoutX(Rummikub.xCenter - 200);
         vsHuman.setLayoutY(Rummikub.yCenter - 50);
@@ -52,11 +63,35 @@ class ModeSelection extends Pane {
 
                     if (!getChildren().contains(start)) 
                         getChildren().add(start);
-
+                        
                 }
             });
 
+        });
 
+        vsAI = new HoverButton("Player vs. AI");
+        vsAI.setLayoutX(Rummikub.xCenter - 200);
+        vsAI.setLayoutY(Rummikub.yCenter + 50);
+
+        vsAI.setOnAction(e -> {
+
+            vsHuman.lock();
+
+            ComboBox<Integer> AIcomboBox = new ComboBox<>(FXCollections.observableArrayList(2, 3, 4));
+            AIcomboBox.setValue(0);
+            AIcomboBox.setLayoutX(1350);
+            AIcomboBox.setLayoutY(610);
+            getChildren().add(AIcomboBox);
+
+            AIcomboBox.setOnAction(ev -> {
+                if (AIcomboBox.getSelectionModel().getSelectedItem() != 0) {
+                    Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
+                    System.out.println("présent");
+                    if (!getChildren().contains(startAI)) 
+                        getChildren().add(startAI);
+                }
+            });
+            //Game.NUM_OF_PLAYERS = (byte)2;
         });
 
         ImageView rummikubLogoIV = new ImageView(Images.rummikubLogo);
@@ -65,17 +100,12 @@ class ModeSelection extends Pane {
         rummikubLogoIV.setPreserveRatio(true);
         rummikubLogoIV.setFitWidth(600);
 
-        vsAI = new HoverButton("Player vs. AI");
-        vsAI.setLayoutX(Rummikub.xCenter - 200);
-        vsAI.setLayoutY(Rummikub.yCenter + 50);
-
         back = new HoverButton("Back");
         back.setLayoutX(100);
         back.setLayoutY(1000);
         back.setOnAction(e -> {
             Rummikub.gameWindow.getScene().setRoot(new MainMenu());
         });
-
 
         getChildren().addAll(rummikubLogoIV,vsHuman, vsAI, back);
     }

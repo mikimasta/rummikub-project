@@ -25,15 +25,16 @@ public class Game {
     public static final byte GRID_COLS = 13;
 
     public static byte NUM_OF_PLAYERS;
+    public static boolean isAIGame;
 
     public static Game getInstance() {
         if (instance == null)
-            instance = new Game(NUM_OF_PLAYERS);
+            instance = new Game(NUM_OF_PLAYERS, isAIGame);
         return instance;
     }
-     public static Game getInstance(byte numPlayers) {
+     public static Game getInstance(byte numPlayers, boolean gameAI) {
         if (instance == null)
-            instance = new Game(numPlayers);
+            instance = new Game(numPlayers, gameAI);
         return instance;
     }
 
@@ -50,27 +51,29 @@ public class Game {
      * creates the board, the pool and initializes and deals tiles.
      * 
      * @param numPlayers number of players for the game
+     * @param isAIGame if a game is ai
      */
-    Game(byte numPlayers) {
+    Game(byte numPlayers, boolean isAIGame) {
 
         if (numPlayers > 4 || numPlayers < 2)
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
 
-        //board = new Tile[GRID_ROWS][GRID_COLS];
+        this.isAIGame = isAIGame;  
 
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {
                 //board[row][col] = new Tile("lol", (byte) 0);
             }
         }
+
         players = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
-            players.add(new Player("Player " + i));
+        players.add(new Player("Player " + i, i == 1 && isAIGame));
         }
 
         byte firstPlayer = (byte) (0 + (byte) (Math.random() * numPlayers - 1));
         currentPlayer = players.get(firstPlayer);
-
+        
         pool = new ArrayList<>();
 
         initializeTiles();
