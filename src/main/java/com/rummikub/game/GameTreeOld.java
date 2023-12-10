@@ -1,13 +1,12 @@
 package com.rummikub.game;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class GameTree {
- 
-    static Game game;
+public class GameTreeOld {
+        static Game game;
     static ArrayList<ArrayList<ArrayList<Tile>>> solutionsPerHand;
     static ArrayList<ArrayList<ArrayList<Tile>>> solutions;
-    static ArrayList<ArrayList<ArrayList<Tile>>> prevSolution;
     static ArrayList<Tile> hand;
     static ArrayList<Tile> allTilesBoard;
      
@@ -16,7 +15,7 @@ public class GameTree {
      * @param hand The player's hand.
      * @param board The current state of the game board.
      */
-    public GameTree(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
+    public GameTreeOld(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
        
         this.game = Game.getInstance((byte)2);
         this.solutionsPerHand = new ArrayList<>();
@@ -30,30 +29,16 @@ public class GameTree {
 
     }
 
-
-        /**
-     * Entry point to get solutions with iterative deepening depth-first search.
+     /**
+     * Entry point to get solutions
      * @return The best solutions in the form of a board using as many hand tiles as possible
      */
-    static ArrayList<ArrayList<ArrayList<Tile>>> getSolution(int startDepth, int endDepth) {
 
-        // Iterative deepening loop
-        for (int segmentSize = startDepth; segmentSize <= endDepth; segmentSize++) {
-            System.out.println("depth " + segmentSize);
-            prevSolution = solutions;
-            solutions = new ArrayList<>();  // Reset solutions at the start of each iteration
-            
-            segementHand(hand, segmentSize, 0, new ArrayList<>());
-           
+    static ArrayList<ArrayList<ArrayList<Tile>>> getSolution() {
+        segmentHandSolutionsHelper(hand, hand.size());
 
-            // Check if a solution is found for the current segment size
-            if (solutions.isEmpty()) {
-                System.out.println("depth " + segmentSize + " does not have a solution");
-                return prevSolution;
-            }
-        }
+        return solutions;
 
-        return solutions;  // If no solution is found for any segment size
     }
 
      /**
@@ -61,26 +46,42 @@ public class GameTree {
      * @param hand The current segment of the player's hand.
      * @param size The size of the current segment.
      */
-
-     private static void segementHand(ArrayList<Tile> hand, int numTiles, int start, ArrayList<Tile> current) {
-        if (numTiles == 0) {
-            //System.out.println("hand segment " + current);
-            ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerSegment(current, allTilesBoard);
+    private static void segmentHandSolutionsHelper(ArrayList<Tile> hand, int size) {
+       
+       //Base case: all segment options are depleted 
+        if (size == 0) {
+          
+            // Check the result of getSolutionsPerHand() on the current segment
+            ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerHand(hand, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
-                 // If a solution is found, you can choose to terminate early
-                 solutions = segmentSolution;
+                // If a solution is found, you can choose to terminate early
+                solutions = segmentSolution;
+                //System.out.println("Solution found. Stopping further segmentation.");
                 return;
-
-             }
+            }
             return;
         }
 
-        for (int i = start; i < hand.size(); i++) {
-            current.add(hand.get(i));
-            segementHand(hand, numTiles - 1, i + 1, current);
-            current.remove(current.size() - 1);
+        // Recursive case: generate segments by considering each tile
+        for (int i = 0; i < size; i++) {
+            // Create a sublist representing the current segment
+            ArrayList<Tile> segment = new ArrayList<>(hand.subList(i, size));
+            
+
+            // Check the result of getSolutionsPerHand() on the current segment
+            ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerHand(segment, allTilesBoard);
+            if (!segmentSolution.isEmpty()) {
+                // If a solution is found, you can choose to terminate early
+                solutions = segmentSolution;
+                //System.out.println("Solution found. Stopping further segmentation.");
+                return;
+            }
+
+            // Recursively call with a reduced size (hand - 1)
+            segmentHandSolutionsHelper(hand, size - 1);
         }
-     }
+    }
+    
      /**
      * Get solutions for a given hand segment.
      * @param hand The current segment of the player's hand.
@@ -88,7 +89,7 @@ public class GameTree {
      * @return The solutions for the given hand.
      */
    
-    static ArrayList<ArrayList<ArrayList<Tile>>>  getSolutionsPerSegment(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
+    static ArrayList<ArrayList<ArrayList<Tile>>>  getSolutionsPerHand(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
         //Combine the hand segement and board into one set of tiles
         ArrayList<Tile> allTiles = new ArrayList<Tile>();
         allTiles.addAll(hand);
@@ -99,7 +100,6 @@ public class GameTree {
 
         // Generate all possible moves for the sorted tiles
         ArrayList<ArrayList<ArrayList<Tile>>> allMoves = generatePossibleMovesPerHand(allTiles);
-        solutionsPerHand = new ArrayList<>();
 
         return allMoves;
 
@@ -217,3 +217,4 @@ public class GameTree {
         return newBoard;
     }
 }
+

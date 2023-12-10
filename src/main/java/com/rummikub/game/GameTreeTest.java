@@ -31,7 +31,7 @@ public class GameTreeTest {
    
         ArrayList<Tile> set4 = new ArrayList<>();
         Tile tile10 = new Tile((byte) 3, Color.RED);
-        Tile tile11 = new Tile((byte) -1,Color.BLACK);
+        Tile tile11 = new Tile((byte) 4,Color.RED);
         Tile tile12 = new Tile((byte) 5, Color.RED);
         set4.add(tile10);
         set4.add(tile11);
@@ -75,7 +75,7 @@ public class GameTreeTest {
         fullBoard.add(set1);
         fullBoard.add(set2);
         fullBoard.add(set3);
-        //fullBoard.add(set4);
+        fullBoard.add(set4);
         //fullBoard.add(set5);
         fullBoard.add(set6);
 
@@ -93,7 +93,7 @@ public class GameTreeTest {
         hand.add(tile30);
 
         GameTree gameTree = new GameTree(hand, fullBoard);
-        ArrayList<ArrayList<ArrayList<Tile>>> solutions = GameTree.getSolution();
+        ArrayList<ArrayList<ArrayList<Tile>>> solutions = gameTree.getSolution(4, hand.size());
         //Print or process the generated solutions
         for (ArrayList<ArrayList<Tile>> solution : solutions) {
             System.out.println("Solution:");
