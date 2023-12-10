@@ -65,10 +65,11 @@ public class Game {
                 //board[row][col] = new Tile("lol", (byte) 0);
             }
         }
-
+        boolean isAnAI = true;
         players = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
-        players.add(new Player("Player " + i, i == 1 && isAIGame));
+            players.add(new Player("Player " + i, isAnAI));
+            isAnAI = false;
         }
 
         byte firstPlayer = (byte) (0 + (byte) (Math.random() * numPlayers - 1));
