@@ -1,26 +1,32 @@
 package com.rummikub.game;
+
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Random;
 
-public class GameTree {
- 
+
+public class MonteCarloGameTree {
+    
     static Game game;
     static ArrayList<ArrayList<ArrayList<Tile>>> solutionsPerHand;
     static ArrayList<ArrayList<ArrayList<Tile>>> solutions;
     static ArrayList<ArrayList<ArrayList<Tile>>> prevSolution;
     static ArrayList<Tile> hand;
     static ArrayList<Tile> allTilesBoard;
+    static int maxDepth;
      
     /**
      * Constructor for initializing the GameTree with a current state of the game via the hand and board.
      * @param hand The player's hand.
      * @param board The current state of the game board.
      */
-    public GameTree(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
+    public MonteCarloGameTree(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
        
         this.game = Game.getInstance((byte)2);        
         this.hand = hand;
         this.allTilesBoard = new ArrayList<>();
+
+        this.maxDepth = hand.size();
 
         // Flatten the 2D board into a single list of tiles
         for (ArrayList<Tile> list : board) {
@@ -34,26 +40,31 @@ public class GameTree {
      * Entry point to get solutions with iterative deepening depth-first search, returns on solution of certin depth.
      * @return The best solutions in the form of a board using as many hand tiles as possible
      */
-    static ArrayList<ArrayList<ArrayList<Tile>>> getSolutions(int startDepth, int endDepth) {
+    ArrayList<ArrayList<Tile>> getRandomSolution() {
+        //random int between 1 and maxDepth   
+        int randomSegmentSize = new Random().nextInt(maxDepth) + 1;
 
-        // Iterative deepening loop
-        for (int segmentSize = startDepth; segmentSize <= endDepth; segmentSize++) {
-            System.out.println("segmenent size (depth) " + segmentSize);
-            prevSolution = solutions;
-            solutions = new ArrayList<>();  // Reset solutions at the start of each iteration
+        //random int between 1 and hand.size()   
+       //s int randomStartSize = new Random().nextInt(hand.size()-maxDepth) + 1;
+
+        System.out.println("segmenent size (depth) " + randomSegmentSize);
+        solutions = new ArrayList<>();  // set solutions at the start of each iteration
             
-            segementHand(hand, segmentSize, 0, new ArrayList<>());
+        segementHand(hand, randomSegmentSize, 0, new ArrayList<>());
            
 
             // Check if a solution is not found for the current segment size
             if (solutions.isEmpty()) {
-                System.out.println("segement size " + segmentSize + " does not have a solution");
-                // then return previous depth solutions
-                return prevSolution;
+                System.out.println("segement size " + randomSegmentSize + " does not have a solution");
+                // if no solution do with segement size, do after adjusting maxDepth to me segmentsize - 1
+                maxDepth = randomSegmentSize - 1; 
+                return getRandomSolution();
             }
-        }
+          // Choose a random index from the list of solutions
+          Random random = new Random();
+          int randomIndex = random.nextInt(solutions.size());
 
-        return solutions;  // if all of the max amount of  tiles can be used (segementsSize = endDepth)
+        return solutions.get(randomIndex);  // found random solution
     }
 
     
@@ -213,4 +224,6 @@ public class GameTree {
 
         return newBoard;
     }
+
+   
 }

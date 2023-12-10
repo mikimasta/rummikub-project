@@ -92,16 +92,18 @@ public class GameTreeTest {
         hand.add(tile29);
         hand.add(tile30);
 
-        GameTree gameTree = new GameTree(hand, fullBoard);
-        ArrayList<ArrayList<ArrayList<Tile>>> solutions = gameTree.getSolution(2, hand.size());
+        //GameTree gameTree = new GameTree(hand, fullBoard);
+        //ArrayList<ArrayList<ArrayList<Tile>>> solutions = gameTree.getSolutions(2, hand.size());
         //Print or process the generated solutions
-        for (ArrayList<ArrayList<Tile>> solution : solutions) {
+        //for (ArrayList<ArrayList<Tile>> solution : solutions) {
+        MonteCarlo mc = new MonteCarlo(hand, fullBoard);
+        ArrayList<ArrayList<Tile>> solution = mc.monteCarloSearch();
             System.out.println("Solution:");
             for (ArrayList<Tile> row : solution) {
                 System.out.println("new row");
                 System.out.println(row);
             }
             System.out.println("----");
-        }
+        //}
     }
 }
