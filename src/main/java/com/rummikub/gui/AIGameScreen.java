@@ -82,21 +82,28 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (gameboard.stateNotChanged()) {
-                Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+            if (Game.getInstance().currentPlayer.isAI()) { // player is computer
+                ArrayList<Tile> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
+                if (aimove == null) {
+                        makeAIMove(aimove, GameboardGUI.getInstance().getState());
+                        System.out.println(BaselineAgent.printListTiles(aimove));
+                        GameboardGUI.getInstance().renderAIMove();
+                        System.out.println(Game.getInstance().printBoard(GameboardGUI.getInstance().getState()));
+                }else{ // no move so draw
+                    System.out.println("no move possible for computer");
+                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                }
                 finishMove();
-            } else {
-                if (Game.getInstance().currentPlayer.isAI()) { // player is computer
-                    System.out.println("je suis L'IA");
-                    ArrayList<Tile> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); // param is Tile[][] rack
-                    makeAIMove(aimove, GameboardGUI.getInstance().getState());
+            }else{ // player is computer
+                if (gameboard.stateNotChanged()) {
+                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
-                }else{ // player is human
-                    System.out.println("je suis le joueur ");
+                } else {
                     humanPlayerMove();
                 }
             }
         });
+        
     }
         
     private void humanPlayerMove() {
@@ -132,10 +139,12 @@ class AIGameScreen extends Pane {
 
     }
 
-    private Tile[][] makeAIMove(ArrayList<Tile> aiMove, Tile [][] board) {
-        // Tile[][] board = GameboardGUI.getInstance().getState();
-        //  GameboardGUI.getInstance().setState(board);
-        System.out.println("il est present 3");
+    private Tile[][] makeAIMove(ArrayList<Tile> aiMove, Tile[][] board) {
+        if (aiMove == null) {
+            return board;
+        }
+
+        System.out.println("FUCK MAN");
         int space = 0;
         for (int i = 0; i < board.length; i++) {
             for (int y = 0; y < board[i].length; y++) {
@@ -143,15 +152,18 @@ class AIGameScreen extends Pane {
                     space++;
                 }
                 if (space > aiMove.size()) { // enough space for the move
-                    for (int z = y - space ; i < aiMove.size(); z++) {
-                        board[i][z] = aiMove.get(z);
+                    for (int z = y - space + 1, aiIndex = 0; aiIndex < aiMove.size(); z++, aiIndex++) {
+                        board[i][z] = aiMove.get(aiIndex);
                     }
+                    break; 
                 }
             }
             space = 0;
         }
+        BaselineAgent.printListTiles(aiMove);
         return board;
     }
+    
 
     
 }

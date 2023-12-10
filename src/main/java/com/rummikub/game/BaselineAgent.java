@@ -35,8 +35,9 @@ public class BaselineAgent {
                 }
             } 
         }
+        
         actualMoveGroup = findLargestMove(listOfMovesGroups); // largest move for groups
-        printListTiles(actualMoveGroup);
+        // printListTiles(actualMoveGroup);
                 
         // now check if there is a move possible for runs
         move.clear();
@@ -56,8 +57,8 @@ public class BaselineAgent {
                 }
             } 
         }
-        actualMoveRun = findLargestMove(listOfMovesRuns);
-        printListTiles(actualMoveRun);
+        actualMoveRun = findLargestMove(listOfMovesRuns); // largest move for runs
+        // printListTiles(actualMoveRun);
 
         ArrayList<Tile> finalMove = chooseBestMove(actualMoveRun, actualMoveGroup);
         return finalMove;
@@ -95,12 +96,17 @@ public class BaselineAgent {
      * @return true if two moves are possible
      */
     static boolean isTwoMovesPossible(ArrayList<Tile> runMove, ArrayList<Tile> groupMove) {
-        for (Tile tile : runMove) {
-            if (groupMove.contains(tile) && tile != null) {
-                return false; // only one move is possible
+        if (runMove == null || groupMove == null){
+            return false;
+        } else {
+            for (Tile tile : runMove) {
+                if (groupMove.contains(tile) && tile != null) {
+                    return false; // only one move is possible
+                }
             }
+            return true; // two moves are possible
         }
-        return true; // two moves are possible
+        
     }
     
     /**
@@ -109,13 +115,17 @@ public class BaselineAgent {
      * @return arraylist of largest moves
      */
     static ArrayList<Tile> findLargestMove(ArrayList<ArrayList<Tile>> listOfMoves) {
-        ArrayList<Tile> largestMove = listOfMoves.get(0);
-        for (ArrayList<Tile> move : listOfMoves) {
-            if (move.size() > largestMove.size()) {
-                largestMove = move;
+        if (listOfMoves.size() == 0){
+            return null;
+        }else{
+            ArrayList<Tile> largestMove = listOfMoves.get(0);
+            for (ArrayList<Tile> move : listOfMoves) {
+                if (move.size() > largestMove.size()) {
+                    largestMove = move;
+                }
             }
+            return largestMove;            
         }
-        return largestMove;
     }
         
     /**
@@ -140,7 +150,7 @@ public class BaselineAgent {
      * @param list list of tiles
      * @return string of tiles with number and color
      */
-    static String printListTiles(ArrayList<Tile> list){
+    public static String printListTiles(ArrayList<Tile> list){
         String s = "";
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i) == null){
@@ -161,21 +171,25 @@ public class BaselineAgent {
      * @return the best move
      */
     static ArrayList<Tile> chooseBestMove(ArrayList<Tile> movesGroup, ArrayList<Tile> movesRun) {
-        if (isTwoMovesPossible(movesGroup, movesRun)) {
-            ArrayList<Tile> twoMoves = new ArrayList<>(movesGroup);
-            twoMoves.add(null);
-            twoMoves.addAll(movesRun);
-            System.out.println("Two moves are possible");
-            printListTiles(twoMoves);
-            return twoMoves;
+        if (movesGroup == null || movesRun == null){
+            return null;
         } else {
-            System.out.println("Choosing the largest move");
-            if (movesGroup.size() > movesRun.size()) {
-                printListTiles(movesGroup);
-                return movesGroup;
-            }else{
-                printListTiles(movesRun);
-                return movesRun;
+            if (isTwoMovesPossible(movesGroup, movesRun)) {
+                ArrayList<Tile> twoMoves = new ArrayList<>(movesGroup);
+                twoMoves.add(null);
+                twoMoves.addAll(movesRun);
+                System.out.println("Two moves are possible");
+                printListTiles(twoMoves);
+                return twoMoves;
+            } else {
+                System.out.println("Choosing the largest move");
+                if (movesGroup.size() > movesRun.size()) {
+                    printListTiles(movesGroup);
+                    return movesGroup;
+                }else{
+                    printListTiles(movesRun);
+                    return movesRun;
+                }
             }
         }
     }

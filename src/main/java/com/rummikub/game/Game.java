@@ -231,7 +231,6 @@ public class Game {
             } else {
                 // If there is no joker, numbers should increment
                 if (numTmp - 1 != numOfFirst && numTmp != 0) {
-                    System.out.println("ici 3");
                     return false;
                 }
                 numOfFirst = numTmp;

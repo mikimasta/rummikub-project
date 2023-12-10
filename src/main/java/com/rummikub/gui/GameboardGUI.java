@@ -120,7 +120,7 @@ class GameboardGUI extends Pane {
     public void renderAIMove() {
 
         for (int i = 0; i < state.length; i++) {
-            for (int j = 0; j < state[0].length; j++) {
+            for (int j = 0; j < state[i].length; j++) {
                 
                 Tile t = state[i][j];
 

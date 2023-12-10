@@ -166,7 +166,7 @@ class TileGUI extends StackPane {
             setTranslateY(getYPos());
 
 
-            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+            // System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
         });
 
