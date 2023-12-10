@@ -46,14 +46,15 @@ public class GameTree {
             segementHand(hand, segmentSize, 0, new ArrayList<>());
            
 
-            // Check if a solution is found for the current segment size
+            // Check if a solution is not found for the current segment size
             if (solutions.isEmpty()) {
                 System.out.println("depth " + segmentSize + " does not have a solution");
+                // then return previous depth solutions
                 return prevSolution;
             }
         }
 
-        return solutions;  // If no solution is found for any segment size
+        return solutions;  // If all tiles can be used
     }
 
      /**
