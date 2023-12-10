@@ -151,16 +151,21 @@ public class BaselineAgent {
      * @return string of tiles with number and color
      */
     public static String printListTiles(ArrayList<Tile> list){
-        String s = "";
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) == null){
-                s += " null - ";
-            }else{
-                s += list.get(i).getNumber() + " " + list.get(i).getColorString() + " - ";
+        if (list == null){
+            return null;
+        }else{
+            String s = "";
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) == null){
+                    s += " null - ";
+                }else{
+                    s += list.get(i).getNumber() + " " + list.get(i).getColorString() + " - ";
+                }
             }
+            System.out.println(s);
+            return s;
         }
-        System.out.println(s);
-        return s;
+
     }
     
 
