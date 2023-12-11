@@ -152,12 +152,17 @@ class AIGameScreen extends Pane {
 
         int space = 0;
         boolean done = false;
+        int leaveSpace = 0;
         for (int i = 0; i < board.length; i++) {
             for (int y = 0; y < board[i].length; y++) {
                 if (board[i][y] == null) {
-                    space++;
+                    if (leaveSpace < 1) leaveSpace++;
+                    else space++;
+                } else {
+                    leaveSpace = 0;
+                    space = 0;
                 }
-                if (!done && space > aiMove.size()) { // enough space for the move
+                if (!done && space >= aiMove.size()) { // enough space for the move
                     for (int z = y - space + 1, aiIndex = 0; aiIndex < aiMove.size(); z++, aiIndex++) {
                         board[i][z] = aiMove.get(aiIndex);
                     }
