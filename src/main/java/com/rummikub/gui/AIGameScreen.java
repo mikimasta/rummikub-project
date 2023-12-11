@@ -87,7 +87,7 @@ class AIGameScreen extends Pane {
                 aimove = null;
                 aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
                 System.out.println(aimove);
-                if (aimove != null || !aimove.isEmpty()) {
+                if (aimove != null && !aimove.isEmpty()) {
                     System.out.println("yes ");
                         makeAIMove(aimove, GameboardGUI.getInstance().getState());
                         BaselineAgent.printListTiles(aimove); // update the board in memory 
