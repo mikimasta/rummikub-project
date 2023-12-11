@@ -1,19 +1,14 @@
 package com.rummikub.game;
 
-
-import javafx.scene.paint.Color;
-
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.ArrayList;
 
 public class BaselineAgentNB {
 
     public static Object[] baselineAgentNB(ArrayList<Tile> hand, ArrayList<String> board) {
-        Object[] result = new Object[4];
+        Object[] result = new Object[3];
         int count = 0;
         ArrayList<ArrayList<Tile>> newboard = new ArrayList<>();
-        ArrayList<Move> moves = new ArrayList<>();
 
         Iterator<String> boardIterator = board.iterator();
         while (boardIterator.hasNext()) {
@@ -138,10 +133,8 @@ public class BaselineAgentNB {
                         if ((NB.getColor() == tileHand.getColor()) && (NB.getNumber() == tileHand.getNumber())) { //there is a Match
                             ArrayList<Tile> tileAdded = new ArrayList<>();
                             tileAdded.add(tileHand);
-                            Move move = new Move(setTile, tileAdded);
                             setTile.add(tileHand);
                             hand.remove(tileHand);
-                            moves.add(move);
                             count++;
                             setTile = Game.orderSetStairs(setTile);
                             break;
@@ -154,7 +147,6 @@ public class BaselineAgentNB {
         result[0] = newboard;
         result[1] = hand;
         result[2] = count;
-        result[3] = moves;
         return result;
     }
 
