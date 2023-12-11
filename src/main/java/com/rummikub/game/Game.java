@@ -182,22 +182,22 @@ public class Game {
             }
         }
         // check if different colors
-        int red = 0, green = 0, blue = 0, black = 0; 
+        int red = 0, orange = 0, blue = 0, black = 0; 
         for (int i = 0; i < set.size() ; i++){
             if (set.get(i).getNumber() != -1){ // tile is not a joker
-                Color color = set.get(i).getColor();
-                if (color == Color.RED){
+                String color = set.get(i).getColorString();
+                if (color.equals("red")){
                     red++;
-                }else if (color == Color.GREEN){
-                    green++;
-                }else if (color == Color.BLUE){
+                }else if (color.equals("orange")){
+                    orange++;
+                }else if (color.equals("blue")){
                     blue++;
-                }else if (color == Color.BLACK){
+                }else if (color.equals("black")){
                     black++;
                 }
             }
         }
-        if (red > 1 || green > 1 || blue > 1 || black > 1){
+        if (red > 1 || orange > 1 || blue > 1 || black > 1){
             return false;
         }
 

@@ -20,6 +20,7 @@ class AIGameScreen extends Pane {
     TimerGUI timer;
     HoverButton quit;
     BaselineAgent baselineAgent;
+    ArrayList<Tile> aimove;
 
     AIGameScreen() {
 
@@ -82,12 +83,17 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI()) { // player is computer
-                ArrayList<Tile> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
-                if (aimove == null) {
+            if (Game.getInstance().currentPlayer.isAI()) { // player is ai
+                aimove = null;
+                aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
+                System.out.println(aimove);
+                if (aimove != null || !aimove.isEmpty()) {
+                    System.out.println("yes ");
                         makeAIMove(aimove, GameboardGUI.getInstance().getState());
-                        System.out.println(BaselineAgent.printListTiles(aimove));
-                        GameboardGUI.getInstance().renderAIMove();
+                        BaselineAgent.printListTiles(aimove); // update the board in memory 
+                        GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
+                        Tile[][] newHand = removeTiles(aimove); // remove tiles used for the ai move
+                        RackGUI.getInstance().handToRack(newHand); 
                         System.out.println(Game.getInstance().printBoard(GameboardGUI.getInstance().getState()));
                 }else{ // no move so draw
                     System.out.println("no move possible for computer");
@@ -144,26 +150,41 @@ class AIGameScreen extends Pane {
             return board;
         }
 
-        System.out.println("FUCK MAN");
         int space = 0;
+        boolean done = false;
         for (int i = 0; i < board.length; i++) {
             for (int y = 0; y < board[i].length; y++) {
                 if (board[i][y] == null) {
                     space++;
                 }
-                if (space > aiMove.size()) { // enough space for the move
+                if (!done && space > aiMove.size()) { // enough space for the move
                     for (int z = y - space + 1, aiIndex = 0; aiIndex < aiMove.size(); z++, aiIndex++) {
                         board[i][z] = aiMove.get(aiIndex);
                     }
-                    break; 
+                    done = true;
+                    break;
                 }
             }
+            if (done) break;
             space = 0;
         }
         BaselineAgent.printListTiles(aiMove);
         return board;
     }
     
-
+    private Tile[][] removeTiles(ArrayList<Tile> aiMove){
+        
+        for (Tile tile : aiMove) {
+            for (int i = 0; i < Game.getInstance().currentPlayer.getHand().length; i++) {
+                for (int j = 0; j < Game.getInstance().currentPlayer.getHand()[i].length; j++) {
+                    if (Game.getInstance().currentPlayer.getHand()[i][j] != null && Game.getInstance().currentPlayer.getHand()[i][j].equals(tile)) {
+                        Game.getInstance().currentPlayer.getHand()[i][j] = null;
+                    }
+                }
+            }
+        }
+        
+        return Game.getInstance().currentPlayer.getHand();
+    }
     
 }

@@ -1,9 +1,11 @@
 package com.rummikub.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import javafx.scene.paint.Color;
-
+// TODO after a move remove tiles from rack
+// TODO it stopped drawing new tiles to the ai
 public class BaselineAgent {
     
     /**
@@ -11,56 +13,82 @@ public class BaselineAgent {
      * @param rack rack of tiles
      * @return the best move to make based on that rack
      */
-    public static ArrayList<Tile> baselineAgent(Tile[][] rack){
+    public static ArrayList<Tile> baselineAgent(Tile[][] dupRack){
+        ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(TwodArrayToArrayList(dupRack)));
 
-        ArrayList<Tile> groups = new ArrayList<>(TwodArrayToArrayList(rack)); 
+        ArrayList<Tile> groups = new ArrayList<>(rack); 
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
 
-        ArrayList<Tile> runs = new ArrayList<>(TwodArrayToArrayList(rack)); 
+        ArrayList<Tile> runs = new ArrayList<>(rack); 
         Game.orderRackByStairs(runs); // if joker it will be at the front
 
         // now check if there is a move possible for groups
         ArrayList<Tile> move = new ArrayList<>(); 
         ArrayList<Tile> actualMoveGroup = new ArrayList<>();
         ArrayList<ArrayList<Tile>> listOfMovesGroups = new ArrayList<ArrayList<Tile>>();
-        for (int i = 0; i < groups.size(); i++) {
-            Tile tile = groups.get(i);
-            move.add(tile);
-            if (move.size() > 2) {
-                if (Game.checkIfGroup(move)) {
-                    actualMoveGroup = new ArrayList<>(move);
-                    listOfMovesGroups.add(actualMoveGroup);
-                } else {
-                    move.clear();
+        ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<Tile> finalMove = new ArrayList<>();
+
+        // for (int i = 0; i < groups.size() - 2; i++) { // TODO recursive method for longer moves
+        //     move.add(groups.get(i));
+        //     move.add(groups.get(i+1));
+        //     move.add(groups.get(i+2));
+        //     System.out.println(move.size());
+        //     System.out.println(i);
+        //     if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { // TODO discard a group if it has two tiles of the same color
+        //         System.out.println(printListTiles(move));
+        //         actualMoveGroup = new ArrayList<>(move);
+        //         listOfMovesGroups.add(actualMoveGroup);
+        //     }
+        //     move.clear();
+        // }
+
+        int move_size = 3;
+        while (true) {
+            System.out.println(move_size);
+            for (int i = 0; i < groups.size() - move_size + 1; i++) {
+                for (int j = 0; j < move_size; j++) {
+                    move.add(groups.get(i + j));
                 }
-            } 
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                    System.out.println(printListTiles(move));
+                    listOfMovesGroups.add(new ArrayList<>(move));
+                }
+                move.clear();
+            }
+            for (int i = 0; i < runs.size() - move_size + 1; i++) {
+                for (int j = 0; j < move_size; j++) {
+                    move.add(runs.get(i + j));
+                }
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { // TODO discard a group if it has two tiles of the same color
+                    System.out.println(printListTiles(move));
+                    listOfMovesGroups.add(new ArrayList<>(move));
+                }
+                move.clear();
+            }
+            if (listOfMovesGroups.size() == 0) {
+                listOfMovesGroups = prevListOfMoves;
+                break;
+            } else {
+                prevListOfMoves = new ArrayList<>(listOfMovesGroups);
+                listOfMovesGroups.clear();
+            }
+            move_size++;
         }
+        System.out.println(listOfMovesGroups.size());
         
-        actualMoveGroup = findLargestMove(listOfMovesGroups); // largest move for groups
+        
+        //actualMoveGroup = findLargestMove(listOfMovesGroups); // largest move for groups
         // printListTiles(actualMoveGroup);
-                
-        // now check if there is a move possible for runs
-        move.clear();
-        ArrayList<Tile> actualMoveRun = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> listOfMovesRuns = new ArrayList<ArrayList<Tile>>();
-        for (int i = 0; i < runs.size(); i++) {
-            Tile tile = runs.get(i);
-            move.add(tile);
-            if (move.size() > 2) {
-                if (Game.checkIfStairs(move)) {
-                    actualMoveRun = new ArrayList<>(move);
-                    listOfMovesRuns.add(actualMoveRun); 
-                } else {
-                    move.clear();
-                    move.add(runs.get(i-1));
-                    move.add(tile);
-                }
-            } 
-        }
-        actualMoveRun = findLargestMove(listOfMovesRuns); // largest move for runs
+             
+        // TODO check every combinaion of three, if there is one, check n+1 (while loop)
+
+
+        // actualMoveRun = findLargestMove(listOfMovesRuns); // largest move for runs
         // printListTiles(actualMoveRun);
 
-        ArrayList<Tile> finalMove = chooseBestMove(actualMoveRun, actualMoveGroup);
+        // ArrayList<Tile> finalMove = chooseBestMove(actualMoveRun, actualMoveGroup);
+        finalMove = AI.nestedArrayListToArrayList(listOfMovesGroups);
         return finalMove;
     }
 
@@ -133,7 +161,7 @@ public class BaselineAgent {
      * @param arr 2D array
      * @return an arraylist
      */
-    static ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
+    public static ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
         ArrayList<Tile> arrList = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length; j++) {

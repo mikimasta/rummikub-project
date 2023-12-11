@@ -34,6 +34,8 @@ public class AI {
                     listOfMovesGroups.add(actualMoveGroup);
                 } else {
                     move.clear();
+                    move.add(groups.get(i-1)); // added
+                    move.add(tile);
                 }
             } 
         }
