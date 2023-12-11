@@ -97,8 +97,6 @@ class TileGUI extends StackPane {
 
             if (isInRackBounds(mouseX, mouseY)) {
 
-                
-
                 colToSnap = (int) (Math.abs(RackGUI.RACK_X - mouseX + RackGUI.X_OFFSET) / TILE_WIDTH);
                 //System.out.println(colToSnap);
                 rowToSnap = (int) ((mouseY > (RackGUI.RACK_Y + RackGUI.RACK_HEIGHT / 2)) ? 1 : 0);
@@ -240,6 +238,9 @@ class TileGUI extends StackPane {
         return false;
     }
 
+    public void addToBoard() {
+        this.addedToBoard = true;
+    }
 
     double getCurrentMouseX() {
         return mouseX;
@@ -290,6 +291,17 @@ class TileGUI extends StackPane {
     }
     public boolean isAddedToBoard() {
         return addedToBoard;
+    }
+    public void setPrevColBoard(int col) {
+        this.prevColBoard = col;
+    } 
+    public void setPrevRowBoard(int row) {
+        this.prevRowBoard = row;
+    }
+
+    public void setPrevBoardCoords(int col, int row) {
+        setPrevColBoard(col);
+        setPrevRowBoard(row);
     }
 
 

@@ -83,7 +83,7 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI()) { // player is ai
+            if (Game.getInstance().currentPlayer.isAI()) { // player is AI
                 aimove = null;
                 aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
                 System.out.println(aimove);
@@ -92,9 +92,9 @@ class AIGameScreen extends Pane {
                         makeAIMove(aimove, GameboardGUI.getInstance().getState());
                         BaselineAgent.printListTiles(aimove); // update the board in memory 
                         GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
-                        Tile[][] newHand = removeTiles(aimove); // remove tiles used for the ai move
+                        Tile[][] newHand = removeTiles(aimove); // remove tiles used for the AI move
                         RackGUI.getInstance().handToRack(newHand); 
-                        System.out.println(Game.getInstance().printBoard(GameboardGUI.getInstance().getState()));
+                        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
                 }else{ // no move so draw
                     System.out.println("no move possible for computer");
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));

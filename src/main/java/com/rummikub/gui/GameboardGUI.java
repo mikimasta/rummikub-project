@@ -127,8 +127,10 @@ class GameboardGUI extends Pane {
                 if (t != null && !t.isLocked()) {
 
                     TileGUI tGui = new TileGUI(t); 
-                    tGui.setLayoutX(j * TileGUI.TILE_WIDTH);
-                    tGui.setLayoutY(i * TileGUI.TILE_HEIGHT);
+                    tGui.setPrevBoardCoords(j, i);
+                    tGui.addToBoard();
+                    tGui.setTranslateX(j * TileGUI.TILE_WIDTH);
+                    tGui.setTranslateY(i * TileGUI.TILE_HEIGHT);
 
                     getChildren().add(tGui);
                 }
