@@ -33,7 +33,7 @@ public class MonteCarlo {
 
     ArrayList<ArrayList<Tile>> monteCarloSearch() {
         //Random random = new Random();
-        int simulations = 1000;  // Number of Monte Carlo simulations
+        int simulations = 5;  // Number of Monte Carlo simulations
 
         ArrayList<ArrayList<Tile>> bestSolution = null;
         double bestScore = Double.NEGATIVE_INFINITY;

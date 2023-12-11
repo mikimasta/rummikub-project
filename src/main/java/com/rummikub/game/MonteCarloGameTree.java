@@ -27,6 +27,7 @@ public class MonteCarloGameTree {
         this.allTilesBoard = new ArrayList<>();
 
         this.maxDepth = hand.size();
+        this.solutionsPerHand = new ArrayList<>();
 
         // Flatten the 2D board into a single list of tiles
         for (ArrayList<Tile> list : board) {
