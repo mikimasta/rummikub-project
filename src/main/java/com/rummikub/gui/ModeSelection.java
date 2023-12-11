@@ -63,7 +63,6 @@ class ModeSelection extends Pane {
 
                     if (!getChildren().contains(start)) 
                         getChildren().add(start);
-                        
                 }
             });
 
@@ -86,7 +85,6 @@ class ModeSelection extends Pane {
             AIcomboBox.setOnAction(ev -> {
                 if (AIcomboBox.getSelectionModel().getSelectedItem() != 0) {
                     Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
-                    System.out.println("présent");
                     if (!getChildren().contains(startAI)) 
                         getChildren().add(startAI);
                 }
