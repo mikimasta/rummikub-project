@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Utility class for managing valid sets and their tiles in the Rummikub game.
+ */
 public class ValidSets {
     private static final HashMap<String, ArrayList<Tile>> immutableMap = generateImmutableHashMap();
     private static HashMap<String, ArrayList<Tile>> generateImmutableHashMap() {

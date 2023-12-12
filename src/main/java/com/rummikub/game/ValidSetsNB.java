@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Utility class for managing valid sets and their possible neighbours in the Rummikub game.
+ */
 public class ValidSetsNB {
     public static void main(String[] args) {
         System.out.println(getNBForKey("-1None1Black2Black"));

@@ -1,11 +1,31 @@
 package com.rummikub.game;
 
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 
 public class BaselineAgentNB {
-
+    /**
+     * Executes the decision-making process for placing tiles on the Rummikub board,
+     * considering the given hand of tiles and the board configuration.
+     *
+     * This method iterates through the board and analyzes various conditions to form sets
+     * based on Rummikub rules. It examines different scenarios including complete sets,
+     * partial sets, consecutive numbers, and groups of tiles to determine valid moves.
+     *
+     * The decision-making process includes analyzing the hand of tiles to identify potential
+     * matches with the existing board configuration, optimizing sets, and rearranging tiles
+     * to form valid Rummikub sets according to the game rules.
+     *
+     * @param hand The current hand of tiles available for placement.
+     * @param board The current board configuration represented as an ArrayList of strings.
+     * @return An Object array containing the resulting board configuration, updated hand after
+     *         placing tiles, and the count of tiles placed. The returned array format is:
+     *         - Index 0: ArrayList of ArrayLists representing the updated board configuration.
+     *         - Index 1: Updated hand after placing tiles, represented as an ArrayList of tiles.
+     *         - Index 2: Count of tiles placed during this decision-making process.
+     */
     public static Object[] baselineAgentNB(ArrayList<Tile> hand, ArrayList<String> board) {
         Object[] result = new Object[3];
         int count = 0;
@@ -22,29 +42,16 @@ public class BaselineAgentNB {
                 count += resultRack.size();
             }
         }while(countRackPlays!=0);
-        /*
-        int countRackPlays = 1;
-        do{
-            ArrayList<Tile> resultRack = BaselineAgent.BaselineAgent(hand.toArray(new Tile[0][0]));;
-            if(resultRack==null){
-                countRackPlays=0;
-            }else {
-                hand.removeAll(resultRack);
-                newboard.add(resultRack);
-                count += resultRack.size();
-            }
-        }while(countRackPlays!=0);
-        */
 
         //LOOKING AT BOARD AND THE RACK
         Iterator<String> boardIterator = board.iterator();
-        while (boardIterator.hasNext()) {
+        while (boardIterator.hasNext()) { //selects iteratively a set from the board
             int countset = 0;
             String set = boardIterator.next();
             ArrayList<Tile> setTile = Game.orderSetStairs(ValidSets.getSetForKey(set));
             ArrayList<Tile> createNewSet = new ArrayList<>();
             ArrayList<Tile> setNB = ValidSetsNB.getNBForKey(set);
-            //REARRANGEMENT
+            //REARRANGEMENT TAKING PARTIAL SETS
             if (setTile.size()>3) {
                 if(Game.checkIfStairs(setTile)){
                     Tile first = setTile.get(0);
@@ -90,7 +97,6 @@ public class BaselineAgentNB {
                     }
                 }else if(Game.checkIfGroup(setTile)){
                     for(Tile selected: setTile){
-                        //System.out.println(selected.getNumber()+" "+ Game.getStringFromColor(selected));
                         if(addPartialRun(selected, hand)!= null){
                             createNewSet = addPartialRun(selected, hand);
                             newboard.add(createNewSet);
@@ -150,7 +156,7 @@ public class BaselineAgentNB {
                     }
                 }
             }
-            //SEARCH BASED ON ONE NB
+            //SEARCH BASED ON ONE NEIGHBOURS
             if(countset==0) {
                 for (Tile NB : setNB) {
                     Iterator<Tile> handIterator = hand.iterator();
@@ -177,7 +183,11 @@ public class BaselineAgentNB {
         return result;
     }
 
-
+    /**
+     * Retrieves a list of pairs of tiles with the same numbers but different colors.
+     * @param tiles The list of tiles to analyze.
+     * @return An ArrayList of pairs of tiles that have the same number but different colors consecutively(partial sets).
+     */
     public static ArrayList<Tile> getTilesWithSameNumbers(ArrayList<Tile> tiles) {
         tiles = Game.orderSetGroup(tiles);
         ArrayList<Tile> resultTiles = new ArrayList<>();
@@ -192,6 +202,11 @@ public class BaselineAgentNB {
         return resultTiles;
     }
 
+    /**
+     * Retrieves a list of pairs of tiles with consecutive numbers and the same color.
+     * @param tiles The list of tiles to analyze.
+     * @return An ArrayList of tiles with consecutive numbers and the same color(partial sets).
+     */
     public static ArrayList<Tile> getTilesWithConsecutiveNumbers(ArrayList<Tile> tiles) {
         tiles = Game.orderSetStairs(tiles);
         //System.out.println(tiles);
@@ -207,6 +222,12 @@ public class BaselineAgentNB {
         return resultTiles;
     }
 
+    /**
+     * Finds and creates a group of tiles including the provided tile from the given hand.
+     * @param tile The tile to include in the partial group.
+     * @param hand The hand containing tiles to search for a partial group.
+     * @return An ArrayList containing a partial group that includes the provided tile, or null if no such group is found.
+     */
     public static ArrayList<Tile> addPartialGroup(Tile tile, ArrayList<Tile> hand) {
         int num = tile.getNumber();
         ArrayList<Tile> sameNum = getTilesWithSameNumbers(hand);
@@ -225,6 +246,13 @@ public class BaselineAgentNB {
         }
         return null;
     }
+
+    /**
+     * Finds and creates a run of tiles including the provided tile from the given hand.
+     * @param tile The tile to include in the partial run.
+     * @param hand The hand containing tiles to search for a partial run.
+     * @return An ArrayList containing a partial group that includes the provided tile, or null if no such run is found.
+     */
     public static ArrayList<Tile> addPartialRun(Tile tile, ArrayList<Tile> hand) {
         ArrayList<Tile> consecutive = getTilesWithConsecutiveNumbers(hand);
         ArrayList<Tile> newSet = new ArrayList<>();
@@ -243,6 +271,11 @@ public class BaselineAgentNB {
         return null;
     }
 
+    /**
+     * Attempts to create a set from the provided hand considering various criteria.
+     * @param hand The hand of tiles to analyze and create a set from.
+     * @return An ArrayList containing tiles forming a set, or null if no set is found according to the specified criteria.
+     */
     public static ArrayList<Tile> playTheRack(ArrayList<Tile> hand) {
         ArrayList<Tile> set = new ArrayList<>();
         ArrayList<Tile> handNoDuplicates = new ArrayList<>(new HashSet<>(hand));
@@ -294,4 +327,5 @@ public class BaselineAgentNB {
 
         return null;
     }
+
 }

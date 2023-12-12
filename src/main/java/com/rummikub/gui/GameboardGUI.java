@@ -116,4 +116,6 @@ class GameboardGUI extends Pane {
         }
     }
 
+    public void renderAIMove() {
+    }
 }

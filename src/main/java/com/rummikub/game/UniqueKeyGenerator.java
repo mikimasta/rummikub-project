@@ -3,7 +3,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-
+/**
+ * This class generates unique keys based on data read from a file.
+ * It processes the input data to create specific keys by sorting and combining elements.
+ * The resulting keys are added to Key_Set.NB_J-1.txt
+ */
 public class UniqueKeyGenerator {
     public static void main(String[] args) {
         try {

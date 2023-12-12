@@ -8,7 +8,7 @@ public class BaselineAgent {
 
     /**
      * takes the rack and tries to make moves based on the tiles in that rack
-     * @param rack rack of tiles
+     * @param dupRack rack of tiles
      * @return the best move to make based on that rack
      */
     public static ArrayList<Tile> BaselineAgent(Tile[][] dupRack){
@@ -30,13 +30,13 @@ public class BaselineAgent {
 
         int move_size = 3;
         while (true) {
-            System.out.println(move_size);
+            //System.out.println(move_size);
             for (int i = 0; i < groups.size() - move_size + 1; i++) {
                 for (int j = 0; j < move_size; j++) {
                     move.add(groups.get(i + j));
                 }
                 if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
-                    System.out.println(printListTiles(move));
+                    //System.out.println(printListTiles(move));
                     listOfMovesGroups.add(new ArrayList<>(move));
                 }
                 move.clear();
@@ -46,7 +46,7 @@ public class BaselineAgent {
                     move.add(runs.get(i + j));
                 }
                 if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { // TODO discard a group if it has two tiles of the same color
-                    System.out.println(printListTiles(move));
+                    //System.out.println(printListTiles(move));
                     listOfMovesGroups.add(new ArrayList<>(move));
                 }
                 move.clear();
@@ -60,7 +60,7 @@ public class BaselineAgent {
             }
             move_size++;
         }
-        System.out.println(listOfMovesGroups.size());
+        //System.out.println(listOfMovesGroups.size());
 
 
         //actualMoveGroup = findLargestMove(listOfMovesGroups); // largest move for groups
@@ -175,7 +175,7 @@ public class BaselineAgent {
                     s += list.get(i).getNumber() + " " + list.get(i).getColorString() + " - ";
                 }
             }
-            System.out.println(s);
+            //System.out.println(s);
             return s;
         }
 
@@ -196,11 +196,11 @@ public class BaselineAgent {
                 ArrayList<Tile> twoMoves = new ArrayList<>(movesGroup);
                 twoMoves.add(null);
                 twoMoves.addAll(movesRun);
-                System.out.println("Two moves are possible");
+                //System.out.println("Two moves are possible");
                 printListTiles(twoMoves);
                 return twoMoves;
             } else {
-                System.out.println("Choosing the largest move");
+                //System.out.println("Choosing the largest move");
                 if (movesGroup.size() > movesRun.size()) {
                     printListTiles(movesGroup);
                     return movesGroup;

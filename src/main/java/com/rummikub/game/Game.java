@@ -597,6 +597,8 @@ public class Game {
         return arrList;
     }
 
+
+
     public static ArrayList<Tile> orderSetStairs(ArrayList<Tile> set) {
         Tile joker = new Tile((byte) -1, Color.BROWN);
         if(set.contains(joker)){
@@ -608,6 +610,7 @@ public class Game {
         }
         return set;
     }
+
 
     public static ArrayList<Tile> orderSetGroup(ArrayList<Tile> set) {
         set.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
