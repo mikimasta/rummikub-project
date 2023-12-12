@@ -1,33 +1,29 @@
 package com.rummikub.game;
-
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Random;
 
-
-public class MonteCarloGameTree {
-    
+public class GameTreeNew {
+ 
     static Game game;
-    static ArrayList<ArrayList<ArrayList<Tile>>> solutionsPerHand;
-    static ArrayList<ArrayList<ArrayList<Tile>>> solutions;
-    static ArrayList<ArrayList<ArrayList<Tile>>> prevSolution;
+    static ArrayList<ArrayList<Tile>> solutionPerHand;
+    static ArrayList<ArrayList<Tile>> solution;
+    static ArrayList<ArrayList<Tile>> prevSolution;
     static ArrayList<Tile> hand;
     static ArrayList<Tile> allTilesBoard;
-    static int maxDepth;
+    static boolean solutionFound;
      
     /**
      * Constructor for initializing the GameTree with a current state of the game via the hand and board.
      * @param hand The player's hand.
      * @param board The current state of the game board.
      */
-    public MonteCarloGameTree(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
+    public GameTreeNew(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
        
         this.game = Game.getInstance((byte)2);        
         this.hand = hand;
         this.allTilesBoard = new ArrayList<>();
-
-        this.maxDepth = hand.size();
-        this.solutionsPerHand = new ArrayList<>();
+        this.solutionPerHand = new ArrayList<>();
+        this.solutionFound = false;
 
         // Flatten the 2D board into a single list of tiles
         for (ArrayList<Tile> list : board) {
@@ -41,52 +37,52 @@ public class MonteCarloGameTree {
      * Entry point to get solutions with iterative deepening depth-first search, returns on solution of certin depth.
      * @return The best solutions in the form of a board using as many hand tiles as possible
      */
-    ArrayList<ArrayList<Tile>> getRandomSolution() {
-        //random int between 1 and maxDepth   
-        int randomSegmentSize = new Random().nextInt(maxDepth) + 1;
+    static ArrayList<ArrayList<Tile>> getSolution(int startDepth, int endDepth) {
 
-        //random int between 1 and hand.size()   
-       //s int randomStartSize = new Random().nextInt(hand.size()-maxDepth) + 1;
-
-        System.out.println("segmenent size (depth) " + randomSegmentSize);
-        solutions = new ArrayList<>();  // set solutions at the start of each iteration
+        // Iterative deepening loop
+        for (int segmentSize = startDepth; segmentSize <= endDepth; segmentSize++) {
+            System.out.println("segmenent size (depth) " + segmentSize);
+            solutionFound = false;
+            prevSolution = solution;
+            solution = new ArrayList<>();  // Reset solutions at the start of each iteration
             
-        segementHand(hand, randomSegmentSize, 0, new ArrayList<>());
+            segementHand(hand, segmentSize, 0, new ArrayList<>());
            
 
             // Check if a solution is not found for the current segment size
-            if (solutions.isEmpty()) {
-                System.out.println("segement size " + randomSegmentSize + " does not have a solution");
-                // if no solution do with segement size, do after adjusting maxDepth to me segmentsize - 1
-                maxDepth = randomSegmentSize - 1; 
-                return getRandomSolution();
+            if (solution.isEmpty() && segmentSize >= 3) {
+                System.out.println("segement size " + segmentSize + " does not have a solution");
+                // then return previous depth solutions
+                return prevSolution;
             }
-          // Choose a random index from the list of solutions
-          Random random = new Random();
-          int randomIndex = random.nextInt(solutions.size());
+        }
 
-        return solutions.get(randomIndex);  // found random solution
+        return solution;  // if all of the max amount of  tiles can be used (segementsSize = endDepth)
     }
 
     
 
      private static void segementHand(ArrayList<Tile> hand, int numTiles, int start, ArrayList<Tile> current) {
         if (numTiles == 0) {
-            //System.out.println("hand segment " + current);
-            ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerSegment(current, allTilesBoard);
+            System.out.println("hand segment " + current);
+            ArrayList<ArrayList<Tile>> segmentSolution = getSolutionPerSegment(current, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
-                 // If a solution is found, you can choose to terminate early
-                 solutions = segmentSolution;
-                return;
+                System.out.println("solution at segment size: " + current.size()); 
+                 solution = segmentSolution;
+                 return;
 
              }
             return;
         }
-
+        
         for (int i = start; i < hand.size(); i++) {
             current.add(hand.get(i));
             segementHand(hand, numTiles - 1, i + 1, current);
             current.remove(current.size() - 1);
+
+            if(solutionFound){
+                return;
+            }
         }
      }
      
@@ -97,7 +93,7 @@ public class MonteCarloGameTree {
      * @return The solutions for the given hand.
      */
    
-    static ArrayList<ArrayList<ArrayList<Tile>>>  getSolutionsPerSegment(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
+    static ArrayList<ArrayList<Tile>>  getSolutionPerSegment(ArrayList<Tile> hand, ArrayList<Tile> allTilesBoard) {
         //Combine the hand segement and board into one set of tiles
         ArrayList<Tile> allTiles = new ArrayList<Tile>();
         allTiles.addAll(hand);
@@ -107,10 +103,10 @@ public class MonteCarloGameTree {
         allTiles.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
 
         // Generate all possible moves for the sorted tiles
-        ArrayList<ArrayList<ArrayList<Tile>>> allMoves = generatePossibleMovesPerHand(allTiles);
-        solutionsPerHand = new ArrayList<>();
+        ArrayList<ArrayList<Tile>> segmentSolution = generatePossibleMovePerHand(allTiles);
+        solutionPerHand = new ArrayList<>();
 
-        return allMoves;
+        return segmentSolution;
 
      }
 
@@ -120,9 +116,10 @@ public class MonteCarloGameTree {
      * @return The possible moves for the given hand.
      */
 
-    private static ArrayList<ArrayList<ArrayList<Tile>>> generatePossibleMovesPerHand(ArrayList<Tile> allTiles){
+    private static ArrayList<ArrayList<Tile>> generatePossibleMovePerHand(ArrayList<Tile> allTiles){
+        solutionFound = false;
         generateAllMovesHelper(allTiles, new ArrayList<>());
-        return solutionsPerHand;
+        return solutionPerHand;
     }
 
      /**
@@ -137,7 +134,9 @@ public class MonteCarloGameTree {
             if (isValid(currentBoard)) {
         
                 ArrayList<ArrayList<Tile>> deepCopy = deepCopyBoard(currentBoard);
-                solutionsPerHand.add(deepCopy);
+                solutionPerHand = deepCopy;
+                solutionFound = true;
+                System.out.print("solution found at hand segment level");
               
             }
             return;
@@ -161,6 +160,10 @@ public class MonteCarloGameTree {
     
             // Backtrack by removing the last added tile from the current row
             currentBoard.get(i).remove(currentBoard.get(i).size() - 1);
+        // Check the flag to see if a solution has been found, and return if true
+        if (solutionFound) {
+            return;
+        }
         }
     
         // If needed, create a new row and add the tile
@@ -177,6 +180,10 @@ public class MonteCarloGameTree {
     
         // Backtrack by removing the last added row
         currentBoard.remove(currentBoard.size() - 1);
+        // Check the flag to see if a solution has been found, and return if true
+    if (solutionFound) {
+        return;
+    }
     }
     
      /**
@@ -225,6 +232,4 @@ public class MonteCarloGameTree {
 
         return newBoard;
     }
-
-   
 }

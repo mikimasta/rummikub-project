@@ -74,36 +74,39 @@ public class GameTreeTest {
         ArrayList<ArrayList<Tile>> fullBoard = new ArrayList<>();
         fullBoard.add(set1);
         fullBoard.add(set2);
-        fullBoard.add(set3);
-        //fullBoard.add(set4);
+        //fullBoard.add(set3);
+        fullBoard.add(set4);
         //fullBoard.add(set5);
-        fullBoard.add(set6);
+        //fullBoard.add(set6);
 
         ArrayList<Tile> hand = new ArrayList<>();
-        Tile tile26 = new Tile((byte) 4, Color.RED);
-        Tile tile27 = new Tile((byte) 11, Color.ORANGE);
+        Tile tileA = new Tile((byte) 10, Color.RED);
+        Tile tileB = new Tile((byte) 10, Color.ORANGE);
+        Tile tileC = new Tile((byte) 10, Color.BLACK);
+        Tile tileD = new Tile((byte) 4, Color.RED);
+        Tile tileE = new Tile((byte) 11, Color.ORANGE);
         Tile tile28 = new Tile((byte) 7, Color.ORANGE);
         Tile tile29 = new Tile((byte) 5, Color.BLACK);
         Tile tile30 = new Tile((byte) 13, Color.BLUE);
 
-        hand.add(tile26);
-        hand.add(tile27);
-        hand.add(tile28);
-        hand.add(tile29);
-        hand.add(tile30);
+        hand.add(tileA);
+        hand.add(tileB);
+        hand.add(tileC);
+        hand.add(tileD);
+        hand.add(tileE);
 
-        //GameTree gameTree = new GameTree(hand, fullBoard);
-        //ArrayList<ArrayList<ArrayList<Tile>>> solutions = gameTree.getSolutions(2, hand.size());
+        GameTreeNew gameTree = new GameTreeNew(hand, fullBoard);
+        ArrayList<ArrayList<Tile>> solution = gameTree.getSolution(1, hand.size());
         //Print or process the generated solutions
         //for (ArrayList<ArrayList<Tile>> solution : solutions) {
-        MonteCarlo mc = new MonteCarlo(hand, fullBoard);
-        ArrayList<ArrayList<Tile>> solution = mc.monteCarloSearch();
+        //MonteCarlo mc = new MonteCarlo(hand, fullBoard);
+        //ArrayList<ArrayList<Tile>> solution = mc.monteCarloSearch();
             System.out.println("Solution:");
             for (ArrayList<Tile> row : solution) {
                 System.out.println("new row");
                 System.out.println(row);
             }
             System.out.println("----");
-        //}
-    }
+        }
+   // }
 }

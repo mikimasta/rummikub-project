@@ -21,6 +21,7 @@ public class GameTree {
         this.game = Game.getInstance((byte)2);        
         this.hand = hand;
         this.allTilesBoard = new ArrayList<>();
+        this.solutionsPerHand = new ArrayList<>();
 
         // Flatten the 2D board into a single list of tiles
         for (ArrayList<Tile> list : board) {
@@ -46,7 +47,7 @@ public class GameTree {
            
 
             // Check if a solution is not found for the current segment size
-            if (solutions.isEmpty()) {
+            if (solutions.isEmpty() && segmentSize >= 3) {
                 System.out.println("segement size " + segmentSize + " does not have a solution");
                 // then return previous depth solutions
                 return prevSolution;
@@ -60,7 +61,7 @@ public class GameTree {
 
      private static void segementHand(ArrayList<Tile> hand, int numTiles, int start, ArrayList<Tile> current) {
         if (numTiles == 0) {
-            //System.out.println("hand segment " + current);
+            System.out.println("hand segment " + current);
             ArrayList<ArrayList<ArrayList<Tile>>> segmentSolution = getSolutionsPerSegment(current, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
                  // If a solution is found, you can choose to terminate early
@@ -70,7 +71,7 @@ public class GameTree {
              }
             return;
         }
-
+    
         for (int i = start; i < hand.size(); i++) {
             current.add(hand.get(i));
             segementHand(hand, numTiles - 1, i + 1, current);
