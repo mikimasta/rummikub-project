@@ -2,10 +2,8 @@ package com.rummikub.game;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
 import javafx.scene.paint.Color;
-// TODO after a move remove tiles from rack
-// TODO it stopped drawing new tiles to the ai
+
 public class BaselineAgent {
     
     /**
@@ -22,26 +20,10 @@ public class BaselineAgent {
         ArrayList<Tile> runs = new ArrayList<>(rack); 
         Game.orderRackByStairs(runs); // if joker it will be at the front
 
-        // now check if there is a move possible for groups
         ArrayList<Tile> move = new ArrayList<>(); 
-        ArrayList<Tile> actualMoveGroup = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> listOfMovesGroups = new ArrayList<ArrayList<Tile>>();
+        ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<Tile> finalMove = new ArrayList<>();
-
-        // for (int i = 0; i < groups.size() - 2; i++) { // TODO recursive method for longer moves
-        //     move.add(groups.get(i));
-        //     move.add(groups.get(i+1));
-        //     move.add(groups.get(i+2));
-        //     System.out.println(move.size());
-        //     System.out.println(i);
-        //     if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { // TODO discard a group if it has two tiles of the same color
-        //         System.out.println(printListTiles(move));
-        //         actualMoveGroup = new ArrayList<>(move);
-        //         listOfMovesGroups.add(actualMoveGroup);
-        //     }
-        //     move.clear();
-        // }
 
         int move_size = 3;
         while (true) {
@@ -52,7 +34,7 @@ public class BaselineAgent {
                 }
                 if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
                     System.out.println(printListTiles(move));
-                    listOfMovesGroups.add(new ArrayList<>(move));
+                    listOfMoves.add(new ArrayList<>(move));
                 }
                 move.clear();
             }
@@ -60,35 +42,26 @@ public class BaselineAgent {
                 for (int j = 0; j < move_size; j++) {
                     move.add(runs.get(i + j));
                 }
-                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { // TODO discard a group if it has two tiles of the same color
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
                     System.out.println(printListTiles(move));
-                    listOfMovesGroups.add(new ArrayList<>(move));
+                    listOfMoves.add(new ArrayList<>(move));
                 }
                 move.clear();
             }
-            if (listOfMovesGroups.size() == 0) {
-                listOfMovesGroups = prevListOfMoves;
+            if (listOfMoves.size() == 0) {
+                listOfMoves = prevListOfMoves;
                 break;
             } else {
-                prevListOfMoves = new ArrayList<>(listOfMovesGroups);
-                listOfMovesGroups.clear();
+                prevListOfMoves = new ArrayList<>(listOfMoves);
+                listOfMoves.clear();
             }
             move_size++;
         }
-        System.out.println(listOfMovesGroups.size());
+        System.out.println(listOfMoves.size());
         
-        
-        //actualMoveGroup = findLargestMove(listOfMovesGroups); // largest move for groups
-        // printListTiles(actualMoveGroup);
-             
-        // TODO check every combinaion of three, if there is one, check n+1 (while loop)
-
-
-        // actualMoveRun = findLargestMove(listOfMovesRuns); // largest move for runs
-        // printListTiles(actualMoveRun);
-
-        // ArrayList<Tile> finalMove = chooseBestMove(actualMoveRun, actualMoveGroup);
-        finalMove = AI.nestedArrayListToArrayList(listOfMovesGroups);
+       
+        listOfMoves = findNonOverlappingMoves(listOfMoves);
+        finalMove = AI.nestedArrayListToArrayList(listOfMoves);
         return finalMove;
     }
 
@@ -195,8 +168,34 @@ public class BaselineAgent {
         }
 
     }
-    
 
+    /**
+     * finds all moves that don't use the same tiles
+     * @param listOfMovesGroups list of moves
+     * @return list of moves that don't use the same tiles
+     */
+    static ArrayList<ArrayList<Tile>> findNonOverlappingMoves(ArrayList<ArrayList<Tile>> listOfMoves) {
+        ArrayList<ArrayList<Tile>> notOverlappingMoves = new ArrayList<>();
+
+        for (int i = 0; i < listOfMoves.size(); i++) {
+            ArrayList<Tile> currentMove = listOfMoves.get(i);
+            boolean isOverlapping = false;
+            // Compare currentMove with previously selected non-overlapping moves
+            for (ArrayList<Tile> selectedMove : notOverlappingMoves) {
+                if (!BaselineAgent.isTwoMovesPossible(currentMove, selectedMove)) {
+                    isOverlapping = true;
+                    break;
+                }
+            }
+            // If currentMove doesn't overlap, add it to nonOverlappingMoves
+            if (!isOverlapping) {
+                notOverlappingMoves.add(currentMove);
+            }
+        }
+
+        return notOverlappingMoves;
+    }
+    
     /**
      * chooses the best move to make
      * @param movesGroup move of tiles forming groups
@@ -212,15 +211,12 @@ public class BaselineAgent {
                 twoMoves.add(null);
                 twoMoves.addAll(movesRun);
                 System.out.println("Two moves are possible");
-                printListTiles(twoMoves);
                 return twoMoves;
             } else {
                 System.out.println("Choosing the largest move");
                 if (movesGroup.size() > movesRun.size()) {
-                    printListTiles(movesGroup);
                     return movesGroup;
                 }else{
-                    printListTiles(movesRun);
                     return movesRun;
                 }
             }
@@ -228,7 +224,6 @@ public class BaselineAgent {
     }
 
     public static void main(String[] args) {
-        BaselineAgent test = new BaselineAgent();
 
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
@@ -245,6 +240,6 @@ public class BaselineAgent {
         Tile t7R = new Tile((byte) 7, Color.RED);
 
         Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
-        test.baselineAgent(rack);
+        baselineAgent(rack);
     }
 }

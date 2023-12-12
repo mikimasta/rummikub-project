@@ -2,6 +2,7 @@ package com.rummikub.game;
 
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
+import java.util.HashSet;
 
 public class AI {
 
@@ -11,69 +12,66 @@ public class AI {
      * @param board board of the game
      * @return the best outcome adding the board to the rack
      */
-    public ArrayList<Tile> possibleMoveAddingRackToBoard(Tile[][] rack, Tile[][] board){
+    public static ArrayList<Tile> possibleMoveAddingRackToBoard(Tile[][] dupRack, Tile[][] board){
 
-        ArrayList<Tile> combined = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack)); 
+        ArrayList<Tile> combined = new ArrayList<Tile>(new HashSet<Tile>(BaselineAgent.TwodArrayToArrayList(dupRack)));
         combined.addAll(BaselineAgent.TwodArrayToArrayList(board)); // arraylist combining rack and board tiles
 
-        ArrayList<Tile> groups = Game.orderRackByGroup(combined);
+        ArrayList<Tile> groups = new ArrayList<>(combined); 
+        Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
 
         ArrayList<Tile> runs = new ArrayList<>(combined); 
         Game.orderRackByStairs(runs); // if joker it will be at the front
 
-        // now check if there is a move possible for groups
         ArrayList<Tile> move = new ArrayList<>(); 
-        ArrayList<Tile> actualMoveGroup = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> listOfMovesGroups = new ArrayList<ArrayList<Tile>>();
-        for (int i = 0; i < groups.size(); i++) {
-            Tile tile = groups.get(i);
-            move.add(tile);
-            if (move.size() > 2) {
-                if (Game.checkIfGroup(move)) {
-                    actualMoveGroup = new ArrayList<>(move);
-                    listOfMovesGroups.add(actualMoveGroup);
-                } else {
-                    move.clear();
-                    move.add(groups.get(i-1)); // added
-                    move.add(tile);
+        ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<Tile> finalMove = new ArrayList<>();
+
+        int move_size = 3;
+        while (true) {
+            System.out.println(move_size);
+            for (int i = 0; i < groups.size() - move_size + 1; i++) {
+                for (int j = 0; j < move_size; j++) {
+                    move.add(groups.get(i + j));
                 }
-            } 
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                    System.out.println(BaselineAgent.printListTiles(move));
+                    listOfMoves.add(new ArrayList<>(move));
+                }
+                move.clear();
+            }
+            for (int i = 0; i < runs.size() - move_size + 1; i++) {
+                for (int j = 0; j < move_size; j++) {
+                    move.add(runs.get(i + j));
+                }
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
+                    System.out.println(BaselineAgent.printListTiles(move));
+                    listOfMoves.add(new ArrayList<>(move));
+                }
+                move.clear();
+            }
+            if (listOfMoves.size() == 0) {
+                listOfMoves = prevListOfMoves;
+                break;
+            } else {
+                prevListOfMoves = new ArrayList<>(listOfMoves);
+                listOfMoves.clear();
+            }
+            move_size++;
         }
-        //actualMoveGroup = BaselineAgent.findLargestMove(listOfMovesGroups); // largest move for groups
-        ArrayList<Tile> groupMove = nestedArrayListToArrayList(findNonOverlappingMoves(listOfMovesGroups));
-        System.out.println("moves for groups");        
-        BaselineAgent.printListTiles(groupMove);
+        System.out.println(listOfMoves.size());
+
+        listOfMoves = BaselineAgent.findNonOverlappingMoves(listOfMoves);
+        finalMove = nestedArrayListToArrayList(listOfMoves);
         
-        // now check if there is a move possible for runs
-        move.clear();
-        ArrayList<Tile> actualMoveRun = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> listOfMovesRuns = new ArrayList<ArrayList<Tile>>();
-        for (int i = 0; i < runs.size(); i++) {
-            Tile tile = runs.get(i);
-            move.add(tile);
-            if (move.size() > 2) {
-                if (Game.checkIfStairs(move)) {
-                    actualMoveRun = new ArrayList<>(move);
-                    listOfMovesRuns.add(actualMoveRun); 
-                } else {
-                    move.clear();
-                    move.add(runs.get(i-1));
-                    move.add(tile);
-                }
-            } 
-        }
-        //actualMoveRun = BaselineAgent.findLargestMove(listOfMovesRuns);
-        ArrayList<Tile> runMove = nestedArrayListToArrayList(findNonOverlappingMoves(listOfMovesRuns));
-        System.out.println("moves for runs");
-        BaselineAgent.printListTiles(runMove);
-
-        ArrayList<Tile> finalMove = BaselineAgent.chooseBestMove(runMove, groupMove);
-
         // check if tiles on the board are still on the board
         if (finalMove.containsAll(BaselineAgent.TwodArrayToArrayList(board))){
             return finalMove;
+        } else {
+            System.out.println("unable to use it");
+            return null;
         }
-        return null;
         
     }
 
@@ -91,36 +89,8 @@ public class AI {
         return move;
     }
 
-    /**
-     * finds all moves that don't use the same tiles
-     * @param listOfMovesGroups list of moves
-     * @return list of moves that don't use the same tiles
-     */
-    static ArrayList<ArrayList<Tile>> findNonOverlappingMoves(ArrayList<ArrayList<Tile>> listOfMoves) {
-        ArrayList<ArrayList<Tile>> notOverlappingMoves = new ArrayList<>();
-
-        for (int i = 0; i < listOfMoves.size(); i++) {
-            ArrayList<Tile> currentMove = listOfMoves.get(i);
-            boolean isOverlapping = false;
-            // Compare currentMove with previously selected non-overlapping moves
-            for (ArrayList<Tile> selectedMove : notOverlappingMoves) {
-                if (!BaselineAgent.isTwoMovesPossible(currentMove, selectedMove)) {
-                    isOverlapping = true;
-                    break;
-                }
-            }
-            // If currentMove doesn't overlap, add it to nonOverlappingMoves
-            if (!isOverlapping) {
-                notOverlappingMoves.add(currentMove);
-            }
-        }
-
-        return notOverlappingMoves;
-    }
-
     public static void main(String[] args) {
-        AI test = new AI();
-
+        
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
         Tile t7R = new Tile((byte) 7, Color.RED);
@@ -144,6 +114,6 @@ public class AI {
         Tile t2R = new Tile((byte) 2, Color.BLACK);
         Tile[][]  board = {{n, t5R, t6R, t7R, n, n, n, t2O, t2B, t2R, n, n, n, n, n}};
 
-        test.possibleMoveAddingRackToBoard(rack, board);
+        possibleMoveAddingRackToBoard(rack, board);
     }
 }

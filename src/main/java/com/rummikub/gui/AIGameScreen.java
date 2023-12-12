@@ -1,5 +1,6 @@
 package com.rummikub.gui;
 
+import com.rummikub.game.AI;
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
@@ -85,16 +86,19 @@ class AIGameScreen extends Pane {
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI()) { // player is AI
                 aimove = null;
-                aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
+                aimove = AI.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                if (aimove == null) {
+                    aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
+                }
                 System.out.println(aimove);
                 if (aimove != null && !aimove.isEmpty()) {
                     System.out.println("yes ");
-                        makeAIMove(aimove, GameboardGUI.getInstance().getState());
-                        BaselineAgent.printListTiles(aimove); // update the board in memory 
-                        GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
-                        Tile[][] newHand = removeTiles(aimove); // remove tiles used for the AI move
-                        RackGUI.getInstance().handToRack(newHand); 
-                        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+                    makeAIMove(aimove, GameboardGUI.getInstance().getState());
+                    BaselineAgent.printListTiles(aimove); // update the board in memory 
+                    GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
+                    Tile[][] newHand = removeTiles(aimove); // remove tiles used for the AI move
+                    RackGUI.getInstance().handToRack(newHand); 
+                    System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
                 }else{ // no move so draw
                     System.out.println("no move possible for computer");
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
