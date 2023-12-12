@@ -1,5 +1,6 @@
 package com.rummikub.game;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -9,7 +10,33 @@ public class BaselineAgentNB {
         Object[] result = new Object[3];
         int count = 0;
         ArrayList<ArrayList<Tile>> newboard = new ArrayList<>();
+        //FIRST ONLY LOOK AT THE RACK
+        int countRackPlays = 1;
+        do{
+            ArrayList<Tile> resultRack = playTheRack(hand);
+            if(resultRack==null){
+                countRackPlays=0;
+            }else {
+                hand.removeAll(resultRack);
+                newboard.add(resultRack);
+                count += resultRack.size();
+            }
+        }while(countRackPlays!=0);
+        /*
+        int countRackPlays = 1;
+        do{
+            ArrayList<Tile> resultRack = BaselineAgent.BaselineAgent(hand.toArray(new Tile[0][0]));;
+            if(resultRack==null){
+                countRackPlays=0;
+            }else {
+                hand.removeAll(resultRack);
+                newboard.add(resultRack);
+                count += resultRack.size();
+            }
+        }while(countRackPlays!=0);
+        */
 
+        //LOOKING AT BOARD AND THE RACK
         Iterator<String> boardIterator = board.iterator();
         while (boardIterator.hasNext()) {
             int countset = 0;
@@ -216,4 +243,55 @@ public class BaselineAgentNB {
         return null;
     }
 
+    public static ArrayList<Tile> playTheRack(ArrayList<Tile> hand) {
+        ArrayList<Tile> set = new ArrayList<>();
+        ArrayList<Tile> handNoDuplicates = new ArrayList<>(new HashSet<>(hand));
+        handNoDuplicates = Game.orderSetStairs(handNoDuplicates);
+
+        ArrayList<Tile> consecutiveTiles = BaselineAgentNB.getTilesWithConsecutiveNumbers(handNoDuplicates);
+        ArrayList<Tile> sameNumberTiles = BaselineAgentNB.getTilesWithSameNumbers(handNoDuplicates);
+
+        for (int i = 0; i < handNoDuplicates.size() - 2; i++) {
+            Tile t1 = handNoDuplicates.get(i);
+            Tile t2 = handNoDuplicates.get(i + 1);
+            Tile t3 = handNoDuplicates.get(i + 2);
+            if ((t1.getNumber() == t3.getNumber() - 2) && t1.getColor().equals(t2.getColor()) && t1.getColor().equals(t3.getColor())) {
+                set.add(t1);
+                set.add(t2);
+                set.add(t3);
+                return set;
+            }
+        }
+
+        handNoDuplicates = Game.orderSetGroup(handNoDuplicates);
+
+        for (int i = 0; i < handNoDuplicates.size() - 2; i++) {
+            Tile t1 = handNoDuplicates.get(i);
+            Tile t2 = handNoDuplicates.get(i + 1);
+            Tile t3 = handNoDuplicates.get(i + 2);
+
+            if ((t1.getNumber() == t3.getNumber()) && (!t1.getColor().equals(t2.getColor())) && (!t1.getColor().equals(t3.getColor())) && !t2.getColor().equals(t3.getColor())) {
+                set.add(t1);
+                set.add(t2);
+                set.add(t3);
+                return set;
+            }
+        }
+
+        if (hand.get(hand.size() - 1).getNumber() == -1) {
+            if (!consecutiveTiles.isEmpty()) {
+                set.add(consecutiveTiles.get(0));
+                set.add(consecutiveTiles.get(1));
+                set.add(hand.get(hand.size() - 1));
+                return set;
+            } else if (!sameNumberTiles.isEmpty()) {
+                set.add(sameNumberTiles.get(0));
+                set.add(sameNumberTiles.get(1));
+                set.add(hand.get(hand.size() - 1));
+                return set;
+            }
+        }
+
+        return null;
+    }
 }

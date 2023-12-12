@@ -2,6 +2,8 @@ package com.rummikub.game;
 
 import javafx.scene.paint.Color;
 
+import java.util.Objects;
+
 /**
  * This class is a memory representation of a tile in the game
  */
@@ -31,7 +33,7 @@ public class Tile {
         }
     }
     public void printTile(){
-        System.out.println(getNumber()+""+getColor());
+        System.out.print(getNumber()+""+getColor());
     }
     public byte getNumber() {
         return number;
@@ -52,5 +54,19 @@ public class Tile {
     public boolean isLocked() {
         return locked;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tile tile = (Tile) o;
+        return number == tile.number && Objects.equals(color, tile.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number, color);
+    }
+
 
 }

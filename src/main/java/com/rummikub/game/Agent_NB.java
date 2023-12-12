@@ -1,14 +1,15 @@
 package com.rummikub.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import javafx.scene.paint.Color;
 
 public class Agent_NB {
 
     public static ArrayList<ArrayList<Tile>> possibleMoves(ArrayList<Tile> rack, ArrayList<ArrayList<Tile>> boardArray){
-        /*
-        * Add code for firstMove base on the BaselineAgentRack
-        * */
+
         ArrayList<String> board = Game.boardListToSetKey(boardArray);
         System.out.println("Initial board");
         System.out.println(board);
@@ -28,7 +29,7 @@ public class Agent_NB {
 
         } while (count != 0);
 
-        if(searchNum == 1){ //no tiles from the hand are valid
+        if(searchNum == 1&&(board.size()==Game.boardListToSetKey(newBoard).size())){ //no tiles from the hand are valid
             System.out.println("no tiles from the hand can be added to the board");
             System.out.println("Final board");
             ArrayList<String> finalBoardString = (Game.boardListToSetKey(boardArray));
@@ -143,31 +144,35 @@ public class Agent_NB {
         set6.add(bu7);
 
         ArrayList<ArrayList<Tile>> fullBoard = new ArrayList<>();
-        fullBoard.add(set1);
-        fullBoard.add(set2);
-        fullBoard.add(set3);
-        fullBoard.add(set4);
-        fullBoard.add(set5);
-        fullBoard.add(set6);
+//        fullBoard.add(set1);
+//        fullBoard.add(set2);
+//        fullBoard.add(set3);
+//        fullBoard.add(set4);
+//        fullBoard.add(set5);
+//        fullBoard.add(set6);
 
         ArrayList<Tile> hand = new ArrayList<>();
         hand.add(rr4);
-        hand.add(bl4);
+        hand.add(bl3);
+        hand.add(rr3);
         hand.add(rr5);
         hand.add(oo5);
         hand.add(bl11);
         hand.add(rr11);
-        hand.add(bu3);
+        hand.add(bu11);
         hand.add(bu6);
         hand.add(bu5);
         hand.add(bu7);
         hand.add(oo8);
-        hand.add(oo9);
+        hand.add(oo5);
         hand.add(bl3);
         hand.add(oo3);
         hand.add(oo2);
-        hand.add(oo1);
-
+        hand.add(joker);
+        System.out.println("Inicia loop");
         possibleMoves(hand,fullBoard);
+
+
+
     }
 }
