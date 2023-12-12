@@ -1,8 +1,9 @@
 package com.rummikub.game;
 
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
+
+import com.rummikub.model.AgentImplementation;
 
 
 public class Experiments {
@@ -28,9 +29,9 @@ public class Experiments {
         Tile tile7 = new Tile((byte) 3, Color.RED);
         Tile tile8 = new Tile((byte) -1,Color.BLACK);
         Tile tile9 = new Tile((byte) 5, Color.RED);
-        set1.add(tile7);
-        set1.add(tile8);
-        set1.add(tile9);
+        set3.add(tile7);
+        set3.add(tile8);
+        set3.add(tile9);
    
         ArrayList<Tile> set4 = new ArrayList<>();
         Tile tile10 = new Tile((byte) 3, Color.RED);
@@ -72,6 +73,22 @@ public class Experiments {
         set7.add(tile23);
         set7.add(tile24);
         set7.add(tile25);
+
+        ArrayList<Tile> set8 = new ArrayList<>();
+        Tile tile31 = new Tile((byte) 6, Color.ORANGE);
+        Tile tile26 = new Tile((byte) 7, Color.ORANGE);
+        Tile tile27 = new Tile((byte) 8,Color.ORANGE);
+        Tile tile28 = new Tile((byte) 9, Color.ORANGE);
+        Tile tile29 = new Tile((byte) 10, Color.ORANGE);
+        Tile tile30 = new Tile((byte) 11, Color.ORANGE);
+        
+        set8.add(tile31);
+        set8.add(tile25);
+        set8.add(tile26);
+        set8.add(tile27);
+        set8.add(tile28);
+        set8.add(tile29);
+        set8.add(tile30);
         
 
         ArrayList<ArrayList<Tile>> randomSets = new ArrayList<>();
@@ -82,6 +99,7 @@ public class Experiments {
         randomSets.add(set5);
         randomSets.add(set6);
         randomSets.add(set7);
+        randomSets.add(set8);
 
         return randomSets;
     }
@@ -210,35 +228,58 @@ public class Experiments {
      }
 
 
-    private static Object[]getTestState(int numTiles){
+     private static Object[] getTestState(int numTiles) {
         ArrayList<ArrayList<Tile>> randomSets = randomValidSets();
         ArrayList<Tile> allTiles = allTiles();
 
-        ArrayList<ArrayList<Tile>> board = new ArrayList<ArrayList<Tile>>();
+        ArrayList<ArrayList<Tile>> board = new ArrayList<>();
         ArrayList<Tile> hand = new ArrayList<>();
+        Map<Tile, Integer> tileOccurrences = new HashMap<>();
         int count = 0;
         Random randomSet = new Random();
         Random randomTile = new Random();
         Random randomTest = new Random();
-        while(count < numTiles){
+
+        while (count < numTiles) {
             int test = randomTest.nextInt(2);
-            if(test == 1){
+            if (test == 1) {
                 int randomSetIndex = randomSet.nextInt(randomSets.size());
-                board.add(randomSets.get(randomSetIndex));
+                ArrayList<Tile> randomSetTiles = randomSets.get(randomSetIndex);
 
-                count = count + randomSets.get(randomSetIndex).size();
+                // Check occurrences for each tile in the set
+                boolean canAddSet = true;
+                for (Tile tile : randomSetTiles) {
+                    if (tileOccurrences.getOrDefault(tile, 0) >= 2) {
+                        canAddSet = false;
+                        break;
+                    }
+                }
 
-            }
-            else if(test == 0){
-            int randomIndex = randomTile.nextInt(allTiles.size());
-            hand.add(allTiles.get(randomIndex));
-                count = count + 1;
+                // Add the set if allowed
+                if (canAddSet) {
+                    board.add(randomSetTiles);
+                    for (Tile tile : randomSetTiles) {
+                        tileOccurrences.put(tile, tileOccurrences.getOrDefault(tile, 0) + 1);
+                    }
+                    count += randomSetTiles.size();
+                }
+            } else if (test == 0) {
+                int randomIndex = randomTile.nextInt(allTiles.size());
+                Tile randomTileToAdd = allTiles.get(randomIndex);
+
+                // Check occurrences for the random tile
+                if (tileOccurrences.getOrDefault(randomTileToAdd, 0) < 2) {
+                    hand.add(randomTileToAdd);
+                    tileOccurrences.put(randomTileToAdd, tileOccurrences.getOrDefault(randomTileToAdd, 0) + 1);
+                    count++;
+                }
             }
         }
-        Object[] state = {hand,board};
+
+        Object[] state = {hand, board};
         return state;
     }
-   
+
     private static long testMain(int numTiles){
         Object[] testState = getTestState(numTiles);
         Tile[][] hand = (Tile[][]) testState[0];
@@ -274,6 +315,62 @@ public class Experiments {
         }
 
 
+    }
+
+    private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board){
+        Tile[][] matrix = new Tile[20][7];
+
+        int rowIndex = 0;
+        int colIndex = 0;
+
+        for (ArrayList<Tile> innerList : board) {
+            for (Tile tile : innerList) {
+                matrix[rowIndex][colIndex] = tile;
+                colIndex++;
+
+                // Check if the row is full or if a 0 is encountered
+                if (colIndex == 7) {
+                    rowIndex++;
+                    colIndex = 0;
+
+                    // Check if the matrix is full
+                    if (rowIndex == 20) {
+                        break;
+                    }
+                }
+            }
+            //after every inner list it should be moved
+            if (!(colIndex == 0)) {
+                  colIndex++;
+        }
+        
+    }
+        return matrix;
+    }
+    
+
+    private static Tile[][] hand2matrix(ArrayList<Tile> hand){
+         Tile[][] matrix = new Tile[2][15];
+
+        int rowIndex = 0;
+        int colIndex = 0;
+
+            for (Tile tile : hand) {
+                matrix[rowIndex][colIndex] = tile;
+                colIndex++;
+
+                // Check if the row is full or if a 0 is encountered
+                if (colIndex == 15) {
+                    rowIndex++;
+                    colIndex = 0;
+
+                    // Check if the matrix is full
+                    if (rowIndex == 2) {
+                        break;
+                    }
+                }
+            }
+        return matrix;
     }
     public static void main(String[] args) {
         runTests();
