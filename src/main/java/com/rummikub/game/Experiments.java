@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Experiments {
 
-    private ArrayList<ArrayList<Tile>> randomValidSets(){
+    private static ArrayList<ArrayList<Tile>> randomValidSets(){
       ArrayList<Tile> set1 = new ArrayList<>();
         Tile tile1 = new Tile((byte) 1, Color.RED);
         Tile tile2 = new Tile((byte) 2,Color.RED);
@@ -86,7 +86,7 @@ public class Experiments {
         return randomSets;
     }
 
-     private ArrayList<Tile> allTiles(){
+     private static ArrayList<Tile> allTiles(){
         ArrayList<Tile> allTiles = new ArrayList<>();
 
         Tile joker = new Tile((byte) -1, Color.BROWN);
@@ -210,7 +210,7 @@ public class Experiments {
      }
 
 
-    private Object[]getTestState(int numTiles){
+    private static Object[]getTestState(int numTiles){
         ArrayList<ArrayList<Tile>> randomSets = randomValidSets();
         ArrayList<Tile> allTiles = allTiles();
 
@@ -239,7 +239,7 @@ public class Experiments {
         return state;
     }
    
-    private long testMain(int numTiles){
+    private static long testMain(int numTiles){
         Object[] testState = getTestState(numTiles);
         Tile[][] hand = (Tile[][]) testState[0];
         Tile[][] board = (Tile[][])testState[1];
@@ -257,6 +257,26 @@ public class Experiments {
 
         System.out.println("Elapsed time: " + elapsedTime + " milliseconds for " + numTiles + " amount of tiles");
         return elapsedTime;
+    }
+
+    private static void runTests(){
+        int[] numTilesTest = {20,30,40,50};
+        int numOfRuns = 10;
+
+        for(int i = 0; i < numTilesTest.length; i++){
+            long average = 0;
+            for(int j = 0; j < numOfRuns; j++){
+                average += testMain(numTilesTest[i]);
+            }
+            average = average/numOfRuns;
+        
+            System.out.println("Average Time For " + numOfRuns + " Run of " + numTilesTest[i] + " Tiles: " + average + " (milliseconds)");
+        }
+
+
+    }
+    public static void main(String[] args) {
+        runTests();
     }
 
     }
