@@ -1,6 +1,9 @@
-package com.rummikub.game;
+package com.rummikub.model;
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import com.rummikub.game.Game;
+import com.rummikub.game.Tile;
 
 public class SolutionFinder {
  

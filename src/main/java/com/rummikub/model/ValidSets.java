@@ -1,4 +1,4 @@
-package com.rummikub.game;
+package com.rummikub.model;
 import javafx.scene.paint.Color;
 
 import java.io.BufferedReader;
@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.rummikub.game.Tile;
+import com.rummikub.game.Game;
 
 public class ValidSets {
     private static final HashMap<String, ArrayList<Tile>> immutableMap = generateImmutableHashMap();

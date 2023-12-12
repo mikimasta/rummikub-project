@@ -1,7 +1,10 @@
-package com.rummikub.game;
+package com.rummikub.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import com.rummikub.game.Game;
+import com.rummikub.game.Tile;
 
 import javafx.scene.paint.Color;
 // TODO after a move remove tiles from rack
@@ -245,6 +248,6 @@ public class BaselineAgent {
         Tile t7R = new Tile((byte) 7, Color.RED);
 
         Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
-        test.baselineAgent(rack);
+        BaselineAgent.baselineAgent(rack);
     }
 }

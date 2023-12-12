@@ -1,8 +1,10 @@
-package com.rummikub.game;
+package com.rummikub.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import com.rummikub.game.Game;
+import com.rummikub.game.Tile;
 
 import javafx.scene.paint.Color;
 

@@ -1,8 +1,11 @@
-package com.rummikub.game;
+package com.rummikub.model;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
+
+import com.rummikub.game.Tile;
+import com.rummikub.game.Game;
 
 public class AgentNBHelper {
 

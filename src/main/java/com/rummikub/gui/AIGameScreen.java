@@ -1,7 +1,7 @@
 package com.rummikub.gui;
 
-import com.rummikub.game.AgentImplementation;
-import com.rummikub.game.BaselineAgent;
+import com.rummikub.model.AgentImplementation;
+import com.rummikub.model.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
 import javafx.scene.control.Button;

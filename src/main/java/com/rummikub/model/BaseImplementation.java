@@ -1,7 +1,11 @@
-package com.rummikub.game;
+package com.rummikub.model;
 
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
+
+import com.rummikub.game.Tile;
+import com.rummikub.game.Game;
+
 
 public class BaseImplementation {
 

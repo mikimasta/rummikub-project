@@ -1,5 +1,6 @@
-package com.rummikub.game;
+package com.rummikub.model;
 import java.util.*;
+import com.rummikub.game.Tile;
 
 public class AgentImplementation {
 
