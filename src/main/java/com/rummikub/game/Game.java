@@ -1,11 +1,8 @@
 package com.rummikub.game;
 
 import javafx.scene.paint.Color;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * This class is a memory representation of the game state. It executes and
@@ -495,5 +492,126 @@ public class Game {
         }
         return -count;
     }
+
+    public static ArrayList<ArrayList<Tile>> boardArrayToList(Tile[][] gameBoard){
+        ArrayList<ArrayList<Tile>> board = new ArrayList<>();
+
+        for (int i = 0; i < gameBoard.length; i++) {
+            int count = 0;
+            ArrayList<Tile> set = new ArrayList<>();
+            for (int y = 0; y < gameBoard[i].length; y++) {
+                Tile tile = gameBoard[i][y];
+                if (tile != null) {
+                    assert set != null;
+                    set.add(tile);
+                    count++;
+                }
+                if (((tile == null) && (count > 2))||(y==(gameBoard[i].length-1)&& set!=null)) {
+                    count = 0;
+                    board.add(set);
+                    set = null;
+                }
+            }
+        }
+        return board;
+    }
+    public static ArrayList<String> boardListToSetKey (ArrayList<ArrayList<Tile>> gameBoard){
+        ArrayList<String> board = new ArrayList<>();
+        for(ArrayList<Tile> set: gameBoard){
+            String setKey="";
+            if(set.size()<6){
+                for (int i = 0; i < set.size(); i++) {
+                    Tile tile = set.get(i);
+                    setKey += ("(" + tile.getNumber() + "," + getStringFromColor(tile) + ").");
+                }
+                board.add(getUniqueKeyString(setKey));
+            }
+            else{
+                int n = set.size()/3;
+                for (int x = 0; x < n - 1 ; x++) {
+                    for (int i = 0; i < 3; i++) {
+                        Tile tile = set.get(i+x);
+                        setKey += ("(" + tile.getNumber() + "," + getStringFromColor(tile) + ").");
+                    }
+                    board.add(getUniqueKeyString(setKey));
+                    setKey="";
+                }
+                for (int i = 3*(n-1); i <set.size(); i++) {
+                    Tile tile = set.get(i);
+                    setKey += ("(" + tile.getNumber() + "," + getStringFromColor(tile) + ").");
+                }
+                board.add(getUniqueKeyString(setKey));
+            }
+
+        }
+        return board;
+    }
+    public static String getUniqueKeyString(String setKey){
+        String[] objects = setKey.replaceAll(",", "").split("\\.");
+        Arrays.sort(objects, (s1, s2) -> {
+            int num1 = Integer.parseInt(s1.replaceAll("[^0-9]", ""));
+            int num2 = Integer.parseInt(s2.replaceAll("[^0-9]", ""));
+            String word1 = s1.replaceAll("[^a-zA-Z]", "");
+            String word2 = s2.replaceAll("[^a-zA-Z]", "");
+
+            if (num1 != num2) {
+                return Integer.compare(num1, num2);
+            } else {
+                return word1.compareTo(word2);
+            }
+        });
+        StringBuilder setKeyString = new StringBuilder();
+        for (String element : objects) {
+            setKeyString.append(element.replaceAll("[()]", ""));
+        }
+        return (setKeyString.toString());
+    }
+    public static String getStringFromColor(Tile tile){
+        String color = "";
+        if (tile != null) {
+            if (tile.getColor() == Color.RED) {
+                color = "Red";
+            } else if (tile.getColor() == Color.BLUE) {
+                color = "Blue";
+            } else if (tile.getColor() == Color.BLACK) {
+                color = "Black";
+            } else if (tile.getColor() == Color.ORANGE) {
+                color = "Orange";
+            } else {
+                color = "None";
+            }
+        }
+        return color;
+    }
+
+    public static ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
+        ArrayList<Tile> arrList = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                if (arr[i][j] != null) {
+                    arrList.add(arr[i][j]);
+                }
+            }
+        }
+        return arrList;
+    }
+
+    public static ArrayList<Tile> orderSetStairs(ArrayList<Tile> set) {
+        Tile joker = new Tile((byte) -1, Color.BROWN);
+        if(set.contains(joker)){
+            set.remove(joker);
+            set.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
+            set.add(joker);
+        }else{
+            set.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
+        }
+        return set;
+    }
+
+    public static ArrayList<Tile> orderSetGroup(ArrayList<Tile> set) {
+        set.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
+        return set;
+    }
+
 
 }
