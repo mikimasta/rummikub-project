@@ -10,7 +10,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
 class AIGameScreen extends Pane {
@@ -149,6 +148,12 @@ class AIGameScreen extends Pane {
 
     }
 
+    /**
+     * updates the gameboard in memory by finding a space on the board to place the ai move
+     * @param aiMove list of tiles of the move
+     * @param board gameboard
+     * @return the updated gameboard
+     */
     private Tile[][] makeAIMove(ArrayList<Tile> aiMove, Tile[][] board) {
         if (aiMove == null) {
             return board;
@@ -181,6 +186,11 @@ class AIGameScreen extends Pane {
         return board;
     }
     
+    /**
+     * method to remove the tiles used in the AI move from its rack  
+     * @param aiMove list of tiles of the move
+     * @return the updated rack
+     */
     private Tile[][] removeTiles(ArrayList<Tile> aiMove){
         
         for (Tile tile : aiMove) {
