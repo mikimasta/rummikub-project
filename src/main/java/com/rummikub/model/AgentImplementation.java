@@ -21,7 +21,7 @@ public class AgentImplementation {
         System.out.println("number of tiles in play = " + numOfTilesInPlay);
         ArrayList<ArrayList<Tile>> solutionBoard = new ArrayList<>();
 
-        if(numOfTilesInPlay < 25){
+        if(numOfTilesInPlay < 15){
             solutionBoard = SolutionFinder.findSolution(arrayHand, arrayBoard);
         }
         else{
@@ -37,18 +37,18 @@ public class AgentImplementation {
         Tile[][] finalHand = hand2matrix(solutionHand);
         Tile[][] finalBoard = board2matrix(solutionBoard);
 
-        for (ArrayList<Tile> row : solutionBoard) {
-            for (Tile tile : row) {
-                if(!(tile == null)){
-                    System.out.print(tile.toString() +" ");
+        // for (ArrayList<Tile> row : solutionBoard) {
+        //     for (Tile tile : row) {
+        //         if(!(tile == null)){
+        //             System.out.print(tile.toString() +" ");
 
-                }
-                else{
-                    System.out.print(0 + " ");
-                }
-            }
-            System.out.println(); // Move to the next line after each row
-        } 
+        //         }
+        //         else{
+        //             System.out.print(0 + " ");
+        //         }
+        //     }
+        //     System.out.println(); // Move to the next line after each row
+        // } 
        
         return new Object[]{finalHand, finalBoard};
 
@@ -68,7 +68,7 @@ public class AgentImplementation {
                 }
             }
         }
-        System.out.println("used tiles" + usedTiles.toString());
+        //System.out.println("used tiles" + usedTiles.toString());
         
         ArrayList<Tile> finalHand = removeUsedTile(hand, usedTiles);
         
@@ -117,6 +117,10 @@ public class AgentImplementation {
     
         for (ArrayList<Tile> innerList : board) {
             for (Tile tile : innerList) {
+                if(colIndex + innerList.size() > 20){
+                    rowIndex++;
+                    colIndex = 0;
+                }
                 matrix[rowIndex][colIndex] = tile;
                 colIndex++;
     
