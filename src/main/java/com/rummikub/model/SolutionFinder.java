@@ -15,25 +15,7 @@ public class SolutionFinder {
     static ArrayList<Tile> allTilesBoard;
     static boolean solutionFound;
      
-    /**
-     * Constructor for initializing the GameTree with a current state of the game via the hand and board.
-     * @param hand The player's hand.
-     * @param board The current state of the game board.
-    //  */
-    // public SolutionFinder(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
-       
-    //     this.game = Game.getInstance((byte)2, false);        
-    //     this.hand = hand;
-    //     this.allTilesBoard = new ArrayList<>();
-    //     this.solutionPerHand = new ArrayList<>();
-    //     this.solutionFound = false;
 
-    //     // Flatten the 2D board into a single list of tiles
-    //     for (ArrayList<Tile> list : board) {
-    //         allTilesBoard.addAll(list);
-    //     }
-
-    // }
 
     static ArrayList<ArrayList<Tile>> findSolution(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
         game = Game.getInstance((byte)2, false);        
