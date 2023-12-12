@@ -5,10 +5,6 @@ import com.rummikub.game.Tile;
 import java.util.ArrayList;
 
 public class AgentImplementation {
-    private static final int MAX_ROWS_BOARD = 20;
-    private static final int MAX_COLS_BOARD = 7;
-    private static final int MAX_ROWS_HAND = 2;
-    private static final int MAX_COLS_HAND = 15;
 
     public static Object[] makeMove(Tile[][] intialHand, Tile[][] intialBoard){
        ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(intialBoard);
@@ -95,8 +91,8 @@ public class AgentImplementation {
                 Tile currentFromHand = hand.get(i);
                 boolean tileUsed = false;
             for(int j = 0; j < used.size(); j++){
-                Tile currentFromused = used.get(i);
-                if((currentFromHand.getColorString() == currentFromused.getColorString())){
+                Tile currentFromused = used.get(j);
+                if((currentFromHand.getColorString().equals(currentFromused.getColorString()))){
                     if(currentFromHand.getNumber() == currentFromused.getNumber()){
                         tileUsed = true;
                     }   
