@@ -1,11 +1,11 @@
 package com.rummikub.model;
 
+import com.rummikub.game.Game;
+import com.rummikub.game.Tile;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.ArrayList;
-
-import com.rummikub.game.Tile;
-import com.rummikub.game.Game;
 
 public class AgentNBHelper {
 
@@ -15,16 +15,16 @@ public class AgentNBHelper {
         ArrayList<ArrayList<Tile>> newboard = new ArrayList<>();
         //FIRST ONLY LOOK AT THE RACK
         int countRackPlays = 1;
-        // do{
-        //     ArrayList<Tile> resultRack = playTheRack(hand);
-        //     if(resultRack==null){
-        //         countRackPlays=0;
-        //     }else {
-        //         hand.removeAll(resultRack);
-        //         newboard.add(resultRack);
-        //         count += resultRack.size();
-        //     }
-        // }while(countRackPlays!=0);
+         do{
+             ArrayList<Tile> resultRack = playTheRack(hand);
+             if(resultRack==null){
+                 countRackPlays=0;
+             }else {
+                 hand.removeAll(resultRack);
+                 newboard.add(resultRack);
+                 count += resultRack.size();
+             }
+         }while(countRackPlays!=0);
         /*
         int countRackPlays = 1;
         do{

@@ -21,7 +21,7 @@ public class AgentImplementation {
         System.out.println("number of tiles in play = " + numOfTilesInPlay);
         ArrayList<ArrayList<Tile>> solutionBoard = new ArrayList<>();
 
-        if(numOfTilesInPlay < 25){
+        if(numOfTilesInPlay < 11){
             solutionBoard = SolutionFinder.findSolution(arrayHand, arrayBoard);
         }
         else{

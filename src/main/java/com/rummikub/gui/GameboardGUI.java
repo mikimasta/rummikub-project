@@ -1,10 +1,10 @@
 package com.rummikub.gui;
 
+import com.rummikub.game.Tile;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import com.rummikub.game.Tile;
 
 class GameboardGUI extends Pane {
 
@@ -20,6 +20,8 @@ class GameboardGUI extends Pane {
     static final double BOARD_X = Rummikub.xCenter - BOARD_WIDTH / 2;
     static final double BOARD_Y = 90;
 
+    private ImageView logo;
+    private Rectangle border;
     private Tile[][] state;
 
     private Tile[][] prevState = new Tile[MAX_TILES_PER_COL][MAX_TILES_PER_ROW];
@@ -37,14 +39,14 @@ class GameboardGUI extends Pane {
         setLayoutX(BOARD_X);
         setLayoutY(BOARD_Y);
 
-        ImageView logo = new ImageView(Images.rummikubLogoOnBoard);
+        logo = new ImageView(Images.rummikubLogoOnBoard);
         logo.setOpacity(0.3);
         logo.setPreserveRatio(true);
         logo.setFitWidth(400);
         logo.setLayoutX(BOARD_WIDTH / 2 - logo.getFitWidth() / 2);
         logo.setLayoutY(BOARD_HEIGHT / 2 - logo.getFitHeight());
 
-        Rectangle border = new Rectangle(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+        border = new Rectangle(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
         border.setStroke(Color.GREY);
         border.setFill(Color.TRANSPARENT);
 
@@ -143,8 +145,9 @@ class GameboardGUI extends Pane {
     }
 
     public void renderNewBoard(){
-        getChildren().clear();
 
+        getChildren().clear();
+        getChildren().addAll(logo, border);
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state[i].length; j++) {
                 

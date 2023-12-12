@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
  */
 public class Tile {
 
-    private byte number;
-    private Color color;
+    private final byte number;
+    private final Color color;
     private String colorString;
 
     private boolean locked = false;

@@ -1,9 +1,9 @@
 package com.rummikub.game;
 
-import javafx.scene.paint.Color;
-import java.util.*;
-
 import com.rummikub.model.BaselineAgent;
+import javafx.scene.paint.Color;
+
+import java.util.*;
 
 
 /**

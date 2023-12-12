@@ -1,4 +1,6 @@
 package com.rummikub.model;
+
+import com.rummikub.game.Tile;
 import javafx.scene.paint.Color;
 
 import java.io.BufferedReader;
@@ -6,9 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.rummikub.game.Tile;
-import com.rummikub.game.Game;
 
 public class ValidSetsNB {
     public static void main(String[] args) {
@@ -19,7 +18,7 @@ public class ValidSetsNB {
     private static HashMap<String, ArrayList<Tile>> generateImmutableHashMap() {
         HashMap<String, ArrayList<Tile>> validSets =new HashMap<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("/Users/milou/Desktop/Project 2.1/rummikub-project/src/main/java/com/rummikub/game/Key_Set_NB_J-1.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("src/main/java/com/rummikub/game/Key_Set_NB_J-1.txt"));
             String line;
 
             while ((line = reader.readLine()) != null) {

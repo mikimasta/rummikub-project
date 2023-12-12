@@ -1,19 +1,18 @@
 package com.rummikub.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
-
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 // TODO after a move remove tiles from rack
 // TODO it stopped drawing new tiles to the ai
 public class BaselineAgent {
     
     /**
      * takes the rack and tries to make moves based on the tiles in that rack
-     * @param rack rack of tiles
+     * @param dupRack duplicated rack of tiles
      * @return the best move to make based on that rack
      */
     public static ArrayList<Tile> baselineAgent(Tile[][] dupRack){
