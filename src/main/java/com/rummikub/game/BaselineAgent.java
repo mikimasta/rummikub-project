@@ -61,8 +61,74 @@ public class BaselineAgent {
         
        
         listOfMoves = findNonOverlappingMoves(listOfMoves);
-        finalMove = AI.nestedArrayListToArrayList(listOfMoves);
+        finalMove = nestedArrayListToArrayList(listOfMoves);
         return finalMove;
+    }
+
+    /**
+     * takes the rack and the board ordered them and makes moves with them comined and ordered
+     * @param rack rack of tiles 
+     * @param board board of the game
+     * @return the best outcome adding the board to the rack
+     */
+    public static ArrayList<Tile> possibleMoveAddingRackToBoard(Tile[][] dupRack, Tile[][] board){
+
+        ArrayList<Tile> combined = new ArrayList<Tile>(new HashSet<Tile>(BaselineAgent.TwodArrayToArrayList(dupRack)));
+        combined.addAll(BaselineAgent.TwodArrayToArrayList(board)); // arraylist combining rack and board tiles
+
+        ArrayList<Tile> groups = new ArrayList<>(combined); 
+        Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
+
+        ArrayList<Tile> runs = new ArrayList<>(combined); 
+        Game.orderRackByStairs(runs); // if joker it will be at the front
+
+        ArrayList<Tile> move = new ArrayList<>(); 
+        ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<Tile> finalMove = new ArrayList<>();
+
+        int move_size = 3;
+        while (true) {
+            for (int i = 0; i < groups.size() - move_size + 1; i++) {
+                for (int j = 0; j < move_size; j++) {
+                    move.add(groups.get(i + j));
+                }
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                    listOfMoves.add(new ArrayList<>(move));
+                }
+                move.clear();
+            }
+            for (int i = 0; i < runs.size() - move_size + 1; i++) {
+                for (int j = 0; j < move_size; j++) {
+                    move.add(runs.get(i + j));
+                }
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
+                    listOfMoves.add(new ArrayList<>(move));
+                }
+                move.clear();
+            }
+            if (listOfMoves.size() == 0) {
+                listOfMoves = prevListOfMoves;
+                break;
+            } else {
+                prevListOfMoves = new ArrayList<>(listOfMoves);
+                listOfMoves.clear();
+            }
+            move_size++;
+        }
+
+        listOfMoves = BaselineAgent.findNonOverlappingMoves(listOfMoves);
+        finalMove = BaselineAgent.nestedArrayListToArrayList(listOfMoves);
+        
+        // check if tiles on the board are still on the board
+        if (finalMove.containsAll(BaselineAgent.TwodArrayToArrayList(board))){
+            System.out.println(BaselineAgent.printListTiles(finalMove));
+            return finalMove;
+        } else {
+            System.out.println("unable to use it");
+            return null;
+        }
+        
     }
 
     /**
@@ -110,6 +176,20 @@ public class BaselineAgent {
         
     }
     
+    /**
+     * transforms a list of moves to an arraylist of moves with null tiles between each of them
+     * @param listOfMoves list of moves
+     * @return an arraylist of moves
+     */
+    static ArrayList<Tile> nestedArrayListToArrayList(ArrayList<ArrayList<Tile>> listOfMoves){
+        ArrayList<Tile> move = new ArrayList<>();
+        for (ArrayList<Tile> moveRun : listOfMoves) {
+            move.addAll(moveRun);
+            move.add(null);
+        }
+        return move;
+    }
+
     /**
      * find moves using the largest amount of tiles in a list of list of moves
      * @param listOfMoves list of moves
@@ -241,5 +321,15 @@ public class BaselineAgent {
 
         Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
         baselineAgent(rack);
+
+        Tile t5R = new Tile((byte) 5, Color.RED);
+        Tile t6R = new Tile((byte) 6, Color.RED);
+
+        Tile t2O = new Tile((byte) 2, Color.ORANGE);
+        Tile t2B = new Tile((byte) 2, Color.BLUE);
+        Tile t2R = new Tile((byte) 2, Color.BLACK);
+        Tile[][]  board = {{n, t5R, t6R, t7R, n, n, n, t2O, t2B, t2R, n, n, n, n, n}};
+
+        possibleMoveAddingRackToBoard(rack, board);
     }
 }

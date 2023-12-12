@@ -1,6 +1,5 @@
 package com.rummikub.gui;
 
-import com.rummikub.game.AI;
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
@@ -85,7 +84,7 @@ class AIGameScreen extends Pane {
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI()) { // player is AI
                 aimove = null;
-                aimove = AI.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
                 if (aimove == null) {
                     aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
                 }
