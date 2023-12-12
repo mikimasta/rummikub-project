@@ -14,6 +14,7 @@ public class Game {
     private List<Player> players;
     private List<Tile> pool;
     public Player currentPlayer;
+    public String aiType;
 
     private static Game instance;
 
@@ -43,6 +44,10 @@ public class Game {
         return players;
     }
 
+    public String getAiType() {
+        return aiType;
+    }
+
     /**
      * constructs a Game instance with a given number of player. <br>
      * creates the board, the pool and initializes and deals tiles.
@@ -56,6 +61,7 @@ public class Game {
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
 
         this.isAIGame = isAIGame;  
+        this.aiType = "baseline";
 
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {

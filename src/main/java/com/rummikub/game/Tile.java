@@ -52,4 +52,10 @@ public class Tile {
         return locked;
     }
 
+    @Override
+    public String toString() {
+        return "Tile" + number + colorString;
+        //return " " + number;
+    }
+
 }

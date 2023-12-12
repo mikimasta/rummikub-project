@@ -83,19 +83,30 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI()) { // player is AI
+            if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().getAiType() == "baseline") { // player is AI
                 aimove = null;
                 aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
                 System.out.println(aimove);
                 if (aimove != null && !aimove.isEmpty()) {
                     System.out.println("yes ");
-                        makeAIMove(aimove, GameboardGUI.getInstance().getState());
+                        makeBaselineMove(aimove, GameboardGUI.getInstance().getState());
                         BaselineAgent.printListTiles(aimove); // update the board in memory 
                         GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
                         Tile[][] newHand = removeTiles(aimove); // remove tiles used for the AI move
                         RackGUI.getInstance().handToRack(newHand); 
                         System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
                 }else{ // no move so draw
+                    System.out.println("no move possible for computer");
+                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                }
+                finishMove();}
+            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().getAiType() == "main") { // player is AI
+                aimove = null;
+                //aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
+                System.out.println(aimove);
+                if (aimove != null && !aimove.isEmpty()) {
+
+                }else{ 
                     System.out.println("no move possible for computer");
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                 }
@@ -145,7 +156,7 @@ class AIGameScreen extends Pane {
 
     }
 
-    private Tile[][] makeAIMove(ArrayList<Tile> aiMove, Tile[][] board) {
+    private Tile[][] makeBaselineMove(ArrayList<Tile> aiMove, Tile[][] board) {
         if (aiMove == null) {
             return board;
         }

@@ -16,31 +16,45 @@ public class SolutionFinder {
      * Constructor for initializing the GameTree with a current state of the game via the hand and board.
      * @param hand The player's hand.
      * @param board The current state of the game board.
-     */
-    public SolutionFinder(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
+    //  */
+    // public SolutionFinder(ArrayList<Tile> hand, ArrayList<ArrayList<Tile>> board) {
        
-        this.game = Game.getInstance((byte)2, false);        
-        this.hand = hand;
-        this.allTilesBoard = new ArrayList<>();
-        this.solutionPerHand = new ArrayList<>();
-        this.solutionFound = false;
+    //     this.game = Game.getInstance((byte)2, false);        
+    //     this.hand = hand;
+    //     this.allTilesBoard = new ArrayList<>();
+    //     this.solutionPerHand = new ArrayList<>();
+    //     this.solutionFound = false;
+
+    //     // Flatten the 2D board into a single list of tiles
+    //     for (ArrayList<Tile> list : board) {
+    //         allTilesBoard.addAll(list);
+    //     }
+
+    // }
+
+    static ArrayList<ArrayList<Tile>> findSolution(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
+        game = Game.getInstance((byte)2, false);        
+        hand = initalHand;
+        allTilesBoard = new ArrayList<>();
+        solutionPerHand = new ArrayList<>();
+        solutionFound = false;
 
         // Flatten the 2D board into a single list of tiles
-        for (ArrayList<Tile> list : board) {
+        for (ArrayList<Tile> list : initalBoard) {
             allTilesBoard.addAll(list);
         }
 
+        return getSolution();
     }
-
 
         /**
      * Entry point to get solutions with iterative deepening depth-first search, returns on solution of certin depth.
      * @return The best solutions in the form of a board using as many hand tiles as possible
      */
-    static ArrayList<ArrayList<Tile>> getSolution(int startDepth, int endDepth) {
+    static ArrayList<ArrayList<Tile>> getSolution() {
 
         // Iterative deepening loop
-        for (int segmentSize = startDepth; segmentSize <= endDepth; segmentSize++) {
+        for (int segmentSize = 0; segmentSize <= hand.size(); segmentSize++) {
             System.out.println("segmenent size (depth) " + segmentSize);
             solutionFound = false;
             prevSolution = solution;

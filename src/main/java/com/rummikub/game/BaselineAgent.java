@@ -88,7 +88,7 @@ public class BaselineAgent {
         // printListTiles(actualMoveRun);
 
         // ArrayList<Tile> finalMove = chooseBestMove(actualMoveRun, actualMoveGroup);
-        finalMove = AI.nestedArrayListToArrayList(listOfMovesGroups);
+        finalMove = BaseImplementation.nestedArrayListToArrayList(listOfMovesGroups);
         return finalMove;
     }
 

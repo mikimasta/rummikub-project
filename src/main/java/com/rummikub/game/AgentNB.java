@@ -31,10 +31,7 @@ public class AgentNB {
 
         if(searchNum == 1&&(board.size()==Game.boardListToSetKey(newBoard).size())){ //no tiles from the hand are valid
             System.out.println("no tiles from the hand can be added to the board");
-            System.out.println("Final board");
-            ArrayList<String> finalBoardString = (Game.boardListToSetKey(boardArray));
-            System.out.println(finalBoardString);
-            return boardArray;
+            return null;
         }
         System.out.println("Final board");
         ArrayList<String> finalBoardString = (Game.boardListToSetKey(newBoard));

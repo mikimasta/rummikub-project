@@ -3,7 +3,7 @@ package com.rummikub.game;
 import java.util.ArrayList;
 import javafx.scene.paint.Color;
 
-public class AI {
+public class BaseImplementation {
 
     /**
      * looks for good moves
@@ -119,7 +119,7 @@ public class AI {
     }
 
     public static void main(String[] args) {
-        AI test = new AI();
+        BaseImplementation test = new BaseImplementation();
 
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
