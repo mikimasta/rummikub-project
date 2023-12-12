@@ -30,13 +30,11 @@ public class AI {
 
         int move_size = 3;
         while (true) {
-            System.out.println(move_size);
             for (int i = 0; i < groups.size() - move_size + 1; i++) {
                 for (int j = 0; j < move_size; j++) {
                     move.add(groups.get(i + j));
                 }
                 if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
-                    System.out.println(BaselineAgent.printListTiles(move));
                     listOfMoves.add(new ArrayList<>(move));
                 }
                 move.clear();
@@ -46,7 +44,6 @@ public class AI {
                     move.add(runs.get(i + j));
                 }
                 if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
-                    System.out.println(BaselineAgent.printListTiles(move));
                     listOfMoves.add(new ArrayList<>(move));
                 }
                 move.clear();
@@ -60,13 +57,13 @@ public class AI {
             }
             move_size++;
         }
-        System.out.println(listOfMoves.size());
 
         listOfMoves = BaselineAgent.findNonOverlappingMoves(listOfMoves);
         finalMove = nestedArrayListToArrayList(listOfMoves);
         
         // check if tiles on the board are still on the board
         if (finalMove.containsAll(BaselineAgent.TwodArrayToArrayList(board))){
+            System.out.println(BaselineAgent.printListTiles(finalMove));
             return finalMove;
         } else {
             System.out.println("unable to use it");
@@ -90,7 +87,7 @@ public class AI {
     }
 
     public static void main(String[] args) {
-        
+
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
         Tile t7R = new Tile((byte) 7, Color.RED);
