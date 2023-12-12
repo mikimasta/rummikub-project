@@ -142,4 +142,29 @@ class GameboardGUI extends Pane {
 
     }
 
+    public void renderNewBoard(){
+        getChildren().clear();
+
+        for (int i = 0; i < state.length; i++) {
+            for (int j = 0; j < state[i].length; j++) {
+                
+                Tile t = state[i][j];
+
+                if (t != null) {
+
+                    TileGUI tGui = new TileGUI(t); 
+                    tGui.setPrevBoardCoords(j, i);
+                    tGui.addToBoard();
+                    tGui.setTranslateX(j * TileGUI.TILE_WIDTH);
+                    tGui.setTranslateY(i * TileGUI.TILE_HEIGHT);
+
+                    getChildren().add(tGui);
+                }
+
+            }
+        }
+
+
+    }
+
 }

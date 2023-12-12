@@ -111,7 +111,7 @@ class AIGameScreen extends Pane {
                     Tile[][] board = (Tile[][]) aimove[1];
                     //TO DO aiMove[0] is the new hand and aiMove[1] is the 
                     GameboardGUI.getInstance().setState(board);
-                    GameboardGUI.getInstance().renderAIMove();
+                    GameboardGUI.getInstance().renderNewBoard();
                     Game.getInstance().currentPlayer.setHand(rack);
                     RackGUI.getInstance().handToRack(rack);
 

@@ -10,16 +10,6 @@ public class AgentImplementation {
        ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(intialBoard);
        ArrayList<Tile> arrayHand = hand2ArrayList(intialHand);
 
-       for (int i = 0; i < intialHand.length; i++) {
-        for (int j = 0; j < intialHand[i].length; j++) {
-            if (intialHand[i][j] != null) {
-                System.out.print(intialHand[i][j] + " ");
-            } else {
-                System.out.print("null ");
-            }
-        }
-        System.out.println(); // Move to the next line after each row
-    }
        
     
        ArrayList<Tile> allTilesBoard = new ArrayList<>();
@@ -47,18 +37,19 @@ public class AgentImplementation {
         Tile[][] finalHand = hand2matrix(solutionHand);
         Tile[][] finalBoard = board2matrix(solutionBoard);
 
-        
-          for (int i = 0; i < finalHand.length; i++) {
-        for (int j = 0; j < finalHand[i].length; j++) {
-            if (finalHand[i][j] != null) {
-                System.out.print(finalHand[i][j] + " ");
-            } else {
-                System.out.print("null ");
-            }
-        }
-        System.out.println(); // Move to the next line after each row
-    }
+        for (ArrayList<Tile> row : solutionBoard) {
+            for (Tile tile : row) {
+                if(!(tile == null)){
+                    System.out.print(tile.toString() +" ");
 
+                }
+                else{
+                    System.out.print(0 + " ");
+                }
+            }
+            System.out.println(); // Move to the next line after each row
+        } 
+       
         return new Object[]{finalHand, finalBoard};
 
     }
@@ -140,12 +131,8 @@ public class AgentImplementation {
                     }
                 }
             }
-            // Reset colIndex to 0 after every inner list
-            colIndex = 0;
-    
-            // Check if the matrix is full
-            if (rowIndex == 20) {
-                break;
+            if(colIndex != 20){
+            colIndex++;
             }
         }
         return matrix;
