@@ -1,5 +1,7 @@
 package com.rummikub.game;
 
+import com.rummikub.model.Type;
+
 /**
  * This class represents a player instance and provides all the move methods needed <br>
  * for a player to make a move
@@ -9,7 +11,7 @@ public class Player {
     private String name;
     private Tile[][] hand;
     private boolean isAI;
-    private String aiType;
+    private Type aiType;
 
     public void setHand(Tile[][] hand) {
 
@@ -28,14 +30,14 @@ public class Player {
         this.hand = new Tile[2][15];
         this.firstMoveMade = false;
         this.isAI = isAI;
-        this.aiType = "baseline";
+        this.aiType = Type.MAIN;
     }
 
     public boolean isAI() {
         return isAI;
     }
 
-    public String getAiType() {
+    public Type getAiType() {
         return aiType;
     }
     public void draw(Tile tile) {

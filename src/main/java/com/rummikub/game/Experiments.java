@@ -1,9 +1,8 @@
 package com.rummikub.game;
 
+import com.rummikub.model.AgentImplementation;
 import javafx.scene.paint.Color;
 import java.util.*;
-
-import com.rummikub.model.AgentImplementation;
 
 
 public class Experiments {

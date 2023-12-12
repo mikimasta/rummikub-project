@@ -1,6 +1,8 @@
 package com.rummikub.model;
-import java.util.*;
+
 import com.rummikub.game.Tile;
+
+import java.util.ArrayList;
 
 public class AgentImplementation {
 
@@ -33,9 +35,7 @@ public class AgentImplementation {
         Tile[][] finalHand = hand2matrix(solutionHand);
         Tile[][] finalBoard = board2matrix(solutionBoard);
 
-        Object[] stateAfterSolution = {finalHand, finalBoard};
-
-        return stateAfterSolution;
+        return new Object[]{finalHand, finalBoard};
 
     }
 
@@ -43,10 +43,10 @@ public class AgentImplementation {
         ArrayList<Tile> usedTiles = new ArrayList<>();
 
         // Iterate through list1
-        for (ArrayList<Tile> sublist1 : solutionBoard) {
+        for (ArrayList<Tile> sublist1 : intialBoard) {
             for (Tile tile : sublist1) {
                 // Check if the tile is not present in list2
-                if (!isTilePresent(tile, intialBoard)) {
+                if (!isTilePresent(tile, solutionBoard)) {
                     usedTiles.add(tile);
                 }
             }
@@ -140,7 +140,7 @@ public class AgentImplementation {
                        currentSet = true;
                        set.add(board[i][j]);
                    }
-                   if(board[i][j] == null && currentSet == true){
+                   if(board[i][j] == null && currentSet){
                        allSets.add(set);
                        set = new ArrayList<>();
                        currentSet = false;
@@ -176,7 +176,7 @@ public class AgentImplementation {
 
       /**
      * Deep copy a given game board.
-     * @param originalBoard The original game board to be copied.
+     * @param hand The original game board to be copied.
      * @return The deep copy of the game board.
      */
     public static ArrayList<Tile> deepCopyHand(ArrayList<Tile> hand) {

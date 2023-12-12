@@ -1,9 +1,10 @@
 package com.rummikub.gui;
 
-import com.rummikub.model.AgentImplementation;
-import com.rummikub.model.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
+import com.rummikub.model.AgentImplementation;
+import com.rummikub.model.BaselineAgent;
+import com.rummikub.model.Type;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -84,7 +85,7 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == "baseline") { // player is AI
+            if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.BASELINE) { // player is AI
                 aimove = null;
                 aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
                 System.out.println(aimove);
@@ -101,8 +102,8 @@ class AIGameScreen extends Pane {
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                 }
                 finishMove();}
-            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == "main") { // player is AI
-                Object[] aimove = null;
+            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.MAIN) { // player is AI
+                Object[] aimove;
                 aimove = AgentImplementation.makeMove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState()); 
             
                 if (aimove != null) {
