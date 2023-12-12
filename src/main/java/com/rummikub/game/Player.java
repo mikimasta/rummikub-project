@@ -9,6 +9,7 @@ public class Player {
     private String name;
     private Tile[][] hand;
     private boolean isAI;
+    private String aiType;
 
     public void setHand(Tile[][] hand) {
 
@@ -27,10 +28,15 @@ public class Player {
         this.hand = new Tile[2][15];
         this.firstMoveMade = false;
         this.isAI = isAI;
+        this.aiType = "baseline";
     }
 
     public boolean isAI() {
         return isAI;
+    }
+
+    public String getAiType() {
+        return aiType;
     }
     public void draw(Tile tile) {
 

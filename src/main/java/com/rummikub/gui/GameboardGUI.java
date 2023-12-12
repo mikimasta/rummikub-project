@@ -58,7 +58,9 @@ class GameboardGUI extends Pane {
         return instance;
 
     }
-
+    public void setState(Tile[][] state) {
+        this.state = state;
+    }
     public void setPrevState() {
         for (int i = 0; i < state.length; i++) {
             prevState[i] = state[i].clone();

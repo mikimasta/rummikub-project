@@ -3,7 +3,7 @@ import java.util.*;
 
 public class AgentImplementation {
 
-    public Object[] makeMove(Tile[] intialHand, Tile[][] intialBoard){
+    public static Object[] makeMove(Tile[][] intialHand, Tile[][] intialBoard){
        ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(intialBoard);
        ArrayList<Tile> arrayHand = hand2ArrayList(intialHand);
     
@@ -28,7 +28,7 @@ public class AgentImplementation {
 
         ArrayList<Tile> solutionHand = getHand(arrayBoard, solutionBoard, arrayHand);
         
-        Tile[] finalHand = hand2matrix(solutionHand);
+        Tile[][] finalHand = hand2matrix(solutionHand);
         Tile[][] finalBoard = board2matrix(solutionBoard);
 
         Object[] stateAfterSolution = {finalHand, finalBoard};
@@ -37,7 +37,7 @@ public class AgentImplementation {
 
     }
 
-    private ArrayList<Tile> getHand(ArrayList<ArrayList<Tile>> intialBoard, ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<Tile> hand){
+    private static ArrayList<Tile> getHand(ArrayList<ArrayList<Tile>> intialBoard, ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
 
         // Iterate through list1
@@ -99,12 +99,32 @@ public class AgentImplementation {
     }
     
 
-    private Tile[] hand2matrix(ArrayList<Tile> hand){
-        Tile[] handMatrix = hand.toArray(new Tile[hand.size()]);
-        return handMatrix;
-        
+    private static Tile[][] hand2matrix(ArrayList<Tile> hand){
+         Tile[][] matrix = new Tile[2][15];
+
+        int rowIndex = 0;
+        int colIndex = 0;
+
+            for (Tile tile : hand) {
+                matrix[rowIndex][colIndex] = tile;
+                colIndex++;
+
+                // Check if the row is full or if a 0 is encountered
+                if (colIndex == 15) {
+                    rowIndex++;
+                    colIndex = 0;
+
+                    // Check if the matrix is full
+                    if (rowIndex == 2) {
+                        break;
+                    }
+                }
+            }
+        return matrix;
     }
-    private ArrayList<ArrayList<Tile>> board2ArrayList( Tile[][] board){
+        
+    
+    private static ArrayList<ArrayList<Tile>> board2ArrayList( Tile[][] board){
            //make board into arrray list of array list
            boolean currentSet = false;
            ArrayList<Tile> set = new ArrayList<>();
@@ -133,9 +153,21 @@ public class AgentImplementation {
    
     }
 
-    private ArrayList<Tile> hand2ArrayList (Tile[] hand){
-        ArrayList<Tile> handArray = new ArrayList<>(Arrays.asList(hand));
-        return handArray;
+    private static ArrayList<Tile> hand2ArrayList (Tile[][] hand){
+         //make board into arrray list of array list
+           ArrayList<Tile> handArray = new ArrayList<>();
+   
+           for (int i = 0; i < hand.length; i++) {
+               for (int j = 0; j < hand[i].length; j++) {
+                   if(hand[i][j] != null){
+                       handArray.add(hand[i][j]);
+                   }
+
+                   
+               }
+           }
+   
+           return handArray;
     }
 
 }

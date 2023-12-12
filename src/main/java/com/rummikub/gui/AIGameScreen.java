@@ -1,5 +1,6 @@
 package com.rummikub.gui;
 
+import com.rummikub.game.AgentImplementation;
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
@@ -83,7 +84,7 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().getAiType() == "baseline") { // player is AI
+            if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == "baseline") { // player is AI
                 aimove = null;
                 aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
                 System.out.println(aimove);
@@ -100,11 +101,17 @@ class AIGameScreen extends Pane {
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                 }
                 finishMove();}
-            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().getAiType() == "main") { // player is AI
-                aimove = null;
-                //aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
-                System.out.println(aimove);
-                if (aimove != null && !aimove.isEmpty()) {
+            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == "main") { // player is AI
+                Object[] aimove = null;
+                aimove = AgentImplementation.makeMove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState()); 
+            
+                if (aimove != null) {
+                    Tile[][] rack = (Tile[][]) aimove[0];
+                    Tile[][] board = (Tile[][]) aimove[1];
+                    //TO DO aiMove[0] is the new hand and aiMove[1] is the 
+                    GameboardGUI.getInstance().setState(board);
+                    GameboardGUI.getInstance().renderAIMove();
+                    RackGUI.getInstance().handToRack(rack);
 
                 }else{ 
                     System.out.println("no move possible for computer");
