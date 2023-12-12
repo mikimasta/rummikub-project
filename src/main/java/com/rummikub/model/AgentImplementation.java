@@ -5,10 +5,26 @@ import com.rummikub.game.Tile;
 import java.util.ArrayList;
 
 public class AgentImplementation {
+    private static final int MAX_ROWS_BOARD = 20;
+    private static final int MAX_COLS_BOARD = 7;
+    private static final int MAX_ROWS_HAND = 2;
+    private static final int MAX_COLS_HAND = 15;
 
     public static Object[] makeMove(Tile[][] intialHand, Tile[][] intialBoard){
        ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(intialBoard);
        ArrayList<Tile> arrayHand = hand2ArrayList(intialHand);
+
+       for (int i = 0; i < intialHand.length; i++) {
+        for (int j = 0; j < intialHand[i].length; j++) {
+            if (intialHand[i][j] != null) {
+                System.out.print(intialHand[i][j] + " ");
+            } else {
+                System.out.print("null ");
+            }
+        }
+        System.out.println(); // Move to the next line after each row
+    }
+       
     
        ArrayList<Tile> allTilesBoard = new ArrayList<>();
        for (ArrayList<Tile> list : arrayBoard) {
@@ -30,10 +46,22 @@ public class AgentImplementation {
             return null;
         }
         System.out.println("solution found");
-        ArrayList<Tile> solutionHand = getHand(arrayBoard, solutionBoard, arrayHand);
+        ArrayList<Tile> solutionHand = getHand(board2ArrayList(intialBoard), solutionBoard, arrayHand);
         
         Tile[][] finalHand = hand2matrix(solutionHand);
         Tile[][] finalBoard = board2matrix(solutionBoard);
+
+        
+          for (int i = 0; i < finalHand.length; i++) {
+        for (int j = 0; j < finalHand[i].length; j++) {
+            if (finalHand[i][j] != null) {
+                System.out.print(finalHand[i][j] + " ");
+            } else {
+                System.out.print("null ");
+            }
+        }
+        System.out.println(); // Move to the next line after each row
+    }
 
         return new Object[]{finalHand, finalBoard};
 
@@ -42,20 +70,45 @@ public class AgentImplementation {
     private static ArrayList<Tile> getHand(ArrayList<ArrayList<Tile>> intialBoard, ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
 
+        //ArrayList<Tile> deepCopy = deepCopyHand(hand);
+   
         // Iterate through list1
-        for (ArrayList<Tile> sublist1 : intialBoard) {
+        for (ArrayList<Tile> sublist1 : solutionBoard) {
             for (Tile tile : sublist1) {
                 // Check if the tile is not present in list2
-                if (!isTilePresent(tile, solutionBoard)) {
+                if (!isTilePresent(tile, intialBoard)) {
                     usedTiles.add(tile);
                 }
             }
         }
-        ArrayList<Tile> deepCopy = deepCopyHand(hand);
-        deepCopy.removeAll(usedTiles);
-
-        return deepCopy;
+        System.out.println("used tiles" + usedTiles.toString());
+        
+        ArrayList<Tile> finalHand = removeUsedTile(hand, usedTiles);
+        
+        return finalHand;
+    //}
     }
+
+    public static ArrayList<Tile> removeUsedTile(ArrayList<Tile> hand, ArrayList<Tile> used){
+        ArrayList<Tile> result = new ArrayList<>();
+        for(int i = 0; i < hand.size(); i++){
+                Tile currentFromHand = hand.get(i);
+                boolean tileUsed = false;
+            for(int j = 0; j < used.size(); j++){
+                Tile currentFromused = used.get(i);
+                if((currentFromHand.getColorString() == currentFromused.getColorString())){
+                    if(currentFromHand.getNumber() == currentFromused.getNumber()){
+                        tileUsed = true;
+                    }   
+                }
+            }
+            if(!tileUsed){
+                result.add(currentFromHand);
+            }
+        }
+        return result;
+    }
+    
 
     public static boolean isTilePresent(Tile tile, ArrayList<ArrayList<Tile>> list) {
         // Check if the tile is present in any sublist of the list
@@ -70,7 +123,7 @@ public class AgentImplementation {
     
 
     private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board) {
-        Tile[][] matrix = new Tile[20][7];
+        Tile[][] matrix = new Tile[7][20];
     
         int rowIndex = 0;
         int colIndex = 0;
@@ -81,12 +134,12 @@ public class AgentImplementation {
                 colIndex++;
     
                 // Check if the row is full
-                if (colIndex == 7) {
+                if (colIndex == 20) {
                     rowIndex++;
                     colIndex = 0;
     
                     // Check if the matrix is full
-                    if (rowIndex == 20) {
+                    if (rowIndex == 7) {
                         break;
                     }
                 }
@@ -129,33 +182,33 @@ public class AgentImplementation {
         
     
     private static ArrayList<ArrayList<Tile>> board2ArrayList( Tile[][] board){
-           //make board into arrray list of array list
-           boolean currentSet = false;
-           ArrayList<Tile> set = new ArrayList<>();
-           ArrayList<ArrayList<Tile>> allSets = new ArrayList<>();
-   
-           for (int i = 0; i < board.length; i++) {
-               for (int j = 0; j < board[i].length; j++) {
-                   if(board[i][j] != null){
-                       currentSet = true;
-                       set.add(board[i][j]);
-                   }
-                   if(board[i][j] == null && currentSet){
-                       allSets.add(set);
-                       set = new ArrayList<>();
-                       currentSet = false;
-                   }
-                   
-               }
-           }
-   
-           if (set.size() != 0){
-            allSets.add(set);
-           }
-        
-           return allSets;
-   
-    }
+        //make board into arrray list of array list
+        boolean currentSet = false;
+        ArrayList<Tile> set = new ArrayList<>();
+        ArrayList<ArrayList<Tile>> allSets = new ArrayList<>();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if(board[i][j] != null){
+                    currentSet = true;
+                    set.add(board[i][j]);
+                }
+                if(board[i][j] == null && currentSet){
+                    allSets.add(set);
+                    set = new ArrayList<>();
+                    currentSet = false;
+                }
+                
+            }
+        }
+
+        if (set.size() != 0){
+         allSets.add(set);
+        }
+     
+        return allSets;
+
+ }
 
     private static ArrayList<Tile> hand2ArrayList (Tile[][] hand){
          //make board into arrray list of array list
