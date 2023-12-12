@@ -19,7 +19,7 @@ public class ValidSetsNB {
     private static HashMap<String, ArrayList<Tile>> generateImmutableHashMap() {
         HashMap<String, ArrayList<Tile>> validSets =new HashMap<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\mespi\\OneDrive\\Escritorio\\DACS2\\Project 2.1\\Key_Set_NB_J-1.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("/Users/milou/Desktop/Project 2.1/rummikub-project/src/main/java/com/rummikub/game/Key_Set_NB_J-1.txt"));
             String line;
 
             while ((line = reader.readLine()) != null) {

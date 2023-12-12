@@ -14,19 +14,20 @@ public class AgentImplementation {
         }
 
         int numOfTilesInPlay = allTilesBoard.size() + arrayHand.size();
-
+        System.out.println("number of tiles in play = " + numOfTilesInPlay);
         ArrayList<ArrayList<Tile>> solutionBoard = new ArrayList<>();
 
-        if(numOfTilesInPlay < 30){
+        if(numOfTilesInPlay < 25){
             solutionBoard = SolutionFinder.findSolution(arrayHand, arrayBoard);
         }
         else{
             solutionBoard = AgentNB.possibleMoves(arrayHand, arrayBoard);
         }
         if(solutionBoard == null || solutionBoard.isEmpty()){
+            System.out.println("solution NOT found");
             return null;
         }
-
+        System.out.println("solution found");
         ArrayList<Tile> solutionHand = getHand(arrayBoard, solutionBoard, arrayHand);
         
         Tile[][] finalHand = hand2matrix(solutionHand);
@@ -50,10 +51,10 @@ public class AgentImplementation {
                 }
             }
         }
+        ArrayList<Tile> deepCopy = deepCopyHand(hand);
+        deepCopy.removeAll(usedTiles);
 
-        hand.removeAll(usedTiles);
-
-        return hand;
+        return deepCopy;
     }
 
     public static boolean isTilePresent(Tile tile, ArrayList<ArrayList<Tile>> list) {
@@ -68,34 +69,36 @@ public class AgentImplementation {
 
     
 
-    private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board){
+    private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board) {
         Tile[][] matrix = new Tile[20][7];
-
+    
         int rowIndex = 0;
         int colIndex = 0;
-
+    
         for (ArrayList<Tile> innerList : board) {
             for (Tile tile : innerList) {
                 matrix[rowIndex][colIndex] = tile;
                 colIndex++;
-
-                // Check if the row is full or if a 0 is encountered
+    
+                // Check if the row is full
                 if (colIndex == 7) {
                     rowIndex++;
                     colIndex = 0;
-
+    
                     // Check if the matrix is full
                     if (rowIndex == 20) {
                         break;
                     }
                 }
             }
-            //after every inner list it should be moved
-            if (!(colIndex == 0)) {
-                  colIndex++;
+            // Reset colIndex to 0 after every inner list
+            colIndex = 0;
+    
+            // Check if the matrix is full
+            if (rowIndex == 20) {
+                break;
+            }
         }
-        
-    }
         return matrix;
     }
     
@@ -169,6 +172,27 @@ public class AgentImplementation {
            }
    
            return handArray;
+    }
+
+      /**
+     * Deep copy a given game board.
+     * @param originalBoard The original game board to be copied.
+     * @return The deep copy of the game board.
+     */
+    public static ArrayList<Tile> deepCopyHand(ArrayList<Tile> hand) {
+        if (hand == null) {
+            return null;
+        }
+
+    ArrayList<Tile> newHand = new ArrayList<>();
+     
+            for (Tile tile : hand) {
+                Tile newTile = new Tile(tile.getNumber(), tile.getColor());
+                newHand.add(newTile);
+            }
+          
+
+        return newHand;
     }
 
 }

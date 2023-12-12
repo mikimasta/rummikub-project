@@ -15,16 +15,16 @@ public class AgentNBHelper {
         ArrayList<ArrayList<Tile>> newboard = new ArrayList<>();
         //FIRST ONLY LOOK AT THE RACK
         int countRackPlays = 1;
-        do{
-            ArrayList<Tile> resultRack = playTheRack(hand);
-            if(resultRack==null){
-                countRackPlays=0;
-            }else {
-                hand.removeAll(resultRack);
-                newboard.add(resultRack);
-                count += resultRack.size();
-            }
-        }while(countRackPlays!=0);
+        // do{
+        //     ArrayList<Tile> resultRack = playTheRack(hand);
+        //     if(resultRack==null){
+        //         countRackPlays=0;
+        //     }else {
+        //         hand.removeAll(resultRack);
+        //         newboard.add(resultRack);
+        //         count += resultRack.size();
+        //     }
+        // }while(countRackPlays!=0);
         /*
         int countRackPlays = 1;
         do{

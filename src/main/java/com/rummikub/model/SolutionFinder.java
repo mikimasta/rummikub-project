@@ -57,8 +57,8 @@ public class SolutionFinder {
     static ArrayList<ArrayList<Tile>> getSolution() {
 
         // Iterative deepening loop
-        for (int segmentSize = 0; segmentSize <= hand.size(); segmentSize++) {
-            System.out.println("segmenent size (depth) " + segmentSize);
+        for (int segmentSize = 1; segmentSize <= hand.size(); segmentSize++) {
+            //System.out.println("segmenent size (depth) " + segmentSize);
             solutionFound = false;
             prevSolution = solution;
             solution = new ArrayList<>();  // Reset solutions at the start of each iteration
@@ -68,7 +68,7 @@ public class SolutionFinder {
 
             // Check if a solution is not found for the current segment size
             if (solution.isEmpty() && segmentSize >= 3) {
-                System.out.println("segement size " + segmentSize + " does not have a solution");
+                //System.out.println("segement size " + segmentSize + " does not have a solution");
                 // then return previous depth solutions
                 return prevSolution;
             }
@@ -81,10 +81,10 @@ public class SolutionFinder {
 
      private static void segementHand(ArrayList<Tile> hand, int numTiles, int start, ArrayList<Tile> current) {
         if (numTiles == 0) {
-            System.out.println("hand segment " + current);
+            //System.out.println("hand segment " + current);
             ArrayList<ArrayList<Tile>> segmentSolution = getSolutionPerSegment(current, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
-                System.out.println("solution at segment size: " + current.size()); 
+                //System.out.println("solution at segment size: " + current.size()); 
                  solution = segmentSolution;
                  return;
 
@@ -153,7 +153,7 @@ public class SolutionFinder {
                 ArrayList<ArrayList<Tile>> deepCopy = deepCopyBoard(currentBoard);
                 solutionPerHand = deepCopy;
                 solutionFound = true;
-                System.out.print("solution found at hand segment level");
+                //System.out.print("solution found at hand segment level");
               
             }
             return;

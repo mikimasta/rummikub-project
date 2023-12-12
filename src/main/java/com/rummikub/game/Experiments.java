@@ -8,6 +8,11 @@ import com.rummikub.model.AgentImplementation;
 
 public class Experiments {
 
+    private static final int MAX_ROWS_BOARD = 20;
+    private static final int MAX_COLS_BOARD = 7;
+    private static final int MAX_ROWS_HAND = 2;
+    private static final int MAX_COLS_HAND = 15;
+
     private static ArrayList<ArrayList<Tile>> randomValidSets(){
       ArrayList<Tile> set1 = new ArrayList<>();
         Tile tile1 = new Tile((byte) 1, Color.RED);
@@ -107,7 +112,7 @@ public class Experiments {
      private static ArrayList<Tile> allTiles(){
         ArrayList<Tile> allTiles = new ArrayList<>();
 
-        Tile joker = new Tile((byte) -1, Color.BROWN);
+        Tile joker = new Tile((byte) -1, Color.BLACK);
 
         Tile rr1 = new Tile((byte) 1, Color.RED);
         Tile rr2 = new Tile((byte) 2,Color.RED);
@@ -282,9 +287,10 @@ public class Experiments {
 
     private static long testMain(int numTiles){
         Object[] testState = getTestState(numTiles);
-        Tile[][] hand = (Tile[][]) testState[0];
-        Tile[][] board = (Tile[][])testState[1];
+        Tile[][] hand = hand2matrix((ArrayList<Tile>) testState[0]);
+        Tile[][] board = board2matrix((List<List<Tile>>) (testState[1]));
         // Record start time
+        System.out.println("Start Expirement");
         long startTime = System.currentTimeMillis();
 
      
@@ -301,7 +307,7 @@ public class Experiments {
     }
 
     private static void runTests(){
-        int[] numTilesTest = {20,30,40,50};
+        int[] numTilesTest = {15,20,30,40};
         int numOfRuns = 10;
 
         for(int i = 0; i < numTilesTest.length; i++){
@@ -317,59 +323,61 @@ public class Experiments {
 
     }
 
-    private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board){
-        Tile[][] matrix = new Tile[20][7];
-
+    private static Tile[][] board2matrix(List<List<Tile>> board) {
+        Tile[][] matrix = new Tile[MAX_ROWS_BOARD][MAX_COLS_BOARD];
+    
         int rowIndex = 0;
         int colIndex = 0;
-
-        for (ArrayList<Tile> innerList : board) {
+    
+        for (List<Tile> innerList : board) {
             for (Tile tile : innerList) {
                 matrix[rowIndex][colIndex] = tile;
                 colIndex++;
-
-                // Check if the row is full or if a 0 is encountered
-                if (colIndex == 7) {
+    
+                // Check if the row is full
+                if (colIndex == MAX_COLS_BOARD) {
                     rowIndex++;
                     colIndex = 0;
-
+    
                     // Check if the matrix is full
-                    if (rowIndex == 20) {
+                    if (rowIndex == MAX_ROWS_BOARD) {
                         break;
                     }
                 }
             }
-            //after every inner list it should be moved
-            if (!(colIndex == 0)) {
-                  colIndex++;
+            // Reset colIndex to 0 after every inner list
+            colIndex = 0;
+    
+            // Check if the matrix is full
+            if (rowIndex == MAX_ROWS_BOARD) {
+                break;
+            }
         }
-        
-    }
         return matrix;
     }
     
 
-    private static Tile[][] hand2matrix(ArrayList<Tile> hand){
-         Tile[][] matrix = new Tile[2][15];
+    private static Tile[][] hand2matrix(List<Tile> hand) {
+        Tile[][] matrix = new Tile[MAX_ROWS_HAND][MAX_COLS_HAND];
 
         int rowIndex = 0;
         int colIndex = 0;
 
-            for (Tile tile : hand) {
-                matrix[rowIndex][colIndex] = tile;
-                colIndex++;
+        for (Tile tile : hand) {
+            matrix[rowIndex][colIndex] = tile;
+            colIndex++;
 
-                // Check if the row is full or if a 0 is encountered
-                if (colIndex == 15) {
-                    rowIndex++;
-                    colIndex = 0;
+            // Check if the row is full or if a 0 is encountered
+            if (colIndex == MAX_COLS_HAND) {
+                rowIndex++;
+                colIndex = 0;
 
-                    // Check if the matrix is full
-                    if (rowIndex == 2) {
-                        break;
-                    }
+                // Check if the matrix is full
+                if (rowIndex == MAX_ROWS_HAND) {
+                    break;
                 }
             }
+        }
         return matrix;
     }
     public static void main(String[] args) {
