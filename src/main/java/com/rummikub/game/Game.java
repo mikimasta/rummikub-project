@@ -25,15 +25,16 @@ public class Game {
     public static final byte GRID_COLS = 13;
 
     public static byte NUM_OF_PLAYERS;
+    public static boolean isAIGame;
 
     public static Game getInstance() {
         if (instance == null)
-            instance = new Game(NUM_OF_PLAYERS);
+            instance = new Game(NUM_OF_PLAYERS, isAIGame);
         return instance;
     }
-     public static Game getInstance(byte numPlayers) {
+     public static Game getInstance(byte numPlayers, boolean gameAI) {
         if (instance == null)
-            instance = new Game(numPlayers);
+            instance = new Game(numPlayers, gameAI);
         return instance;
     }
 
@@ -50,27 +51,30 @@ public class Game {
      * creates the board, the pool and initializes and deals tiles.
      * 
      * @param numPlayers number of players for the game
+     * @param isAIGame if a game is ai
      */
-    Game(byte numPlayers) {
+    Game(byte numPlayers, boolean isAIGame) {
 
         if (numPlayers > 4 || numPlayers < 2)
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
 
-        //board = new Tile[GRID_ROWS][GRID_COLS];
+        this.isAIGame = isAIGame;  
 
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {
                 //board[row][col] = new Tile("lol", (byte) 0);
             }
         }
+        boolean isAnAI = true;
         players = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
-            players.add(new Player("Player " + i));
+            players.add(new Player("Player " + i, isAnAI));
+            isAnAI = false;
         }
 
         byte firstPlayer = (byte) (0 + (byte) (Math.random() * numPlayers - 1));
         currentPlayer = players.get(firstPlayer);
-
+        
         pool = new ArrayList<>();
 
         initializeTiles();
@@ -130,14 +134,12 @@ public class Game {
                 Tile tile = gameBoard[i][y];
                 // Checks for illegal subset of tiles of length 1 or 2
                 if ((tile == null) && (set.size() > 0) && (set.size() < 3)) {
-                    System.out.println("case 1");
                     return false; 
                 } else if (tile == null && set.size() > 2) {
                     if (!checkTile(set)) {
                         return false; // Check if given tile is either stairs or group, return false if not
                     }
                     set.clear();
-                } else {
                 }
                 if (tile != null) {
                     set.add(tile);
@@ -145,7 +147,6 @@ public class Game {
             }
 
             if (set.size() < 3 && set.size() != 0) {
-                System.out.println("case 2");
                 return false; // The block of tiles is too short
             } 
 
@@ -154,7 +155,7 @@ public class Game {
     }
 
     // check if given tile is either group or stairs, i.e. is it legal?
-    boolean checkTile(ArrayList<Tile> set) {
+    static boolean checkTile(ArrayList<Tile> set) {
         return checkIfGroup(set) || checkIfStairs(set);
     }
 
@@ -163,7 +164,7 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a group false otherwise
      */
-    boolean checkIfGroup(ArrayList<Tile> set){
+    static boolean checkIfGroup(ArrayList<Tile> set){
 
         // up to 4 tiles (thats how many colors there are)
         if (set.size() > 4) {
@@ -177,28 +178,26 @@ public class Game {
             if (numOfFirst == -1){ // tile is a joker
                 numOfFirst = numTmp;
             }else if (numOfFirst != -1 && numOfFirst != numTmp && numTmp != -1){
-                System.out.println("case 3");
                 return false;
             }
         }
         // check if different colors
-        int red = 0, green = 0, blue = 0, black = 0; 
+        int red = 0, orange = 0, blue = 0, black = 0; 
         for (int i = 0; i < set.size() ; i++){
             if (set.get(i).getNumber() != -1){ // tile is not a joker
-                Color color = set.get(i).getColor();
-                if (color == Color.RED){
+                String color = set.get(i).getColorString();
+                if (color.equals("red")){
                     red++;
-                }else if (color == Color.GREEN){
-                    green++;
-                }else if (color == Color.BLUE){
+                }else if (color.equals("orange")){
+                    orange++;
+                }else if (color.equals("blue")){
                     blue++;
-                }else if (color == Color.BLACK){
+                }else if (color.equals("black")){
                     black++;
                 }
             }
         }
-        if (red > 1 || green > 1 || blue > 1 || black > 1){
-            System.out.println("case 4");
+        if (red > 1 || orange > 1 || blue > 1 || black > 1){
             return false;
         }
 
@@ -210,7 +209,7 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a run, false otherwise
      */
-    boolean checkIfStairs(ArrayList<Tile> set){
+    static boolean checkIfStairs(ArrayList<Tile> set){
 
         // check if all same color
         Color colorOfFirst = set.get(0).getColor();
@@ -219,7 +218,6 @@ public class Game {
             if (set.get(0).getNumber() == -1){ // first tile is a joker
                 colorOfFirst = color;
             } else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
-                System.out.println("case 5");
                 return false;
             }
         }
@@ -228,23 +226,19 @@ public class Game {
         byte numOfFirst = set.get(0).getNumber();
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
-            if (numOfFirst == -1) { // first number is a joker
-                numOfFirst = (byte) (numTmp - 1);
-                System.out.println("num of first is : " + numOfFirst);
+            if (numOfFirst == 0) {
+               numOfFirst = numTmp;
+            } else {
+                // If there is no joker, numbers should increment
+                if (numTmp - 1 != numOfFirst && numTmp != 0) {
+                    return false;
+                }
+                numOfFirst = numTmp;
             }
-            if (numTmp == -1) { // current number is a joker
-                numTmp = (byte) (numOfFirst + 1);
-                System.out.println("num of second is : " + numTmp);
-            }
-            if (numTmp - 1 != numOfFirst || numTmp > 13 || numOfFirst < 1) {
-                System.out.println("case 6s");
-                return false;
-            }
-            numOfFirst = numTmp;
         }
         return true;
     }
-    
+
     /**
      * checks whether the first move made is valid or not (>= 30)
      * @param board current state of the board after moved was made
@@ -422,16 +416,7 @@ public class Game {
      * @return the oredered by runs tiles of the player
      */
     public static Tile[][] orderRackByStairs(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>();
-        
-        // 2D array to arraylist
-        for (Tile[] row : rack) {
-            for (Tile tile : row) {
-                if (tile != null) {
-                    tileList.add(tile);
-                }
-            }
-        }
+        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
 
         //sort the arraylist
         tileList.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
@@ -442,21 +427,7 @@ public class Game {
             tileList.add(null);
         }
 
-        // Clear the rack
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[i].length; y++) {
-                rack[i][y] = null;
-            }
-        }
-
-        // populate the 2D array with the sorted tiles
-        int x = 0;
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[0].length; y++) {
-                rack[i][y] = tileList.get(x);
-                x++;
-            }
-        }
+        BaselineAgent.arrayListToRack(tileList, rack);
 
         return rack;
     }
@@ -467,16 +438,7 @@ public class Game {
      * @return the ordered by groups tiles of the player
      */
     public static Tile[][] orderRackByGroup(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>();
-        
-        // 2D array to arraylist
-        for (Tile[] row : rack) {
-            for (Tile tile : row) {
-                if (tile != null) {
-                    tileList.add(tile);
-                }
-            }
-        }
+        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
 
         //sort the arraylist
         tileList.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
@@ -487,24 +449,51 @@ public class Game {
             tileList.add(null);
         }
 
-        // Clear the rack
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[i].length; y++) {
-                rack[i][y] = null;
-            }
-        }
-
-        // populate the 2D array with the sorted tiles        
-        int x = 0;
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[0].length; y++) {
-                rack[i][y] = tileList.get(x);
-                x++;
-            }
-        }
+        rack = BaselineAgent.arrayListToRack(tileList, rack);
 
         return rack;
     }
     
+    /**
+     * sorting method to order tiles by groups
+     * @param set rack of tiles of the player
+     * @return the ordered by groups tiles of the player
+     */
+    public static ArrayList<Tile> orderRackByGroup(ArrayList<Tile> set){
+        set.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
+        return set;
+    }
+
+    /**
+     * sorting method to order tiles by runs
+     * @param set rack of tiles of the player
+     * @return the oredered by runs tiles of the player
+     */
+    public static ArrayList<Tile> orderRackByStairs(ArrayList<Tile> set){        
+        set.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
+        return set;
+    }
+
+    /**
+     * method to calculate the ending score of a player.
+     * @param rack rack of tiles of a player
+     * @return  the end score of players that lost, score is negative
+     */
+    public int calculateEndScore(Tile[][] rack) {
+        int count = 0;
+        for (int i = 0; i < rack.length; i++) {
+            for (int y = 0; y < rack[0].length; y++) {
+                if (rack[i][y] != null){
+                    if (rack[i][y].getNumber() == (byte) -1){ // if tile is a joker +30
+                        count += 30;
+                    }else{
+                        count += rack[i][y].getNumber();
+                    }
+                }
+                
+            }
+        }
+        return -count;
+    }
 
 }
