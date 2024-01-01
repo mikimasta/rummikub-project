@@ -2,6 +2,7 @@ package com.rummikub.gui;
 
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
+import com.rummikub.game.SingleTileMove;
 import com.rummikub.game.Tile;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -112,7 +113,7 @@ class AIGameScreen extends Pane {
                     } else {
                         // If the second move is not possible, try the third move
                         aimove3 = null;
-                        aimove3 = BaselineAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                        aimove3 = SingleTileMove.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
                         if (aimove3 != null && !aimove3.isEmpty() && aimove3.size() > 2) {
                             System.out.println("move avec single tiles");
                             System.out.println(BaselineAgent.printListTiles(aimove3));

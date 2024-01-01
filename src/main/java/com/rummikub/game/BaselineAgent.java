@@ -169,205 +169,6 @@ public class BaselineAgent {
         return finalMove;
     }
 
-
-    public static ArrayList<Tile> singleTilemove(Tile[][] dupRack, Tile[][] board) {
-        if (board == null) {
-            return null;
-        }
-    
-        ArrayList<ArrayList<Tile>> movesGroups = listOfMovesGroups(board);
-        ArrayList<ArrayList<Tile>> movesRuns = listOfMovesRuns(board);
-        ArrayList<ArrayList<Tile>> extendedRuns = null;
-        ArrayList<ArrayList<Tile>> extendedGroups = null;
-        ArrayList<Tile> extendedMove = new ArrayList<>();
-    
-        // Step 3: Check and extend runs
-        if (movesRuns != null) {
-            extendedRuns = runMoves(dupRack, movesRuns);
-        }
-    
-        // Step 4: Check and extend groups
-        if (movesGroups != null) {
-            extendedGroups = groupMoves(dupRack, movesGroups);
-        }
-    
-        // Step 5: Combine extended groups and runs into the final move
-        if (extendedGroups != null && extendedRuns != null) {
-            extendedMove = listOfMoves(extendedGroups, extendedRuns, board);
-        }
-    
-        return extendedMove;
-    }
-    
-
-    // step 1 and 2
-    static ArrayList<ArrayList<Tile>> listOfMovesGroups(Tile[][] board) {
-        if (board == null) {
-            return null;
-        }
-
-        ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<ArrayList<Tile>>();
-        ArrayList<Tile> move = new ArrayList<>();
-
-        for (int i = 0; i < board.length; i++) {
-            for (int y = 0; y < board[i].length; y++) {
-                Tile tile = board[i][y];
-                if (tile != null) {
-                    move.add(tile);
-                } else { // tile is null
-                    if (move.size() > 2) {
-                        if (Game.checkIfGroup(move)) { // move is group
-                            movesGroups.add(new ArrayList<>(move)); 
-                        }
-                    }
-                    move.clear();
-                }
-            }
-        }
-        return movesGroups;
-    }
-
-    // step 1 and 2
-    static ArrayList<ArrayList<Tile>> listOfMovesRuns(Tile[][] board) {
-        if (board == null) {
-            return null;
-        }
-
-        ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<ArrayList<Tile>>();
-        ArrayList<Tile> move = new ArrayList<>();
-
-        for (int i = 0; i < board.length; i++) {
-            for (int y = 0; y < board[i].length; y++) {
-                Tile tile = board[i][y];
-                if (tile != null) {
-                    move.add(tile);
-                } else { // tile is null
-                    if (move.size() > 2) {
-                        if (Game.checkIfStairs(move)) { // move is stairs
-                            movesRuns.add(new ArrayList<>(move)); 
-                        }
-                    }
-                    move.clear();
-                }
-            }
-        }
-        return movesRuns;
-    }
-
-
-    // step 3 : for moves that are stairs check the back and the front
-    static ArrayList<ArrayList<Tile>> runMoves(Tile[][] dupRack, ArrayList<ArrayList<Tile>> runMoves) {
-        ArrayList<Tile> rack = new ArrayList<>(TwodArrayToArrayList(dupRack));
-        ArrayList<Tile> possibleTiles = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> finalMove = new ArrayList<ArrayList<Tile>>();
-        
-        for (ArrayList<Tile> move : runMoves) {
-            for (Tile tile : rack) {
-                if (move.get(0).getColorString() == tile.getColorString()) { // if tile in rack with same color add it to possible tiles
-                    possibleTiles.add(tile);
-                }
-            }
-        }
-
-        if (possibleTiles.size() == 0) { // stop looking now its not possible
-            return null;
-        } else {
-            for (ArrayList<Tile> move : runMoves) {
-                if (move.size() > 2) { //possible to add tile to group
-                    ArrayList<Tile> copy = new ArrayList<>(move);
-                    for (Tile tile : possibleTiles) {
-                        int firstNum = move.get(0).getNumber();
-                        int lastNum = move.get(move.size() - 1).getNumber();
-                        if (firstNum > 1 && tile.getNumber() == firstNum - 1) {
-                            move.add(0, tile); // add tile at the beginning of the list
-                            rack.remove(tile);
-                        }
-                        if (lastNum < 13 && tile.getNumber() == lastNum + 1) {
-                            move.add(tile); // add tile at the end of the list
-                            rack.remove(tile);
-                        }
-                        if (copy != null && move.size() != copy.size() ) {
-                            finalMove.add(move);
-                            copy = null;
-                        }
-                    }
-                }
-            }
-        }
-        return finalMove;
-    }  
-
-    // step 4
-    static ArrayList<ArrayList<Tile>> groupMoves(Tile[][] dupRack, ArrayList<ArrayList<Tile>> groupMoves) {
-        ArrayList<Tile> rack = new ArrayList<>(TwodArrayToArrayList(dupRack));
-        ArrayList<Tile> possibleTiles = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> finalMove = new ArrayList<>();
-    
-        for (ArrayList<Tile> move : groupMoves) {
-            for (Tile tile : rack) {
-                if (tile.getNumber() == move.get(0).getNumber()) {
-                    possibleTiles.add(tile);
-                }
-            }
-        }
-
-        if (possibleTiles.size() == 0) {
-            return null;
-        } else { // there are possible tiles
-            for (ArrayList<Tile> move : groupMoves) {
-                if (move.size() == 3) { // possible to add tile to group
-                    for (Tile tile : possibleTiles) {
-                        move.add(tile);
-                        if (Game.checkIfGroup(move)) { // move is correct with the tile added
-                            finalMove.add(move);
-                            rack.remove(tile); // tile used so removed from rack
-                            break;
-                        } else {
-                            move.remove(move.size() - 1); // remove the last tile
-                        }
-                    }
-                }
-            }
-        }
-        return finalMove;
-    }
-
-    // step 5
-    static ArrayList<Tile> listOfMoves(ArrayList<ArrayList<Tile>> extendedGroups, ArrayList<ArrayList<Tile>> extendedRuns, Tile[][] board) {
-        if (extendedGroups == null && extendedRuns == null) {
-            return null;
-        }
-
-        ArrayList<Tile> groupMov = new ArrayList<>();
-        if (extendedGroups != null) {
-            groupMov = new ArrayList<>(nestedArrayListToArrayList(extendedGroups));
-        }
-    
-        ArrayList<Tile> runMov = new ArrayList<>();
-        if (extendedRuns != null) {
-            runMov = new ArrayList<>(nestedArrayListToArrayList(extendedRuns));
-        }
-    
-        if (!isTwoMovesPossible(runMov, groupMov)) {
-            runMov.removeAll(groupMov);
-        }
- 
-        ArrayList<Tile> moves = new ArrayList<>(groupMov);
-        moves.add(null);
-        moves.addAll(runMov);
- 
-        for (int i = 0; i < board.length; i++) {
-            for (int y = 0; y < board[i].length; y++) {
-                if (moves.contains(board[i][y])) {
-                    board[i][y] = null;
-                    
-                }
-            }
-        }
-        return moves;
-    }
-    
-
     /**
      * takes the rack and the board ordered them and makes moves with them comined and ordered
      * @param rack rack of tiles 
@@ -571,14 +372,14 @@ public class BaselineAgent {
         for (int i = 0; i < listOfMoves.size(); i++) {
             ArrayList<Tile> currentMove = listOfMoves.get(i);
             boolean isOverlapping = false;
-            // Compare currentMove with previously selected non-overlapping moves
+            // compare currentMove with previously selected non-overlapping moves
             for (ArrayList<Tile> selectedMove : notOverlappingMoves) {
                 if (!BaselineAgent.isTwoMovesPossible(currentMove, selectedMove)) {
                     isOverlapping = true;
                     break;
                 }
             }
-            // If currentMove doesn't overlap, add it to nonOverlappingMoves
+            // if currentMove doesn't overlap, add it to nonOverlappingMoves
             if (!isOverlapping) {
                 notOverlappingMoves.add(currentMove);
             }
@@ -630,8 +431,8 @@ public class BaselineAgent {
         Tile t4R = new Tile((byte) 4, Color.RED);
         Tile t7R = new Tile((byte) 7, Color.RED);
 
-        // Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
-        //baselineAgent(rack);
+        Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
+        baselineAgent(rack);
 
         Tile t5R = new Tile((byte) 5, Color.RED);
         Tile t6R = new Tile((byte) 6, Color.RED);
@@ -641,14 +442,7 @@ public class BaselineAgent {
         Tile t2R = new Tile((byte) 2, Color.RED);
         Tile[][]  board = {{n, t5R, t6R, t7R, n, n, n, t2O, t2B, t2R, n, n, n, n, n}};
 
-        //possibleMoveAddingRackToBoard(rack, board);
+        possibleMoveAddingRackToBoard(rack, board);
 
-        Tile t8R = new Tile((byte) 8, Color.RED);
-        Tile t2Bl = new Tile((byte) 2, Color.BLACK);
-
-        Tile[][]  rack = {{t4R, t8R, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, t2Bl}};
-
-        ArrayList<Tile> list = new ArrayList<>(singleTilemove(rack, board));
-        printListTiles(list);
     }
 }
