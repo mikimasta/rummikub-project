@@ -43,14 +43,12 @@ public class MainMenu extends Pane {
         rules.setLayoutY(Rummikub.yCenter + 100);
         rules.setOnAction(e -> {
             try {
-                // Reemplaza "ruta_del_archivo.pdf" con la ubicación y nombre de tu archivo PDF
-                File pdfFile = new File("ruta_del_archivo.pdf");
+                File pdfFile = new File("src/main/resources/RulesRummy.pdf");
 
                 if (pdfFile.exists()) {
                     Desktop.getDesktop().open(pdfFile);
                 } else {
-                    System.out.println("El archivo PDF no se encontró en la ruta especificada.");
-                    // Aquí puedes mostrar un mensaje de error al usuario si el archivo no está disponible
+                    System.out.println("Couldn't find the path");
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
