@@ -25,12 +25,12 @@ public class Player {
     /**
      * constructs a Player instance with a given name, that has a hand.
      */
-    Player(String name, boolean isAI) {
+    Player(String name, boolean isAI, Type type) {
         this.name = name;
         this.hand = new Tile[2][15];
         this.firstMoveMade = false;
         this.isAI = isAI;
-        this.aiType = Type.MAIN;
+        this.aiType = type;
     }
 
     public boolean isAI() {

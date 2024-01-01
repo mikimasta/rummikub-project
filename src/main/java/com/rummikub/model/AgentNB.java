@@ -11,37 +11,49 @@ import javafx.scene.paint.Color;
 public class AgentNB {
 
     public static ArrayList<ArrayList<Tile>> possibleMoves(ArrayList<Tile> rack, ArrayList<ArrayList<Tile>> boardArray){
-
+        //System.out.println("Agent NB used");
         ArrayList<String> board = Game.boardListToSetKey(boardArray);
+
         System.out.println("Initial board");
         System.out.println(board);
-        Object[] baselineResult = AgentNBHelper.baselineAgentNB(rack, board);
-        ArrayList<ArrayList<Tile>> newBoard = (ArrayList<ArrayList<Tile>>) baselineResult[0];
-        ArrayList<Tile> newRack = (ArrayList<Tile>) baselineResult[1];
-        int count = (int) baselineResult[2];
+        //System.out.println("Initial hand");
+        //System.out.println(rack);
+
         int searchNum = 0;
         do {
-            baselineResult = AgentNBHelper.baselineAgentNB(newRack, Game.boardListToSetKey(newBoard));
-            newBoard = (ArrayList<ArrayList<Tile>>) baselineResult[0];
-            newRack = (ArrayList<Tile>) baselineResult[1];
-            count = (int) baselineResult[2];
-            //System.out.println("new board");
-            //System.out.println(Game.boardListToSetKey(newBoard));
-            searchNum++;
+            if(boardArray!=null) {
+                Object[] baselineResult = CaseBased.baselineAgentNB(rack, Game.boardListToSetKey(boardArray));
+                boardArray = (ArrayList<ArrayList<Tile>>) baselineResult[0];
+                rack = (ArrayList<Tile>) baselineResult[1];
+                int count = (int) baselineResult[2];
+                searchNum++;
+                if(count==0){
+                    break;
+                }
+                System.out.println("loop "+ searchNum);
+                System.out.println(Game.boardListToSetKey(boardArray));
+            }
+            //System.out.println(count);
+        } while (true);
 
-        } while (count != 0);
-
-        if(searchNum == 1&&(board.size()==Game.boardListToSetKey(newBoard).size())){ //no tiles from the hand are valid
+        //System.out.println(searchNum);
+        if(searchNum < 2){ //no tiles from the hand are valid
             System.out.println("no tiles from the hand can be added to the board");
             return null;
         }
+
+
+
         System.out.println("Final board");
-        ArrayList<String> finalBoardString = (Game.boardListToSetKey(newBoard));
+        ArrayList<String> finalBoardString = (Game.boardListToSetKey(boardArray));
         System.out.println(finalBoardString);
+        //System.out.println("Final hand size");
+        //System.out.println(rack);
         ArrayList<ArrayList<Tile >> finalBoard = new ArrayList<>();
         for(String finalSet: finalBoardString){
             finalBoard.add(ValidSets.getSetForKey(finalSet));
         }
+        System.out.println(finalBoard);
         return finalBoard;
 
     }
@@ -143,35 +155,51 @@ public class AgentNB {
         set6.add(bu7);
 
         ArrayList<ArrayList<Tile>> fullBoard = new ArrayList<>();
-//        fullBoard.add(set1);
-//        fullBoard.add(set2);
-//        fullBoard.add(set3);
-//        fullBoard.add(set4);
-//        fullBoard.add(set5);
-//        fullBoard.add(set6);
+        fullBoard.add(set1);
+        fullBoard.add(set2);
+        fullBoard.add(set3);
+        fullBoard.add(set4);
+        fullBoard.add(set5);
+        fullBoard.add(set6);
 
         ArrayList<Tile> hand = new ArrayList<>();
-        hand.add(rr4);
-        hand.add(bl3);
-        hand.add(rr3);
-        hand.add(rr5);
-        hand.add(oo5);
-        hand.add(bl11);
-        hand.add(rr11);
-        hand.add(bu11);
-        hand.add(bu6);
-        hand.add(bu5);
-        hand.add(bu7);
-        hand.add(oo8);
-        hand.add(oo5);
-        hand.add(bl3);
-        hand.add(oo3);
-        hand.add(oo2);
+        hand.add(oo1);
+        hand.add(oo11);
+        hand.add(bl9);
         hand.add(joker);
-        System.out.println("Inicia loop");
-        possibleMoves(hand,fullBoard);
+        hand.add(oo9);
+        hand.add(rr7);
+        hand.add(rr3);
+        hand.add(bl3);
+        hand.add(bl8);
+        hand.add(bu5);
+        hand.add(bl13);
+
+        ArrayList<Tile> set8 = new ArrayList<>();
+        set8.add(bu2);
+        set8.add(bl2);
+        set8.add(oo2);
 
 
+        ArrayList<ArrayList<Tile>> fullBoard2 = new ArrayList<>();
+        fullBoard2.add(set8);
 
+        ArrayList<Tile> hand2 = new ArrayList<>();
+        hand2.add(bu4);
+        hand2.add(bu6);
+        hand2.add(bu7);
+        //hand2.add(rr5);
+        possibleMoves(hand, fullBoard2);
+        //CaseBased.playTheRack(hand);
+        //System.out.print(CaseBased.playTheRack(hand));
+        //System.out.println(hand);
+        //System.out.println(CaseBased.getTilesWithSameNumbers(hand));
+        //System.out.println(CaseBased.getTilesWithConsecutiveNumbers(hand));
+        //System.out.println(hand2);
+        //System.out.println(CaseBased.addPartialRun(bl3,hand2));
+        //System.out.println(CaseBased.getTilesWithConsecutiveNumbers(hand2));
+        //System.out.println(CaseBased.addPartialGroup(oo11,hand2));
+        //System.out.print(CaseBased.playTheRack(hand));
     }
+
 }

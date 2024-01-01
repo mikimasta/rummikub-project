@@ -6,58 +6,29 @@ import java.util.ArrayList;
 
 public class AgentImplementation {
 
-    public static Object[] makeMove(Tile[][] intialHand, Tile[][] intialBoard){
-       ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(intialBoard);
-       ArrayList<Tile> arrayHand = hand2ArrayList(intialHand);
-
-       
-    
-       ArrayList<Tile> allTilesBoard = new ArrayList<>();
-       for (ArrayList<Tile> list : arrayBoard) {
-            allTilesBoard.addAll(list);
-        }
-
-        int numOfTilesInPlay = allTilesBoard.size() + arrayHand.size();
-        System.out.println("number of tiles in play = " + numOfTilesInPlay);
+    public static Object[] makeMove(Tile[][] initialHand, Tile[][] initialBoard){
+        ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(initialBoard);
+        ArrayList<Tile> arrayHand = hand2ArrayList(initialHand);
         ArrayList<ArrayList<Tile>> solutionBoard = new ArrayList<>();
 
-        if(numOfTilesInPlay < 11){
-            solutionBoard = SolutionFinder.findSolution(arrayHand, arrayBoard);
-        }
-        else{
-            solutionBoard = AgentNB.possibleMoves(arrayHand, arrayBoard);
-        }
-        if(solutionBoard == null || solutionBoard.isEmpty()){
-            System.out.println("solution NOT found");
+        solutionBoard = AgentNB.possibleMoves(arrayHand, arrayBoard);
+        System.out.println(solutionBoard);
+        if(solutionBoard == null){
+            //System.out.println("solution NOT found");
             return null;
         }
-        System.out.println("solution found");
-        ArrayList<Tile> solutionHand = getHand(board2ArrayList(intialBoard), solutionBoard, arrayHand);
-        
+        //System.out.println("solution found");
+        ArrayList<Tile> solutionHand = getHand(board2ArrayList(initialBoard), solutionBoard, arrayHand);
+
         Tile[][] finalHand = hand2matrix(solutionHand);
         Tile[][] finalBoard = board2matrix(solutionBoard);
 
-        // for (ArrayList<Tile> row : solutionBoard) {
-        //     for (Tile tile : row) {
-        //         if(!(tile == null)){
-        //             System.out.print(tile.toString() +" ");
-
-        //         }
-        //         else{
-        //             System.out.print(0 + " ");
-        //         }
-        //     }
-        //     System.out.println(); // Move to the next line after each row
-        // } 
-       
         return new Object[]{finalHand, finalBoard};
 
     }
 
     private static ArrayList<Tile> getHand(ArrayList<ArrayList<Tile>> intialBoard, ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
-
-        //ArrayList<Tile> deepCopy = deepCopyHand(hand);
    
         // Iterate through list1
         for (ArrayList<Tile> sublist1 : solutionBoard) {
@@ -68,12 +39,10 @@ public class AgentImplementation {
                 }
             }
         }
-        //System.out.println("used tiles" + usedTiles.toString());
         
         ArrayList<Tile> finalHand = removeUsedTile(hand, usedTiles);
         
         return finalHand;
-    //}
     }
 
     public static ArrayList<Tile> removeUsedTile(ArrayList<Tile> hand, ArrayList<Tile> used){
@@ -107,8 +76,6 @@ public class AgentImplementation {
         return false;
     }
 
-    
-
     private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board) {
         Tile[][] matrix = new Tile[7][20];
     
@@ -116,32 +83,19 @@ public class AgentImplementation {
         int colIndex = 0;
     
         for (ArrayList<Tile> innerList : board) {
+            if(colIndex+ innerList.size() > 20){
+                //System.out.println("change row");
+                rowIndex++;
+                colIndex = 0;
+            }
             for (Tile tile : innerList) {
-                if(colIndex + innerList.size() > 20){
-                    rowIndex++;
-                    colIndex = 0;
-                }
                 matrix[rowIndex][colIndex] = tile;
                 colIndex++;
-    
-                // Check if the row is full
-                if (colIndex == 20) {
-                    rowIndex++;
-                    colIndex = 0;
-    
-                    // Check if the matrix is full
-                    if (rowIndex == 7) {
-                        break;
-                    }
-                }
             }
-            if(colIndex != 20){
             colIndex++;
-            }
         }
         return matrix;
     }
-    
 
     private static Tile[][] hand2matrix(ArrayList<Tile> hand){
          Tile[][] matrix = new Tile[2][15];
@@ -166,9 +120,8 @@ public class AgentImplementation {
             }
         return matrix;
     }
-        
-    
-    private static ArrayList<ArrayList<Tile>> board2ArrayList( Tile[][] board){
+
+    public static ArrayList<ArrayList<Tile>> board2ArrayList( Tile[][] board){
         //make board into arrray list of array list
         boolean currentSet = false;
         ArrayList<Tile> set = new ArrayList<>();
@@ -195,7 +148,7 @@ public class AgentImplementation {
      
         return allSets;
 
- }
+    }
 
     private static ArrayList<Tile> hand2ArrayList (Tile[][] hand){
          //make board into arrray list of array list
@@ -212,27 +165,6 @@ public class AgentImplementation {
            }
    
            return handArray;
-    }
-
-      /**
-     * Deep copy a given game board.
-     * @param hand The original game board to be copied.
-     * @return The deep copy of the game board.
-     */
-    public static ArrayList<Tile> deepCopyHand(ArrayList<Tile> hand) {
-        if (hand == null) {
-            return null;
-        }
-
-    ArrayList<Tile> newHand = new ArrayList<>();
-     
-            for (Tile tile : hand) {
-                Tile newTile = new Tile(tile.getNumber(), tile.getColor());
-                newHand.add(newTile);
-            }
-          
-
-        return newHand;
     }
 
 }

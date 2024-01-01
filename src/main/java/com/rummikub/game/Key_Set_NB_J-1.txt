@@ -337,7 +337,7 @@
 {-1None10Red12Red};{(10,Red).(-1,None).(12,Red)};{(11,Red).(9,Red).(13,Red)}
 {-1None11Red12Red};{(11,Red).(12,Red).(-1,None)};{(13,Red).(10,Red).(9,Red)}
 {-1None11Red13Red};{(11,Red).(-1,None).(13,Red)};{(12,Red).(10,Red)}
-{-1None12Red13Red};{(12,Red).(13,Red).(-1,None)};{(11,Red).(10,Red)}
+{-1None12Red13Red};{(-1,None).(12,Red).(13,Red)};{(11,Red).(10,Red)}
 {-1None1Black2Black};{(1,Black).(2,Black).(-1,None)};{(3,Black).(4,Black)}
 {-1None1Black3Black};{(1,Black).(-1,None).(3,Black)};{(2,Black).(4,Black)}
 {-1None2Black3Black};{(2,Black).(3,Black).(-1,None)};{(4,Black).(1,Black).(5,Black)}
@@ -360,7 +360,7 @@
 {-1None10Black12Black};{(10,Black).(-1,None).(12,Black)};{(11,Black).(9,Black).(13,Black)}
 {-1None11Black12Black};{(11,Black).(12,Black).(-1,None)};{(13,Black).(10,Black).(9,Black)}
 {-1None11Black13Black};{(11,Black).(-1,None).(13,Black)};{(12,Black).(10,Black)}
-{-1None12Black13Black};{(12,Black).(13,Black).(-1,None)};{(11,Black).(10,Black)}
+{-1None12Black13Black};{(-1,None).(12,Black).(13,Black)};{(11,Black).(10,Black)}
 {-1None1Blue2Blue};{(1,Blue).(2,Blue).(-1,None)};{(3,Blue).(4,Blue)}
 {-1None1Blue3Blue};{(1,Blue).(-1,None).(3,Blue)};{(2,Blue).(4,Blue)}
 {-1None2Blue3Blue};{(2,Blue).(3,Blue).(-1,None)};{(4,Blue).(1,Blue).(5,Blue)}
@@ -383,7 +383,7 @@
 {-1None10Blue12Blue};{(10,Blue).(-1,None).(12,Blue)};{(11,Blue).(9,Blue).(13,Blue)}
 {-1None11Blue12Blue};{(11,Blue).(12,Blue).(-1,None)};{(13,Blue).(10,Blue).(9,Blue)}
 {-1None11Blue13Blue};{(11,Blue).(-1,None).(13,Blue)};{(12,Blue).(10,Blue)}
-{-1None12Blue13Blue};{(12,Blue).(13,Blue).(-1,None)};{(11,Blue).(10,Blue)}
+{-1None12Blue13Blue};{(-1,None).(12,Blue).(13,Blue)};{(11,Blue).(10,Blue)}
 {-1None1Orange2Orange};{(1,Orange).(2,Orange).(-1,None)};{(3,Orange).(4,Orange)}
 {-1None1Orange3Orange};{(1,Orange).(-1,None).(3,Orange)};{(2,Orange).(4,Orange)}
 {-1None2Orange3Orange};{(2,Orange).(3,Orange).(-1,None)};{(4,Orange).(1,Orange).(5,Orange)}
@@ -406,7 +406,7 @@
 {-1None10Orange12Orange};{(10,Orange).(-1,None).(12,Orange)};{(11,Orange).(9,Orange).(13,Orange)}
 {-1None11Orange12Orange};{(11,Orange).(12,Orange).(-1,None)};{(13,Orange).(10,Orange).(9,Orange)}
 {-1None11Orange13Orange};{(11,Orange).(-1,None).(13,Orange)};{(12,Orange).(10,Orange)}
-{-1None12Orange13Orange};{(12,Orange).(13,Orange).(-1,None)};{(11,Orange).(10,Orange)}
+{-1None12Orange13Orange};{(-1,None).(12,Orange).(13,Orange)};{(11,Orange).(10,Orange)}
 {-1None-1None1Red};{(1,Red).(-1,None).(-1,None)};{(2,Red).(3,Red).(4,Red).(1,Black).(1,Blue).(1,Orange)}
 {-1None-1None2Red};{(2,Red).(-1,None).(-1,None)};{(3,Red).(4,Red).(5,Red).(1,Red).(2,Black).(2,Blue).(2,Orange)}
 {-1None-1None3Red};{(3,Red).(-1,None).(-1,None)};{(4,Red).(5,Red).(6,Red).(2,Red).(1,Red).(3,Black).(3,Blue).(3,Orange)}
@@ -509,7 +509,7 @@
 {-1None8Red9Red10Red};{(8,Red).(9,Red).(10,Red).(-1,None)};{(11,Red).(7,Red).(12,Red)}
 {-1None9Red10Red11Red};{(9,Red).(10,Red).(11,Red).(-1,None)};{(12,Red).(8,Red).(13,Red)}
 {-1None10Red11Red12Red};{(10,Red).(11,Red).(12,Red).(-1,None)};{(13,Red).(9,Red)}
-{-1None11Red12Red13Red};{(11,Red).(12,Red).(13,Red).(-1,None)};{(14,Red).(10,Red).(15,Red)}
+{-1None11Red12Red13Red};{(-1,None).(11,Red).(12,Red).(13,Red)};{(14,Red).(10,Red).(15,Red)}
 {-1None1Red3Red4Red};{(1,Red).(-1,None).(3,Red).(4,Red)};{(2,Red).(5,Red)}
 {-1None1Red2Red4Red};{(1,Red).(2,Red).(-1,None).(4,Red)};{(3,Red).(5,Red)}
 {-1None2Red4Red5Red};{(2,Red).(-1,None).(4,Red).(5,Red)};{(3,Red).(1,Red).(6,Red)}
@@ -540,7 +540,7 @@
 {-1None8Black9Black10Black};{(8,Black).(9,Black).(10,Black).(-1,None)};{(11,Black).(7,Black).(12,Black)}
 {-1None9Black10Black11Black};{(9,Black).(10,Black).(11,Black).(-1,None)};{(12,Black).(8,Black).(13,Black)}
 {-1None10Black11Black12Black};{(10,Black).(11,Black).(12,Black).(-1,None)};{(13,Black).(9,Black)}
-{-1None11Black12Black13Black};{(11,Black).(12,Black).(13,Black).(-1,None)};{(14,Black).(10,Black).(15,Black)}
+{-1None11Black12Black13Black};{(-1,None).(11,Black).(12,Black).(13,Black)};{(14,Black).(10,Black).(15,Black)}
 {-1None1Black3Black4Black};{(1,Black).(-1,None).(3,Black).(4,Black)};{(2,Black).(5,Black)}
 {-1None1Black2Black4Black};{(1,Black).(2,Black).(-1,None).(4,Black)};{(3,Black).(5,Black)}
 {-1None2Black4Black5Black};{(2,Black).(-1,None).(4,Black).(5,Black)};{(3,Black).(1,Black).(6,Black)}
@@ -571,7 +571,7 @@
 {-1None8Blue9Blue10Blue};{(8,Blue).(9,Blue).(10,Blue).(-1,None)};{(11,Blue).(7,Blue).(12,Blue)}
 {-1None9Blue10Blue11Blue};{(9,Blue).(10,Blue).(11,Blue).(-1,None)};{(12,Blue).(8,Blue).(13,Blue)}
 {-1None10Blue11Blue12Blue};{(10,Blue).(11,Blue).(12,Blue).(-1,None)};{(13,Blue).(9,Blue)}
-{-1None11Blue12Blue13Blue};{(11,Blue).(12,Blue).(13,Blue).(-1,None)};{(14,Blue).(10,Blue).(15,Blue)}
+{-1None11Blue12Blue13Blue};{(-1,None).(11,Blue).(12,Blue).(13,Blue)};{(14,Blue).(10,Blue).(15,Blue)}
 {-1None1Blue3Blue4Blue};{(1,Blue).(-1,None).(3,Blue).(4,Blue)};{(2,Blue).(5,Blue)}
 {-1None1Blue2Blue4Blue};{(1,Blue).(2,Blue).(-1,None).(4,Blue)};{(3,Blue).(5,Blue)}
 {-1None2Blue4Blue5Blue};{(2,Blue).(-1,None).(4,Blue).(5,Blue)};{(3,Blue).(1,Blue).(6,Blue)}
@@ -602,7 +602,7 @@
 {-1None8Orange9Orange10Orange};{(8,Orange).(9,Orange).(10,Orange).(-1,None)};{(11,Orange).(7,Orange).(12,Orange)}
 {-1None9Orange10Orange11Orange};{(9,Orange).(10,Orange).(11,Orange).(-1,None)};{(12,Orange).(8,Orange).(13,Orange)}
 {-1None10Orange11Orange12Orange};{(10,Orange).(11,Orange).(12,Orange).(-1,None)};{(13,Orange).(9,Orange)}
-{-1None11Orange12Orange13Orange};{(11,Orange).(12,Orange).(13,Orange).(-1,None)};{(14,Orange).(10,Orange).(15,Orange)}
+{-1None11Orange12Orange13Orange};{(-1,None).(11,Orange).(12,Orange).(13,Orange)};{(14,Orange).(10,Orange).(15,Orange)}
 {-1None1Orange3Orange4Orange};{(1,Orange).(-1,None).(3,Orange).(4,Orange)};{(2,Orange).(5,Orange)}
 {-1None1Orange2Orange4Orange};{(1,Orange).(2,Orange).(-1,None).(4,Orange)};{(3,Orange).(5,Orange)}
 {-1None2Orange4Orange5Orange};{(2,Orange).(-1,None).(4,Orange).(5,Orange)};{(3,Orange).(1,Orange).(6,Orange)}
@@ -653,9 +653,9 @@
 {-1None-1None10Red11Red};{(10,Red).(11,Red).(-1,None).(-1,None)};{(12,Red).(13,Red).(9,Red)}
 {-1None-1None10Red12Red};{(10,Red).(-1,None).(12,Red).(-1,None)};{(11,Red).(13,Red).(9,Red)}
 {-1None-1None10Red13Red};{(10,Red).(-1,None).(-1,None).(13,Red)};{(11,Red).(12,Red).(9,Red)}
-{-1None-1None11Red12Red};{(11,Red).(12,Red).(-1,None).(-1,None)};{(13,Red).(10,Red).(9,Red).(8,Red)}
-{-1None-1None11Red13Red};{(11,Red).(-1,None).(13,Red).(-1,None)};{(12,Red).(10,Red).(9,Red)}
-{-1None-1None12Red13Red};{(12,Red).(13,Red).(-1,None).(-1,None)};{(11,Red).(10,Red).(9,Red)}
+{-1None-1None11Red12Red};{(-1,None).(11,Red).(12,Red).(-1,None)};{(13,Red).(10,Red).(9,Red).(8,Red)}
+{-1None-1None11Red13Red};{(-1,None).(11,Red).(-1,None).(13,Red)};{(12,Red).(10,Red).(9,Red)}
+{-1None-1None12Red13Red};{(-1,None).(-1,None).(12,Red).(13,Red)};{(11,Red).(10,Red).(9,Red)}
 {-1None-1None1Black2Black};{(1,Black).(2,Black).(-1,None).(-1,None)};{(3,Black).(4,Black).(5,Black)}
 {-1None-1None1Black3Black};{(1,Black).(-1,None).(3,Black).(-1,None)};{(2,Black).(4,Black).(5,Black)}
 {-1None-1None1Black4Black};{(1,Black).(-1,None).(-1,None).(4,Black)};{(2,Black).(3,Black).(5,Black)}
@@ -686,9 +686,9 @@
 {-1None-1None10Black11Black};{(10,Black).(11,Black).(-1,None).(-1,None)};{(12,Black).(13,Black).(9,Black)}
 {-1None-1None10Black12Black};{(10,Black).(-1,None).(12,Black).(-1,None)};{(11,Black).(13,Black).(9,Black)}
 {-1None-1None10Black13Black};{(10,Black).(-1,None).(-1,None).(13,Black)};{(11,Black).(12,Black).(9,Black)}
-{-1None-1None11Black12Black};{(11,Black).(12,Black).(-1,None).(-1,None)};{(13,Black).(10,Black).(9,Black).(8,Black)}
-{-1None-1None11Black13Black};{(11,Black).(-1,None).(13,Black).(-1,None)};{(12,Black).(10,Black).(9,Black)}
-{-1None-1None12Black13Black};{(12,Black).(13,Black).(-1,None).(-1,None)};{(11,Black).(10,Black).(9,Black)}
+{-1None-1None11Black12Black};{(-1,None).(11,Black).(12,Black).(-1,None)};{(13,Black).(10,Black).(9,Black).(8,Black)}
+{-1None-1None11Black13Black};{(-1,None).(11,Black).(-1,None).(13,Black)};{(12,Black).(10,Black).(9,Black)}
+{-1None-1None12Black13Black};{(-1,None).(-1,None).(12,Black).(13,Black)};{(11,Black).(10,Black).(9,Black)}
 {-1None-1None1Blue2Blue};{(1,Blue).(2,Blue).(-1,None).(-1,None)};{(3,Blue).(4,Blue).(5,Blue)}
 {-1None-1None1Blue3Blue};{(1,Blue).(-1,None).(3,Blue).(-1,None)};{(2,Blue).(4,Blue).(5,Blue)}
 {-1None-1None1Blue4Blue};{(1,Blue).(-1,None).(-1,None).(4,Blue)};{(2,Blue).(3,Blue).(5,Blue)}
@@ -719,9 +719,9 @@
 {-1None-1None10Blue11Blue};{(10,Blue).(11,Blue).(-1,None).(-1,None)};{(12,Blue).(13,Blue).(9,Blue)}
 {-1None-1None10Blue12Blue};{(10,Blue).(-1,None).(12,Blue).(-1,None)};{(11,Blue).(13,Blue).(9,Blue)}
 {-1None-1None10Blue13Blue};{(10,Blue).(-1,None).(-1,None).(13,Blue)};{(11,Blue).(12,Blue).(9,Blue)}
-{-1None-1None11Blue12Blue};{(11,Blue).(12,Blue).(-1,None).(-1,None)};{(13,Blue).(10,Blue).(9,Blue).(8,Blue)}
-{-1None-1None11Blue13Blue};{(11,Blue).(-1,None).(13,Blue).(-1,None)};{(12,Blue).(10,Blue).(9,Blue)}
-{-1None-1None12Blue13Blue};{(12,Blue).(13,Blue).(-1,None).(-1,None)};{(11,Blue).(10,Blue).(9,Blue)}
+{-1None-1None11Blue12Blue};{(-1,None).(11,Blue).(12,Blue).(-1,None)};{(13,Blue).(10,Blue).(9,Blue).(8,Blue)}
+{-1None-1None11Blue13Blue};{(-1,None).(11,Blue).(-1,None).(13,Blue)};{(12,Blue).(10,Blue).(9,Blue)}
+{-1None-1None12Blue13Blue};{(-1,None).(-1,None).(12,Blue).(13,Blue)};{(11,Blue).(10,Blue).(9,Blue)}
 {-1None-1None1Orange2Orange};{(1,Orange).(2,Orange).(-1,None).(-1,None)};{(3,Orange).(4,Orange).(5,Orange)}
 {-1None-1None1Orange3Orange};{(1,Orange).(-1,None).(3,Orange).(-1,None)};{(2,Orange).(4,Orange).(5,Orange)}
 {-1None-1None1Orange4Orange};{(1,Orange).(-1,None).(-1,None).(4,Orange)};{(2,Orange).(3,Orange).(5,Orange)}
@@ -752,9 +752,9 @@
 {-1None-1None10Orange11Orange};{(10,Orange).(11,Orange).(-1,None).(-1,None)};{(12,Orange).(13,Orange).(9,Orange)}
 {-1None-1None10Orange12Orange};{(10,Orange).(-1,None).(12,Orange).(-1,None)};{(11,Orange).(13,Orange).(9,Orange)}
 {-1None-1None10Orange13Orange};{(10,Orange).(-1,None).(-1,None).(13,Orange)};{(11,Orange).(12,Orange).(9,Orange)}
-{-1None-1None11Orange12Orange};{(11,Orange).(12,Orange).(-1,None).(-1,None)};{(13,Orange).(10,Orange).(9,Orange).(8,Orange)}
-{-1None-1None11Orange13Orange};{(11,Orange).(-1,None).(13,Orange).(-1,None)};{(12,Orange).(10,Orange).(9,Orange)}
-{-1None-1None12Orange13Orange};{(12,Orange).(13,Orange).(-1,None).(-1,None)};{(11,Orange).(10,Orange).(9,Orange)}
+{-1None-1None11Orange12Orange};{(-1,None).(11,Orange).(12,Orange).(-1,None)};{(13,Orange).(10,Orange).(9,Orange).(8,Orange)}
+{-1None-1None11Orange13Orange};{(-1,None).(11,Orange).(-1,None).(13,Orange)};{(12,Orange).(10,Orange).(9,Orange)}
+{-1None-1None12Orange13Orange};{(-1,None).(-1,None).(12,Orange).(13,Orange)};{(11,Orange).(10,Orange).(9,Orange)}
 {1Red2Red3Red4Red5Red};{(1,Red).(2,Red).(3,Red).(4,Red).(5,Red)};{(6,Red)}
 {2Red3Red4Red5Red6Red};{(2,Red).(3,Red).(4,Red).(5,Red).(6,Red)};{(7,Red).(1,Red)}
 {3Red4Red5Red6Red7Red};{(3,Red).(4,Red).(5,Red).(6,Red).(7,Red)};{(8,Red).(2,Red)}
@@ -957,8 +957,8 @@
 {-1None-1None7Red8Red9Red};{(7,Red).(8,Red).(9,Red).(-1,None).(-1,None)};{(8,Red).(10,Red).(6,Red).(12,Red)}
 {-1None-1None8Red9Red10Red};{(8,Red).(9,Red).(10,Red).(-1,None).(-1,None)};{(9,Red).(11,Red).(7,Red).(13,Red)}
 {-1None-1None9Red10Red11Red};{(9,Red).(10,Red).(11,Red).(-1,None).(-1,None)};{(10,Red).(12,Red).(8,Red)}
-{-1None-1None10Red11Red12Red};{(10,Red).(11,Red).(12,Red).(-1,None).(-1,None)};{(11,Red).(13,Red).(9,Red).(15,Red)}
-{-1None-1None11Red12Red13Red};{(11,Red).(12,Red).(13,Red).(-1,None).(-1,None)};{(12,Red).(14,Red).(10,Red).(16,Red)}
+{-1None-1None10Red11Red12Red};{(-1,None).(10,Red).(11,Red).(12,Red).(-1,None)};{(11,Red).(13,Red).(9,Red).(15,Red)}
+{-1None-1None11Red12Red13Red};{(-1,None).(-1,None).(11,Red).(12,Red).(13,Red)};{(12,Red).(14,Red).(10,Red).(16,Red)}
 {-1None-1None1Red3Red4Red};{(1,Red).(-1,None).(3,Red).(4,Red).(-1,None)};{(2,Red).(5,Red).(6,Red)}
 {-1None-1None1Red2Red4Red};{(1,Red).(2,Red).(-1,None).(4,Red).(-1,None)};{(3,Red).(5,Red).(6,Red)}
 {-1None-1None1Red2Red5Red};{(1,Red).(2,Red).(-1,None).(-1,None).(5,Red)};{(3,Red).(4,Red).(6,Red)}

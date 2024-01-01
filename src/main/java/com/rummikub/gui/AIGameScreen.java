@@ -86,23 +86,29 @@ class AIGameScreen extends Pane {
 
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.BASELINE) { // player is AI
+                System.out.println("BaseLine Agent:");
                 aimove = null;
                 aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
-                System.out.println(aimove);
+                //System.out.println(aimove);
                 if (aimove != null && !aimove.isEmpty()) {
                     System.out.println("yes ");
                         makeBaselineMove(aimove, GameboardGUI.getInstance().getState());
-                        BaselineAgent.printListTiles(aimove); // update the board in memory 
+                        //BaselineAgent.printListTiles(aimove); // update the board in memory
                         GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
                         Tile[][] newHand = removeTiles(aimove); // remove tiles used for the AI move
                         RackGUI.getInstance().handToRack(newHand); 
-                        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+                        //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
                 }else{ // no move so draw
                     System.out.println("no move possible for computer");
-                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    if(!Game.getInstance().getPool().isEmpty()) {
+                        System.out.println("pool is NOT empty");
+                        Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    }
                 }
                 finishMove();}
-            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.MAIN) { // player is AI
+            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.MAIN) { // player is AI;
+                System.out.println("");
+                System.out.println("MAIN AGENT:");
                 Object[] aimove;
                 aimove = AgentImplementation.makeMove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState()); 
             
@@ -117,12 +123,18 @@ class AIGameScreen extends Pane {
 
                 }else{ 
                     System.out.println("no move possible for computer");
-                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    if(!Game.getInstance().getPool().isEmpty()) {
+                        System.out.println("pool is NOT empty");
+                        Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    }
                 }
                 finishMove();
             }else{ // player is computer
                 if (gameboard.stateNotChanged()) {
-                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    if(!Game.getInstance().getPool().isEmpty()) {
+                        System.out.println("pool is NOT empty");
+                        Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    }
                     finishMove();
                 } else {
                     humanPlayerMove();
@@ -134,22 +146,18 @@ class AIGameScreen extends Pane {
         
     private void humanPlayerMove() {
         if (gameboard.stateNotChanged()) {
-            Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+            if(!Game.getInstance().getPool().isEmpty()) {
+                System.out.println("pool is NOT empty");
+                Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+            }
             finishMove();
         } else {
             if (Game.getInstance().isValidBoard(gameboard.getState())) {
-                if (!Game.getInstance().currentPlayer.getFirstMoveMade()) {
-                    if (Game.getInstance().isValidFirstMove(gameboard.getState())) {
-                        Game.getInstance().currentPlayer.firstMoveMade();
-                        finishMove();
-                    } else {
-                        System.out.println("First move needs to be over 30.");
-                    }
-                } else {
-                    finishMove();
-                }
+                finishMove();
             } else {
-                System.out.println("Board is not in a valid state!");
+                //System.out.println(GameboardGUI.getInstance().getState());
+                System.out.println("move is not valid");
+                //finishMove();
             }
         }
     }
@@ -193,7 +201,7 @@ class AIGameScreen extends Pane {
             if (done) break;
             space = 0;
         }
-        BaselineAgent.printListTiles(aiMove);
+        //BaselineAgent.printListTiles(aiMove);
         return board;
     }
     

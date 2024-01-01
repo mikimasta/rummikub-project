@@ -16,6 +16,7 @@ public class BaseImplementation {
      * @return the best outcome adding the board to the rack
      */
     public ArrayList<Tile> possibleMoveAddingRackToBoard(Tile[][] rack, Tile[][] board){
+        System.out.println("BaseLine Agent used");
 
         ArrayList<Tile> combined = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack)); 
         combined.addAll(BaselineAgent.TwodArrayToArrayList(board)); // arraylist combining rack and board tiles
@@ -45,8 +46,8 @@ public class BaseImplementation {
         }
         //actualMoveGroup = BaselineAgent.findLargestMove(listOfMovesGroups); // largest move for groups
         ArrayList<Tile> groupMove = nestedArrayListToArrayList(findNonOverlappingMoves(listOfMovesGroups));
-        System.out.println("moves for groups");        
-        BaselineAgent.printListTiles(groupMove);
+        //System.out.println("moves for groups");
+        //BaselineAgent.printListTiles(groupMove);
         
         // now check if there is a move possible for runs
         move.clear();
@@ -68,8 +69,8 @@ public class BaseImplementation {
         }
         //actualMoveRun = BaselineAgent.findLargestMove(listOfMovesRuns);
         ArrayList<Tile> runMove = nestedArrayListToArrayList(findNonOverlappingMoves(listOfMovesRuns));
-        System.out.println("moves for runs");
-        BaselineAgent.printListTiles(runMove);
+        //System.out.println("moves for runs");
+        //BaselineAgent.printListTiles(runMove);
 
         ArrayList<Tile> finalMove = BaselineAgent.chooseBestMove(runMove, groupMove);
 
@@ -97,7 +98,7 @@ public class BaseImplementation {
 
     /**
      * finds all moves that don't use the same tiles
-     * @param listOfMovesGroups list of moves
+     * @param listOfMoves list of moves
      * @return list of moves that don't use the same tiles
      */
     static ArrayList<ArrayList<Tile>> findNonOverlappingMoves(ArrayList<ArrayList<Tile>> listOfMoves) {

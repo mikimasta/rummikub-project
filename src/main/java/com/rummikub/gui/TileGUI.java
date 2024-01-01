@@ -200,8 +200,8 @@ class TileGUI extends StackPane {
             ImageView imageToSet = new ImageView();
             imageToSet.setPreserveRatio(true);
             imageToSet.setFitHeight(TILE_HEIGHT);
-            if (tile.getColor() == Color.RED)
-                imageToSet.setImage(Images.jokerRed);
+            if (tile.getColor() == Color.BROWN)
+                imageToSet.setImage(Images.jokerBlack);
             else if (tile.getColor() == Color.BLACK)
                 imageToSet.setImage(Images.jokerBlack);
             else 

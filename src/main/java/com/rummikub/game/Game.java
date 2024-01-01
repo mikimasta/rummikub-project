@@ -1,6 +1,9 @@
 package com.rummikub.game;
 
+import com.rummikub.model.AgentImplementation;
 import com.rummikub.model.BaselineAgent;
+import com.rummikub.model.Type;
+import com.rummikub.model.ValidSets;
 import javafx.scene.paint.Color;
 
 import java.util.*;
@@ -69,10 +72,16 @@ public class Game {
         }
         boolean isAnAI = true;
         players = new ArrayList<>();
+        /*
         for (int i = 1; i <= numPlayers; i++) {
             players.add(new Player("Player " + i, isAnAI));
-            isAnAI = false;
+            isAnAI = true;
+            //isAnAI  = false;
         }
+        */
+        players.add(new Player("NBAgent1", isAnAI, Type.MAIN));
+        players.add(new Player("NBAgent", isAnAI, Type.MAIN));
+
 
         byte firstPlayer = (byte) (0 + (byte) (Math.random() * numPlayers - 1));
         currentPlayer = players.get(firstPlayer);
@@ -99,8 +108,8 @@ public class Game {
         }
         // the interger 0 will be used in regard to a joker
         // two jokers are added into our game
-        pool.add(new Tile((byte) -1, Color.RED));
-        pool.add(new Tile((byte) -1, Color.BLACK));
+        pool.add(new Tile((byte) -1, Color.BROWN));
+        pool.add(new Tile((byte) -1, Color.BROWN));
 
         Collections.shuffle(pool);
     }
@@ -127,33 +136,15 @@ public class Game {
      * @return  true if the board state complies with the rules, false otherwise.
      */
     public boolean isValidBoard(Tile[][] gameBoard) {
-        ArrayList<Tile> set = new ArrayList<>();
-
-        for (int i = 0; i < gameBoard.length; i++) {
-            set.clear();
-
-            for (int y = 0; y < gameBoard[i].length; y++) {
-                Tile tile = gameBoard[i][y];
-                // Checks for illegal subset of tiles of length 1 or 2
-                if ((tile == null) && (set.size() > 0) && (set.size() < 3)) {
-                    return false; 
-                } else if (tile == null && set.size() > 2) {
-                    if (!checkTile(set)) {
-                        return false; // Check if given tile is either stairs or group, return false if not
-                    }
-                    set.clear();
-                }
-                if (tile != null) {
-                    set.add(tile);
-                }
+        HashMap validSets = ValidSets.getImmutableMap();
+        ArrayList<String> board = boardListToSetKey(AgentImplementation.board2ArrayList(gameBoard));
+        //System.out.println(board);
+        for (String set: board){
+            if (!validSets.containsKey(set)) {
+                return false;
             }
-
-            if (set.size() < 3 && set.size() != 0) {
-                return false; // The block of tiles is too short
-            } 
-
         }
-        return true; // Checked all tiles, all are correct
+        return true;
     }
 
     // check if given tile is either group or stairs, i.e. is it legal?
@@ -436,7 +427,7 @@ public class Game {
 
     /**
      * sorting method to order tiles by groups
-     * @param player 2D array representing the rack of the player
+     * @param rack 2D array representing the rack of the player
      * @return the ordered by groups tiles of the player
      */
     public static Tile[][] orderRackByGroup(Tile[][] rack) {
@@ -506,8 +497,7 @@ public class Game {
             ArrayList<Tile> set = new ArrayList<>();
             for (int y = 0; y < gameBoard[i].length; y++) {
                 Tile tile = gameBoard[i][y];
-                if (tile != null) {
-                    assert set != null;
+                if (tile != null && set !=null) {
                     set.add(tile);
                     count++;
                 }
@@ -524,7 +514,7 @@ public class Game {
         ArrayList<String> board = new ArrayList<>();
         for(ArrayList<Tile> set: gameBoard){
             String setKey="";
-            if(set.size()<6){
+            if(set!=null && set.size()<6){
                 for (int i = 0; i < set.size(); i++) {
                     Tile tile = set.get(i);
                     setKey += ("(" + tile.getNumber() + "," + getStringFromColor(tile) + ").");
@@ -603,6 +593,9 @@ public class Game {
 
     public static ArrayList<Tile> orderSetStairs(ArrayList<Tile> set) {
         Tile joker = new Tile((byte) -1, Color.BROWN);
+        if(set==null){
+            return null;
+        }
         if(set.contains(joker)){
             set.remove(joker);
             set.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
@@ -618,5 +611,6 @@ public class Game {
         return set;
     }
 
-
 }
+
+
