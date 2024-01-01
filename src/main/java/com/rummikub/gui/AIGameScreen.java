@@ -19,7 +19,9 @@ class AIGameScreen extends Pane {
     TimerGUI timer;
     HoverButton quit;
     BaselineAgent baselineAgent;
-    ArrayList<Tile> aimove;
+    ArrayList<Tile> aimove1;
+    ArrayList<Tile> aimove2;
+    ArrayList<Tile> aimove3;
 
     AIGameScreen() {
 
@@ -82,27 +84,54 @@ class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI()) { // player is AI
-                aimove = null;
-                aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                if (aimove == null) {
-                    aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand()); 
-                }
-                System.out.println(aimove);
-                if (aimove != null && !aimove.isEmpty()) {
-                    System.out.println("yes ");
-                    makeAIMove(aimove, GameboardGUI.getInstance().getState());
-                    BaselineAgent.printListTiles(aimove); // update the board in memory 
-                    GameboardGUI.getInstance().renderAIMove(); // update the board in the GUI
-                    Tile[][] newHand = removeTiles(aimove); // remove tiles used for the AI move
-                    RackGUI.getInstance().handToRack(newHand); 
+            if (Game.getInstance().currentPlayer.isAI()) {
+                aimove1 = null;
+                aimove1 = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                System.out.println("move avec rack + board");
+                System.out.println(BaselineAgent.printListTiles(aimove1));
+                if (aimove1 != null && !aimove1.isEmpty()) {
+                    makeAIMove(aimove1, GameboardGUI.getInstance().getState());
+                    BaselineAgent.printListTiles(aimove1);
+                    GameboardGUI.getInstance().renderAIMove();
+                    Tile[][] newHand = removeTilesFromRack(aimove1);
+                    RackGUI.getInstance().handToRack(newHand);
                     System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
-                }else{ // no move so draw
-                    System.out.println("no move possible for computer");
-                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                } else {
+                    // If the first move is not possible, try the second move
+                    aimove2 = null;
+                    aimove2 = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand());
+                    System.out.println("move avec baseline agent");
+                    System.out.println(BaselineAgent.printListTiles(aimove2));
+                    if (aimove2 != null && !aimove2.isEmpty()) {
+                        makeAIMove(aimove2, GameboardGUI.getInstance().getState());
+                        BaselineAgent.printListTiles(aimove2);
+                        GameboardGUI.getInstance().renderAIMove();
+                        Tile[][] newHand = removeTilesFromRack(aimove2);
+                        RackGUI.getInstance().handToRack(newHand);
+                        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+                    } else {
+                        // If the second move is not possible, try the third move
+                        aimove3 = null;
+                        aimove3 = BaselineAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                        if (aimove3 != null && !aimove3.isEmpty() && aimove3.size() > 2) {
+                            System.out.println("move avec single tiles");
+                            System.out.println(BaselineAgent.printListTiles(aimove3));
+                            removeTilesFromBoard(aimove3); // TODO doesn't do it i think
+                            GameboardGUI.getInstance().removeAIMove();
+                            makeAIMove(aimove3, GameboardGUI.getInstance().getState());
+                            GameboardGUI.getInstance().renderAIMove();
+                            Tile[][] newHand = removeTilesFromRack(aimove3);
+                            RackGUI.getInstance().handToRack(newHand);
+                            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+                        } else { // no move is possible draw a tile
+                            System.out.println("No move possible for computer. Drawing a tile...");
+                            Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                        }
+                    }
                 }
                 finishMove();
-            }else{ // player is computer
+            }else{ // player is human
+                
                 if (gameboard.stateNotChanged()) {
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
@@ -113,7 +142,7 @@ class AIGameScreen extends Pane {
         });
         
     }
-        
+
     private void humanPlayerMove() {
         if (gameboard.stateNotChanged()) {
             Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
@@ -190,7 +219,7 @@ class AIGameScreen extends Pane {
      * @param aiMove list of tiles of the move
      * @return the updated rack
      */
-    private Tile[][] removeTiles(ArrayList<Tile> aiMove){
+    private Tile[][] removeTilesFromRack(ArrayList<Tile> aiMove){
         
         for (Tile tile : aiMove) {
             for (int i = 0; i < Game.getInstance().currentPlayer.getHand().length; i++) {
@@ -204,5 +233,18 @@ class AIGameScreen extends Pane {
         
         return Game.getInstance().currentPlayer.getHand();
     }
+
+    public static Tile[][] removeTilesFromBoard(ArrayList<Tile> aiMove) {
+        
+        for (int i = 0; i < GameboardGUI.getInstance().getState().length; i++) {
+            for (int j = 0; j < GameboardGUI.getInstance().getState()[i].length; j++) {
+                if (aiMove.contains(GameboardGUI.getInstance().getState()[i][j])) {
+                    GameboardGUI.getInstance().getState()[i][j] = null;
+                }
+            }
+        }
+        return GameboardGUI.getInstance().getState();
+    }
+
     
 }
