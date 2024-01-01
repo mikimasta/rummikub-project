@@ -36,8 +36,8 @@ public class Player {
 
         boolean tileAdded = false;
 
-        for (int i = 0; i < hand[0].length; i++) {
-            for (int j = 0; j < hand[1].length; j++) {
+        for (int i = 0; i < hand.length; i++) {
+            for (int j = 0; j < hand[i].length; j++) {
 
                 if (hand[i][j] == null) {
                     hand[i][j] = tile;
