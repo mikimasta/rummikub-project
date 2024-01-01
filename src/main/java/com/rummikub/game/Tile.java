@@ -17,7 +17,7 @@ public class Tile {
         this.number = number;
         this.color = color;
 
-        if (number ==(byte) -1){
+        if (number == (byte) -1){
             this.colorString = "z";
         }else{
             if (color.equals(Color.ORANGE)) {
