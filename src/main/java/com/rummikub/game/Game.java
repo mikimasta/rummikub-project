@@ -212,9 +212,9 @@ public class Game {
     static boolean checkIfStairs(ArrayList<Tile> set){
 
         // check if all same color
-        String colorOfFirst = set.get(0).getColorString();
+        Color colorOfFirst = set.get(0).getColor();
         for (int i = 1; i < set.size(); i++) {
-            String color = set.get(i).getColorString();
+            Color color = set.get(i).getColor();
             if (set.get(0).getNumber() == -1){ // first tile is a joker
                 colorOfFirst = color;
             } else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
@@ -222,14 +222,14 @@ public class Game {
             }
         }
 
-        // check if incrementing
+        // check if incrementing        
         byte numOfFirst = set.get(0).getNumber();
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
-            if (numOfFirst == 0) {
+            if (numOfFirst == (byte) -1) {
                numOfFirst = numTmp;
             } else {
-                if (numTmp - 1 != numOfFirst && numTmp != 0) { // TODO jokers at the end don't work and in the middle as well
+                if (numTmp - 1 != numOfFirst && numTmp != -1) { 
                     return false;
                 }
                 numOfFirst = numTmp;
