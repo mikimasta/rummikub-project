@@ -211,6 +211,9 @@ public class Game {
      */
     static boolean checkIfStairs(ArrayList<Tile> set){
 
+        if (set.size() < 3) {
+            return false;
+        } 
         // check if all same color
         Color colorOfFirst = set.get(0).getColor();
         for (int i = 1; i < set.size(); i++) {
