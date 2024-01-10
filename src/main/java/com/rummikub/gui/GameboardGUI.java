@@ -1,5 +1,6 @@
 package com.rummikub.gui;
 
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -139,5 +140,29 @@ class GameboardGUI extends Pane {
         }
 
     }
+
+
+    public void removeAIMove() {
+
+        for (Node node : getChildren()) {
+            if (node instanceof TileGUI) {
+                TileGUI tGui = (TileGUI) node;
+                Tile t = tGui.getTile();
+                
+                if (t != null && tGui.isAddedToBoard() ) { 
+                    getChildren().remove(tGui);
+
+                }
+            }
+        }
+
+    }
+
+
+    public void setState(Tile[][] newState) {
+        this.state = newState;
+        setPrevState();
+    }
+    
 
 }
