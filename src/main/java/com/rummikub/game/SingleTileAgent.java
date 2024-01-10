@@ -102,8 +102,16 @@ public class SingleTileAgent {
      */
     static ArrayList<ArrayList<Tile>> runMoves(Tile[][] dupRack, ArrayList<ArrayList<Tile>> runMoves) {
         ArrayList<Tile> rack = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(dupRack));
-        ArrayList<Tile> possibleTiles = new ArrayList<>(possibleTiles(rack, runMoves));
         ArrayList<ArrayList<Tile>> extendRunMoves = new ArrayList<ArrayList<Tile>>();
+
+        ArrayList<Tile> possibleTiles = new ArrayList<>();
+        for (ArrayList<Tile> move : runMoves) {
+            for (Tile tile : rack) {
+                if ((tile.getColorString().equals(move.get(0).getColorString()) && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
+                    possibleTiles.add(tile);
+                }
+            }
+        }
 
         if (possibleTiles.size() == 0) { // no possible tiles
             return null;
@@ -120,7 +128,7 @@ public class SingleTileAgent {
                         copy.add(0, tile); // add tile at the beginning of the list
                         addedTile = true;
                     }
-                    if ((lastNum < 13 && tile.getNumber() == lastNum + 1) || tile.getColorString().equals("z")) {
+                    if ((lastNum < 13 && tile.getNumber() == lastNum + 1) || tile.getColorString().equals("z") && !copy.contains(tile) ) {
                         copy.add(tile); // add tile at the end of the list
                         addedTile = true;
                     }
@@ -148,8 +156,16 @@ public class SingleTileAgent {
      */
     static ArrayList<ArrayList<Tile>> groupMoves(Tile[][] dupRack, ArrayList<ArrayList<Tile>> groupMoves) {
         ArrayList<Tile> rack = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(dupRack));
-        ArrayList<Tile> possibleTiles = new ArrayList<>(possibleTiles(rack, groupMoves));
         ArrayList<ArrayList<Tile>> extendGroupMoves = new ArrayList<>();
+
+        ArrayList<Tile> possibleTiles = new ArrayList<>();
+        for (ArrayList<Tile> move : groupMoves) {
+            for (Tile tile : rack) {
+                if ((tile.getNumber() == move.get(0).getNumber() && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
+                    possibleTiles.add(tile);
+                }
+            }
+        }
 
         if (possibleTiles.size() == 0) {
             return null;
@@ -171,18 +187,6 @@ public class SingleTileAgent {
         return BaselineAgent.findNonOverlappingMoves(extendGroupMoves);
     }
 
-    static ArrayList<Tile> possibleTiles(ArrayList<Tile> rack, ArrayList<ArrayList<Tile>> moves) {
-        ArrayList<Tile> possibleTiles = new ArrayList<>();
-        
-        for (ArrayList<Tile> move : moves) {
-            for (Tile tile : rack) {
-                if ((tile.getNumber() == move.get(0).getNumber() && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
-                    possibleTiles.add(tile);
-                }
-            }
-        }
-        return possibleTiles;
-    }
     /**
      * returns list of moves checks if the extended moves don't use the same tile and removes the tiles of the extended move which are on the board in memory
      * @param extendedGroups extended groups
