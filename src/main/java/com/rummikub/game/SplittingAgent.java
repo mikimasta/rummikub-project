@@ -1,68 +1,111 @@
 package com.rummikub.game;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import javafx.scene.paint.Color;
 
 public class SplittingAgent {
+
+    /**
+     * splits runs into consecutive sub-moves and validates them for staircase patterns
+     * @param dupRack players rack
+     * @param board board
+     * @return list of moves representing the split moves
+     */
+    public static ArrayList<ArrayList<Tile>> splittingMoves(Tile[][] dupRack, Tile[][] board) {
+        ArrayList<ArrayList<Tile>> runs = SingleTileAgent.listOfMovesRuns(board);
     
-
-    // step 1 : check moves bigger than 5, maybe 4 even
-    // step 2 :  for each move bigger than 5 split the move depending on the size -> will return list of moves
-    // step 3 :  loop over these moves -> if checkIfStairs(move) then good count++
-    // and if not good call the runMoves over it then checkIfStairs -> if true -> count++
-    // if count== these move.size(), break return that split
-    public static ArrayList<ArrayList<Tile>> splittingMovesGroup(Tile[][] dupRack, Tile[][] board){
-        ArrayList<ArrayList<Tile>> runMoves = SingleTileAgent.listOfMovesRuns(board); // returns list of moves which are runs
-        ArrayList<ArrayList<Tile>> splittedMoves = new ArrayList<ArrayList<Tile>>();
-        ArrayList<ArrayList<Tile>> expendMove = new ArrayList<ArrayList<Tile>>();
-        ArrayList<ArrayList<Tile>> finalMove =  new ArrayList<ArrayList<Tile>>();
-
+        if (runs == null || runs.isEmpty()) {
+            return null;
+        }
+    
+        ArrayList<ArrayList<Tile>> splitMove = new ArrayList<>();
         ArrayList<Tile> rack = new ArrayList<>();
-
-        for (ArrayList<Tile> move : runMoves) {
-            if (move.size() < 5) { // maybe 4 even
-                runMoves.remove(move);
+    
+        // remove moves with size less than 3
+        Iterator<ArrayList<Tile>> iterator = runs.iterator();
+        while (iterator.hasNext()) {
+            ArrayList<Tile> move = iterator.next();
+            if (move.size() < 3) {
+                iterator.remove();
             }
         }
-
-        boolean isPossible = true;
-        int count = 0;
-        for (ArrayList<Tile> move : runMoves) {
-            splittedMoves = splitMoves(move);
-            for (ArrayList<Tile> splittedMove : splittedMoves) {
-                if (Game.checkIfStairs(splittedMove)) { // its a good move
-                    count++;
-                } else { //  the move is not good
-                    expendMove.add(splittedMove);
-                    expendMove = SingleTileAgent.runMoves(dupRack, expendMove); // expend move with tile(s) from rack
-                    if (Game.checkIfStairs(expendMove.get(0))) { // expended move is correct, remove tile from rack used to expend move
-                        rack.removeAll(expendMove.get(0));
+    
+        for (ArrayList<Tile> move : runs) {
+            ArrayList<ArrayList<Tile>> split = splitMoves(move);
+        
+            System.out.println("Splitted moves:  " + BaselineAgent.printMoves(split));
+        
+            for (ArrayList<Tile> splittedMove : split) {
+                if (!Game.checkIfStairs(splittedMove)) {
+                    ArrayList<ArrayList<Tile>> extendMove = new ArrayList<>();
+                    extendMove.add(0, splittedMove);
+                    // System.out.println("move before expansion : " + BaselineAgent.printMoves(extendMove));;
+                    extendMove = SingleTileAgent.runMoves(dupRack, extendMove);
+                    // System.out.println("move after expansion : " + BaselineAgent.printMoves(extendMove));
+        
+                    if (extendMove != null && !extendMove.isEmpty() && Game.checkIfStairs(extendMove.get(0))) {
+                        rack.removeAll(extendMove.get(0));
                         dupRack = BaselineAgent.arrayListToRack(rack, dupRack);
-                        count++;
-                        expendMove = null;
+                        // System.out.println("Split is valid");
+        
+                        splitMove.add(extendMove.get(0));
+        
+                        // add the rest of the original move to the splitMove
+                        ArrayList<Tile> restOfMove = new ArrayList<>(move);
+                        restOfMove.removeAll(extendMove.get(0));
+                        splitMove.add(restOfMove);
                     } else {
-                        isPossible = false;
-                        break;
+                        System.out.println("Extend move is empty or not valid.");
                     }
                 }
-                if (!isPossible) {
-                    System.out.println("the split is not possible try another split");
-                    break;
-                }
-                if (count == splittedMoves.size()) { // that split works
-                    System.out.println("the split is valid");
-                    finalMove.add(splittedMove);
-                }
             }
         }
+    
+        return splitMove;
+    }
+    
+    /**
+     * splits a given move into consecutive sub-moves, for example, a move of size 3 (1-2-3) would be split into 5 moves: 1, 2-3, 1-2, 3, 1-2-3
+     * @param move the move to be split
+     * @return list containing the sub-moves generated by splitting the original move
+     */
+    static ArrayList<ArrayList<Tile>> splitMoves(ArrayList<Tile> move) {
+        ArrayList<ArrayList<Tile>> splittedMoves = new ArrayList<>();
+        splittedMoves.add(new ArrayList<>(move));
 
+        for (int i = 1; i < move.size(); i++) {
+            splittedMoves.add(new ArrayList<>(move.subList(0, i)));
+            splittedMoves.add(new ArrayList<>(move.subList(i, move.size())));
+        }
+    
         return splittedMoves;
     }
 
-    public static ArrayList<ArrayList<Tile>> splitMoves(ArrayList<Tile> runMove) {
-        ArrayList<ArrayList<Tile>> splittedMove = new ArrayList<ArrayList<Tile>>();
+    public static void main(String[] args) {
 
-        return splittedMove;
+        Tile n = null;
+        Tile j = new Tile((byte) -1, Color.RED);
 
+        Tile t6R = new Tile((byte) 6, Color.RED);
+        Tile t7R = new Tile((byte) 7, Color.RED);
+        Tile t8R = new Tile((byte) 8, Color.RED);
+        Tile t9R = new Tile((byte) 9, Color.RED);
+        Tile t10R = new Tile((byte) 10, Color.RED);
+
+        Tile t8Rbis = new Tile((byte) 12, Color.RED);
+        
+        Tile[][]  board = {
+            {n, n, n,n, n, n, n, n, t6R, t7R, t8R, t9R, t10R, n, n}
+        };
+
+        Tile[][]  rack = {{n, n, n, t8Rbis, n, n, n, n, n, n, n, n, n, n, n}};
+
+        ArrayList<ArrayList<Tile>> splitMoves = splittingMoves(rack, board);
+        if (splitMoves != null && !splitMoves.isEmpty()) {
+            System.out.println("The move split : " + BaselineAgent.printMoves(splitMoves));
+        }else {
+            System.out.println("no move");
+        }
     }
-    
 }
