@@ -12,7 +12,8 @@ public class AgentImplementation {
         ArrayList<ArrayList<Tile>> solutionBoard = new ArrayList<>();
 
         solutionBoard = AgentNB.possibleMoves(arrayHand, arrayBoard);
-        System.out.println(solutionBoard);
+
+        //System.out.println(solutionBoard);
         if(solutionBoard == null){
             //System.out.println("solution NOT found");
             return null;

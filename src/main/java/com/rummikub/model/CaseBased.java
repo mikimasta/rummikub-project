@@ -26,7 +26,12 @@ public class CaseBased {
                     break;
                 } else {
                     System.out.println(" moves from the rack ");
-                    hand.removeAll(resultRack);
+                    for(Tile tilerack: resultRack){
+                        if (hand.contains(tilerack)) {
+                            hand.remove(hand.indexOf(tilerack));
+                        }
+                    }
+                    //hand.removeAll(resultRack);
                     newboard.add(resultRack);
                     count += resultRack.size();
                 }
@@ -53,8 +58,8 @@ public class CaseBased {
                         System.out.println("rearragement ");
                         createNewSet = addPartialRun(first, hand);
                         newboard.add(createNewSet);
-                        hand.remove(createNewSet.get(0));
-                        hand.remove(createNewSet.get(1));
+                        hand.remove(hand.indexOf(createNewSet.get(0)));
+                        hand.remove(hand.indexOf(createNewSet.get(1)));
                         setTile.remove(first);
                         newboard.add(setTile);
                         count += 2;
@@ -63,8 +68,8 @@ public class CaseBased {
                         System.out.println("rearragement ");
                         createNewSet = addPartialRun(last, hand);
                         newboard.add(createNewSet);
-                        hand.remove(createNewSet.get(0));
-                        hand.remove(createNewSet.get(1));
+                        hand.remove(hand.indexOf(createNewSet.get(0)));
+                        hand.remove(hand.indexOf(createNewSet.get(1)));
                         setTile.remove(last);
                         newboard.add(setTile);
                         count += 2;
@@ -73,8 +78,8 @@ public class CaseBased {
                         System.out.println("rearragement ");
                         createNewSet = addPartialGroup(first, hand);
                         newboard.add(createNewSet);
-                        hand.remove(createNewSet.get(0));
-                        hand.remove(createNewSet.get(1));
+                        hand.remove(hand.indexOf(createNewSet.get(0)));
+                        hand.remove(hand.indexOf(createNewSet.get(1)));
                         setTile.remove(first);
                         newboard.add(setTile);
                         count += 2;
@@ -84,8 +89,8 @@ public class CaseBased {
                         System.out.println("rearragement ");
                         createNewSet = addPartialGroup(last, hand);
                         newboard.add(createNewSet);
-                        hand.remove(createNewSet.get(0));
-                        hand.remove(createNewSet.get(1));
+                        hand.remove(hand.indexOf(createNewSet.get(0)));
+                        hand.remove(hand.indexOf(createNewSet.get(1)));
                         setTile.remove(last);
                         newboard.add(setTile);
                         count += 2;
@@ -99,8 +104,8 @@ public class CaseBased {
                             System.out.println("rearragement ");
                             createNewSet = addPartialRun(selected, hand);
                             newboard.add(createNewSet);
-                            hand.remove(createNewSet.get(0));
-                            hand.remove(createNewSet.get(1));
+                            hand.remove(hand.indexOf(createNewSet.get(0)));
+                            hand.remove(hand.indexOf(createNewSet.get(1)));
                             setTile.remove(selected);
                             newboard.add(setTile);
                             count += 2;
@@ -111,8 +116,8 @@ public class CaseBased {
                             System.out.println("rearragement ");
                             createNewSet = addPartialGroup(selected, hand);
                             newboard.add(createNewSet);
-                            hand.remove(createNewSet.get(0));
-                            hand.remove(createNewSet.get(1));
+                            hand.remove(hand.indexOf(createNewSet.get(0)));
+                            hand.remove(hand.indexOf(createNewSet.get(1)));
                             setTile.remove(selected);
                             newboard.add(setTile);
                             count += 2;
@@ -123,6 +128,7 @@ public class CaseBased {
                 }
                 //IF THE SET STARTS WITH JOCKER
             }
+            /*
             if (set.startsWith("-1") &&(setTile.size()>3)) {
                 System.out.println("condition joker");
                 ArrayList<Tile> setOrder = Game.orderSetStairs(setTile);
@@ -176,7 +182,7 @@ public class CaseBased {
                 }else{
                     setTile.add(joker);
                 }
-            }
+            }*/
 
             if(setTile!=null&&setTile.size()==5){
                 Iterator<Tile> handIterator = hand.iterator();
@@ -206,9 +212,10 @@ public class CaseBased {
                             ArrayList<Tile> tileAdded = new ArrayList<>();
                             tileAdded.add(tileHand);
                             setTile.add(tileHand);
-                            hand.remove(tileHand);
+                            hand.remove(hand.indexOf(tileHand));
                             count++;
                             setTile = Game.orderSetStairs(setTile);
+                            /*
                             if(setTile.get(setTile.size()-1).getNumber()==-1){
                                 ArrayList<ArrayList<Tile>> boardSet = new ArrayList<>();
                                 boardSet.add(setTile);
@@ -216,6 +223,8 @@ public class CaseBased {
                                 System.out.println("re order joker"+setTile);
 
                             }
+                            */
+
                             System.out.println("hand " + hand);
                             break;
                         }
@@ -250,7 +259,6 @@ public class CaseBased {
 
     public static ArrayList<Tile> getTilesWithConsecutiveNumbers(ArrayList<Tile> tiles) {
         tiles = Game.orderSetStairs(tiles);
-        //System.out.println(tiles);
         ArrayList<Tile> resultTiles = new ArrayList<>();
         for (int i = 0; i < tiles.size() - 1; i++) {
             int currentNumber = tiles.get(i).getNumber();
@@ -344,6 +352,7 @@ public class CaseBased {
         }
 
         //JOKER
+        /*
         if (handNoDuplicates.get(0).getNumber() == -1) {
             ArrayList<Tile> consecutiveTiles = AgentNBHelper.getTilesWithConsecutiveNumbers(hand);
             //System.out.println(consecutiveTiles);
@@ -360,7 +369,7 @@ public class CaseBased {
                 set.add(handNoDuplicates.get(0));
                 return set;
             }
-        }
+        }*/
 
         return null;
     }

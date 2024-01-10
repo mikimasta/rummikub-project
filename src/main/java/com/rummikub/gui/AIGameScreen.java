@@ -101,8 +101,10 @@ class AIGameScreen extends Pane {
                 }else{ // no move so draw
                     System.out.println("no move possible for computer");
                     if(!Game.getInstance().getPool().isEmpty()) {
-                        System.out.println("pool is NOT empty");
+                        //System.out.println("pool is NOT empty");
                         Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    }else{
+                        System.out.println("pool is empty");
                     }
                 }
                 finishMove();}
@@ -124,7 +126,6 @@ class AIGameScreen extends Pane {
                 }else{ 
                     System.out.println("no move possible for computer");
                     if(!Game.getInstance().getPool().isEmpty()) {
-                        System.out.println("pool is NOT empty");
                         Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     }
                 }
@@ -132,7 +133,6 @@ class AIGameScreen extends Pane {
             }else{ // player is computer
                 if (gameboard.stateNotChanged()) {
                     if(!Game.getInstance().getPool().isEmpty()) {
-                        System.out.println("pool is NOT empty");
                         Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     }
                     finishMove();
@@ -147,7 +147,6 @@ class AIGameScreen extends Pane {
     private void humanPlayerMove() {
         if (gameboard.stateNotChanged()) {
             if(!Game.getInstance().getPool().isEmpty()) {
-                System.out.println("pool is NOT empty");
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
             }
             finishMove();
