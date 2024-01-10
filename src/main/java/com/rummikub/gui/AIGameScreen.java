@@ -103,19 +103,33 @@ class AIGameScreen extends Pane {
                     if (aimove2 != null && !aimove2.isEmpty() && aimove2.size() > 0) {
                         System.out.println("move with single tiles");
                         System.out.println(BaselineAgent.printMoves(aimove2));
-                        removeTilesFromBoard(aimove2, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove3 in memory
+                        removeTilesFromBoard(aimove2, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove2 in memory
                         GameboardGUI.getInstance().removeAIMove(); // TODO doesn't do it i think
-                        makeAIMoves(aimove2, GameboardGUI.getInstance().getState()); // add tiles from aimove3 to memory
+                        makeAIMoves(aimove2, GameboardGUI.getInstance().getState()); // add tiles from aimove2 to memory
                         GameboardGUI.getInstance().renderAIMove(); // update the GUI
                         Tile[][] newHand = removeTilesFromRack(aimove2, Game.getInstance().currentPlayer.getHand()); 
                         RackGUI.getInstance().handToRack(newHand); 
                         System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
-                    } else { // no move is possible draw a tile
-                        System.out.println("No move possible for computer. Drawing a tile...");
-                        Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    } else {
+                        aimove3 = null;
+                        aimove3 = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                        if (aimove3 != null && !aimove3.isEmpty() && aimove3.size() > 0) {
+                            System.out.println("move with splitting method");
+                            System.out.println(BaselineAgent.printMoves(aimove3));
+                            removeTilesFromBoard(aimove3, GameboardGUI.getInstance().getState()); 
+                            GameboardGUI.getInstance().removeAIMove(); // TODO doesn't do it i think
+                            makeAIMoves(aimove3, GameboardGUI.getInstance().getState()); 
+                            GameboardGUI.getInstance().renderAIMove(); // update the GUI
+                            Tile[][] newHand = removeTilesFromRack(aimove3, Game.getInstance().currentPlayer.getHand()); 
+                            RackGUI.getInstance().handToRack(newHand); 
+                            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+                        } else { // no move is possible draw a tile
+                            System.out.println("No move possible for computer. Drawing a tile...");
+                            Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                        }
                     }
+                    finishMove();
                 }
-                finishMove();
             } else { // player is human
                 if (gameboard.stateNotChanged()) {
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));

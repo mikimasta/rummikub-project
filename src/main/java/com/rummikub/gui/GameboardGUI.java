@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import com.rummikub.game.Tile;
+import java.util.Iterator;
 
 class GameboardGUI extends Pane {
 
@@ -143,19 +144,18 @@ class GameboardGUI extends Pane {
 
 
     public void removeAIMove() {
-
-        for (Node node : getChildren()) {
+        Iterator<Node> iterator = getChildren().iterator();
+        while (iterator.hasNext()) {
+            Node node = iterator.next();
             if (node instanceof TileGUI) {
                 TileGUI tGui = (TileGUI) node;
                 Tile t = tGui.getTile();
                 
-                if (t != null && tGui.isAddedToBoard() ) { 
-                    getChildren().remove(tGui);
-
+                if (t != null && tGui.isAddedToBoard()) {
+                    iterator.remove(); 
                 }
             }
         }
-
     }
 
 

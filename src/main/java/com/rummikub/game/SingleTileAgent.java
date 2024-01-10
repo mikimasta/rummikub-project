@@ -137,7 +137,7 @@ public class SingleTileAgent {
                         break;
                     }                      
                 }  
-                if (move.size() != copy.size() && !addedTile) { // || possibleTiles.isEmpty()
+                if (move.size() != copy.size() && !addedTile && Game.checkIfStairs(copy)) { // || possibleTiles.isEmpty()
                     extendRunMoves.add(copy);
                     addedTile = false; 
                     break;             
