@@ -235,20 +235,18 @@ public class BaselineAgent {
      */
     public static Tile[][] arrayListToRack(ArrayList<Tile> list, Tile[][] rack) {
         // Clear the rack
-        for (int i = 0; i < rack.length; i++) {
-            for (int y = 0; y < rack[i].length; y++) {
-                rack[i][y] = null;
-            }
-        }
-
-        // populate the 2D array with the tiles        
         int x = 0;
         for (int i = 0; i < rack.length; i++) {
             for (int y = 0; y < rack[i].length; y++) {
-                rack[i][y] = list.get(x);
-                x++;
+                if (list.size() != x) {
+                    rack[i][y] = list.get(x);
+                    x++;
+                } else {
+                    rack[i][y] = null;
+                }
             }
         }
+
         return rack;
     }
     
