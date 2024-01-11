@@ -16,8 +16,8 @@ public class SingleTileAgent {
             return null;
         }
 
-        ArrayList<ArrayList<Tile>> movesRuns = listOfMovesRuns(board); // returns list of moves which are runs
-        ArrayList<ArrayList<Tile>> movesGroups = listOfMovesGroups(board); // returns list of moves which are groups
+        ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<ArrayList<Tile>>(listOfMovesRuns(board)); // returns list of moves which are runs
+        ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<ArrayList<Tile>>(listOfMovesGroups(board)); // returns list of moves which are groups
         ArrayList<ArrayList<Tile>> extendedRuns = null;
         ArrayList<ArrayList<Tile>> extendedGroups = null;
     
@@ -41,25 +41,29 @@ public class SingleTileAgent {
         if (board == null) {
             return null;
         }
-
-        ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<ArrayList<Tile>>();
+    
+        ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<>();
         ArrayList<Tile> move = new ArrayList<>();
-
+    
         for (int i = 0; i < board.length; i++) {
             for (int y = 0; y < board[i].length; y++) {
                 Tile tile = board[i][y];
                 if (tile != null) {
                     move.add(tile);
                 } else { // tile is null
-                    if (move.size() > 2) {
-                        if (Game.checkIfStairs(move)) { // move is stairs
-                            movesRuns.add(new ArrayList<>(move)); 
-                        }
+                    if (move.size() > 2 && Game.checkIfStairs(move)) { // // move is stairs
+                        movesRuns.add(new ArrayList<>(move));
                     }
                     move.clear();
                 }
             }
+    
+            if (move.size() > 2 && Game.checkIfStairs(move)) { // check if the last sequence forms stairs
+                movesRuns.add(new ArrayList<>(move));
+            }
+            move.clear(); // clear move for the next row
         }
+    
         return movesRuns;
     }
 
@@ -72,27 +76,32 @@ public class SingleTileAgent {
         if (board == null) {
             return null;
         }
-
-        ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<ArrayList<Tile>>();
+    
+        ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<>();
         ArrayList<Tile> move = new ArrayList<>();
-
+    
         for (int i = 0; i < board.length; i++) {
             for (int y = 0; y < board[i].length; y++) {
                 Tile tile = board[i][y];
                 if (tile != null) {
                     move.add(tile);
                 } else { // tile is null
-                    if (move.size() > 2) {
-                        if (Game.checkIfGroup(move)) { // move is group
-                            movesGroups.add(new ArrayList<>(move)); 
-                        }
+                    if (move.size() > 2 && Game.checkIfGroup(move)) { // move is group
+                        movesGroups.add(new ArrayList<>(move));
                     }
-                    move.clear();
+                        move.clear();
                 }
             }
+
+            if (move.size() > 2 && Game.checkIfGroup(move)) { // check if the last sequence forms a group
+                movesGroups.add(new ArrayList<>(move));
+            }
+            move.clear(); // clear move for the next row
         }
+    
         return movesGroups;
     }
+    
 
     /**
      * tries to add tiles from the rack to the back or the front of existing run moves
@@ -106,8 +115,15 @@ public class SingleTileAgent {
 
         ArrayList<Tile> possibleTiles = new ArrayList<>();
         for (ArrayList<Tile> move : runMoves) {
+            String colorOfRun = move.get(0).getColorString();
+            for (Tile t : move) {
+                if (t.getNumber() != -1) {
+                    colorOfRun = t.getColorString();
+                    break;
+                }
+            }
             for (Tile tile : rack) {
-                if ((tile.getColorString().equals(move.get(0).getColorString()) && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
+                if ((tile.getColorString().equals(colorOfRun) && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
                     possibleTiles.add(tile);
                 }
             }
@@ -160,8 +176,15 @@ public class SingleTileAgent {
 
         ArrayList<Tile> possibleTiles = new ArrayList<>();
         for (ArrayList<Tile> move : groupMoves) {
+            byte numberOfGroup = move.get(0).getNumber();
+            for (Tile t : move) {
+                if (t.getNumber() != -1) {
+                    numberOfGroup = t.getNumber();
+                    break;
+                }
+            }
             for (Tile tile : rack) {
-                if ((tile.getNumber() == move.get(0).getNumber() && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
+                if ((tile.getNumber() == numberOfGroup && !possibleTiles.contains(tile)) || tile.getColorString().equals("z")) { // if tile in rack with same color add it to possible tiles
                     possibleTiles.add(tile);
                 }
             }
@@ -183,7 +206,7 @@ public class SingleTileAgent {
                 }
             }
         }
-
+        // return extendGroupMoves;
         return BaselineAgent.findNonOverlappingMoves(extendGroupMoves);
     }
 
@@ -214,26 +237,21 @@ public class SingleTileAgent {
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
 
-        Tile t6R = new Tile((byte) 6, Color.RED);
-        Tile t7R = new Tile((byte) 7, Color.RED);
-        Tile t8R = new Tile((byte) 8, Color.RED);
-        Tile t9R = new Tile((byte) 9, Color.RED);
-
-        Tile t9Bl = new Tile((byte) 9, Color.BLACK);
-        Tile t9B = new Tile((byte) 9, Color.BLUE);
-        Tile t9O = new Tile((byte) 9, Color.ORANGE);
-
-
-        Tile t1B = new Tile((byte) 1, Color.BLUE);
-        Tile t2B = new Tile((byte) 2, Color.BLUE);
-        Tile t3B = new Tile((byte) 3, Color.BLUE);
-        Tile t4B = new Tile((byte) 4, Color.BLUE);
+        Tile t9B = new Tile((byte) 9, Color.BLACK);
+        Tile t10B = new Tile((byte) 10, Color.BLACK);
+        Tile t11B = new Tile((byte) 11, Color.BLACK);
+        Tile t12B = new Tile((byte) 12, Color.BLACK);
         
-        Tile[][]  board = {
-            {n, n, n,n, n, n, n, n, t1B, t2B, t3B, n, n, n, n}
-        };
+        Tile t1B = new Tile((byte) 12, Color.BLUE);
+        Tile t1R = new Tile((byte) 12, Color.RED);
+        Tile t1O = new Tile((byte) 12, Color.ORANGE);
+        Tile t1Bl = new Tile((byte) 12, Color.BLACK);
 
-        Tile[][]  rack = {{n, t4B, n, n, j, n, n, n, n, n, n, n, n, n, n}};
+        Tile[][]  board = {
+            {n, n, n,n, n, n, n, n, t10B, t11B, t12B, j, n, n, n}
+        };
+        System.out.println(Game.printBoard(board));
+        Tile[][]  rack = {{n, t9B, n, n, n, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> singleTileMoves = singleTilemove(rack, board);
 
