@@ -144,7 +144,19 @@ class GameboardGUI extends Pane {
 
 
     public void removeAIMove() {
-        /* 
+
+        Iterator<Node> iterator = getChildren().iterator();
+        while (iterator.hasNext()) {
+            Node node = iterator.next();
+            if (node instanceof TileGUI) {
+                TileGUI tGui = (TileGUI) node;                
+                if (tGui.isAddedToBoard()) {
+                    iterator.remove(); 
+                }
+            }
+        }
+    }
+            /* 
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state[i].length; j++) {
                 
@@ -164,18 +176,6 @@ class GameboardGUI extends Pane {
             }
         }
         */
-        Iterator<Node> iterator = getChildren().iterator();
-        while (iterator.hasNext()) {
-            Node node = iterator.next();
-            if (node instanceof TileGUI) {
-                TileGUI tGui = (TileGUI) node;                
-                if (tGui.isAddedToBoard()) {
-                    iterator.remove(); 
-                }
-            }
-        }
-    }
-    
     
     /*
      * Iterator<Node> iterator = getChildren().iterator();
