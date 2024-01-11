@@ -103,6 +103,7 @@ public class SplittingAgent {
         Tile[][]  board = {
             {n, n, n,n, n, n, n, t6B, t7B, t8B, t9B, t10B, t11B, t12B, t13B}
         };
+        
         System.out.println(Game.printBoard(board));
         Tile[][]  rack = {{n, n, n, t9Bbis, n, n, n, n, n, n, n, n, n, n, n}};
 
@@ -112,5 +113,8 @@ public class SplittingAgent {
         }else {
             System.out.println("no move");
         }
+        
+
+        
     }
 }
