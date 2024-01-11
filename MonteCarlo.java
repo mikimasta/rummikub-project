@@ -2,20 +2,24 @@ package com.rummikub.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.rummikub.gui.GameboardGUI;
 import com.rummikub.gui.RackGUI;
 
 public class MonteCarlo {
 
-    public static final int TIMEOUT = 100; // Adjust as needed
+    public static final int TIMEOUT = 100000; 
 
     public Node root;
 
     public static Game game;
-    public static GameboardGUI gameboard;
+    public static GameboardGUI gameboard; // here need change GameboardGUI to public
     public static RackGUI rack;
+    public static BaselineAgent baselineagent;
+    public static SingleTileAgent singletileagent;
+    
+    // For UCT algorithm
+    public static final double C = 1.0;
 
 
     public MonteCarlo(Node root) {
@@ -34,7 +38,7 @@ public class MonteCarlo {
     }
 
     // branch
-    private Node branch(Node node) {
+    public Node branch(Node node) {
 
         while (!node.isTerminal() && node.isFullyExpanded()) {
             node = node.selectChildNode();
@@ -43,27 +47,26 @@ public class MonteCarlo {
         
     }
 
-    // should change some sruff to implement to game
-    private int simulate(GameState state) { // GameState state / state is game, move is legal move 
-        // Random simulation or a simple heuristic can be used here
-        // Simulate until a terminal state is reached
 
-        gameboard = GameboardGUI.getInstance(); //
+    // is this method shoul add to GUI part? because drawtile need the state of board and rack
+    public int simulate(GameState state) { 
 
-        while (!state.isOver()) { // game.isGameOver()
+        gameboard = GameboardGUI.getInstance(); 
 
-            ArrayList<Tile> legalMoves = state.getLegalMoves(); // ArrayList<Move> legalMoves
+        while (!state.isOver()) {  // game.isGameOver()
+
+            ArrayList<ArrayList<Tile>> legalMoves = state.getLegalMoves(); 
 
             if (!legalMoves.isEmpty()) {
-                ArrayList<Tile> randomMove = legalMoves; //Move randomMove  legalMoves.get(new Random().nextInt(legalMoves.size()))
-                state.drawTile(randomMove);
+                ArrayList<ArrayList<Tile>> moves = legalMoves; 
+                state.drawTile(moves); // drawTile(rack, board);
                 state.getState();
             }
         }
-        return state.getState(); // Return the utility of the terminal state
+        return state.getState(); 
     }
 
-    private void backPropagate(Node node, int result) {
+    public void backPropagate(Node node, int result) {
 
         while (node != null) {
             node.updateScore(result);
@@ -74,12 +77,9 @@ public class MonteCarlo {
 
 
 
-
-    // Define game state representation and move generation
-    // this class is use method form Game class or some GUI class
+    // Define game state and move
     static class GameState{
 
-        // Implement game state representation and move generation logic
         public static Game game;
         public GameboardGUI gameboard;
 
@@ -88,80 +88,38 @@ public class MonteCarlo {
             return game.isGameOver();
         }
 
-        // this method should change 
-        // check the legal move form rack to board and rearrange tile in board
-        public ArrayList<Tile> getLegalMoves() {
+    
+        // check the legal move in rack
+        // can first check baselineagent, then check singletileagent, if there are legal move, put them to board.
+        public ArrayList<ArrayList<Tile>> getLegalMoves() {
 
-            //
-            ArrayList<Tile> l = new ArrayList<Tile>();
-            ArrayList<Tile> lm = new ArrayList<Tile>();
-            Tile[][] hand = game.getInstance().currentPlayer.getHand();
-            int a = 0;
-            int v = 0;
+            ArrayList<ArrayList<Tile>> moves = baselineagent.baselineAgent(Game.getInstance().currentPlayer.getHand());
 
-            for(int i = 0; i < hand.length; i++){
-                for(int j = 0; j < hand[i].length; j++){
-                    if(hand[i][j] != null){
-                        l.add(a, hand[i][j]);
-                    }
-                    else {
-                        a++;
-                    }
-                }
-            }
-            for(int k = 0; k < l.size(); k++){
-                if(game.checkIfGroup(l)){
-                    lm.addAll(l);
-                } else if (game.checkIfStairs(l)){
-                    lm.addAll(l);
-                }
+            if(moves.isEmpty()){
+                moves = singletileagent.singleTilemove(game.getInstance().currentPlayer.getHand(), gameboard.getState());
             }
 
-            // put the legal move tile to board from hand
-            for(int z = 0; z < lm.size(); z++){
-                for(int b = 0; b < lm.size(); b++){
-                    if(gameboard.getState()[z][b] == null){
-                        gameboard.getState()[z][b] = lm.get(v++);
-                    }
+            return moves;
+           
 
-                }
-            }
-
-            return lm;
         }
 
-        // impltment method
-        // put tiles to the board from rack
-        public GameState drawTile(ArrayList<Tile> randomMove){ //Tile[][] rack
 
-            GameState state = new GameState();
-            int v = 0;
+        // put tiles to the board
+        public ArrayList<ArrayList<Tile>> drawTile(ArrayList<ArrayList<Tile>> moves){ // Tile[][] rack, Tile[][] board
 
-            // put the legal move tile to board from hand
-            for(int z = 0; z < getLegalMoves().size(); z++){
-                for(int b = 0; b < getLegalMoves().size(); b++){
-                    if(gameboard.getState()[z][b] == null){
-                        gameboard.getState()[z][b] = getLegalMoves().get(v++);
-                    }
-
-                }
-            }
-
-            return state;
-            
+            return baselineagent.possibleMoveAddingRackToBoard(game.getInstance().currentPlayer.getHand(), gameboard.getState());
+            //baselineagent.possibleMoveAddingRackToBoard(rack, board);
         }
 
-        // be used to calculate a utility value for a particular game state, indicating how favorable or desirable that state is
-        // improve the code
+
+
         public int getState(){
 
             if (game.isGameOver()) {
                 return Integer.MAX_VALUE; 
-            } else if (!game.isGameOver()) {
-                return Integer.MIN_VALUE; 
             } else {
-                // use other considerations for utility, like score
-                return 0;
+                return Integer.MIN_VALUE; 
             }
 
         }
@@ -186,21 +144,20 @@ public class MonteCarlo {
             this.children = new ArrayList<>();
         }
 
-        // checks whether all possible children of a node have been expanded
+        // checks whether all possible children node have been expanded
         public boolean isFullyExpanded() {
-            // Implement logic to check if all children have been expanded
             return children.size() == state.getLegalMoves().size();
 
         }
 
+         // check if the game over or not
         public boolean isTerminal() {
-            // Implement logic to check if the state is terminal
             return state.isOver();
 
         }
 
+        // Select a child based on the UCT (Upper Confidence Bound for Trees) algorithm
         public Node selectChildNode() {
-            // Implement logic to select a child based on the UCT (Upper Confidence Bound for Trees) algorithm
 
             double maxUCT = Double.MIN_VALUE;
             Node selectedChild = null;
@@ -218,11 +175,11 @@ public class MonteCarlo {
             return selectedChild;
         }
 
-        private double UCT(Node child) {
+        // Implement UCT (Upper Confidence Bound for Trees) algorithm
+        public double UCT(Node child) {
 
             double ti = Math.sqrt(Math.log(visits) / child.visits);
             double vi = (double) child.totalScore / child.visits;
-            double C = 1.0; // C can change to different value.
         
             double uct = vi + C * ti;
         
