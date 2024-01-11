@@ -232,12 +232,10 @@ public class Game {
             if (numOfFirst == (byte) -1) {
                numOfFirst = (byte) (numTmp -1);
                if (numOfFirst == 0) {
-                System.out.println("hre");
                     return false;
                }
             }
             if ((numTmp - 1 != numOfFirst && numTmp != -1) || (numOfFirst == 13)) { 
-                System.out.println(numOfFirst);
                 return false;
             }
             numOfFirst = numTmp;
@@ -499,7 +497,7 @@ public class Game {
 
         Tile t6R = new Tile((byte) 9, Color.RED);
         Tile t7R = new Tile((byte) 2, Color.RED);
-        Tile t8R = new Tile((byte) 3, Color.RED);
+        Tile t8R = new Tile((byte) 13, Color.RED);
         Tile t9R = new Tile((byte) 3, Color.RED);
         Tile t1OR = new Tile((byte) 13, Color.RED);
 
@@ -514,7 +512,7 @@ public class Game {
         Tile t4B = new Tile((byte) 4, Color.BLUE);
         
         Tile[][]  board = {
-            {n, n, n,n, j, t7R, t8R, n, n, n, n, n, n, n, n}
+            {n, n, n,n, j, j, j, t8R, j, n, n, n, n, n, n}
         };
 
         Tile[][]  rack = {{n, t4B, n, n, j, n, n, n, n, n, n, n, n, n, n}};
