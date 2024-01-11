@@ -230,13 +230,17 @@ public class Game {
         for (int i = 1; i < set.size(); i++) {
             byte numTmp = set.get(i).getNumber();
             if (numOfFirst == (byte) -1) {
-               numOfFirst = numTmp;
-            } else {
-                if (numTmp - 1 != numOfFirst && numTmp != -1) { 
+               numOfFirst = (byte) (numTmp -1);
+               if (numOfFirst == 0) {
+                System.out.println("hre");
                     return false;
-                }
-                numOfFirst = numTmp;
+               }
             }
+            if ((numTmp - 1 != numOfFirst && numTmp != -1) || (numOfFirst == 13)) { 
+                System.out.println(numOfFirst);
+                return false;
+            }
+            numOfFirst = numTmp;
         }
         return true;
     }
@@ -487,4 +491,35 @@ public class Game {
         return -count;
     }
 
+
+    public static void main(String[] args) {
+
+        Tile n = null;
+        Tile j = new Tile((byte) -1, Color.RED);
+
+        Tile t6R = new Tile((byte) 9, Color.RED);
+        Tile t7R = new Tile((byte) 2, Color.RED);
+        Tile t8R = new Tile((byte) 3, Color.RED);
+        Tile t9R = new Tile((byte) 3, Color.RED);
+        Tile t1OR = new Tile((byte) 13, Color.RED);
+
+        Tile t9Bl = new Tile((byte) 9, Color.BLACK);
+        Tile t9B = new Tile((byte) 9, Color.BLUE);
+        Tile t9O = new Tile((byte) 9, Color.ORANGE);
+
+
+        Tile t1B = new Tile((byte) 1, Color.BLUE);
+        Tile t2B = new Tile((byte) 2, Color.BLUE);
+        Tile t3B = new Tile((byte) 3, Color.BLUE);
+        Tile t4B = new Tile((byte) 4, Color.BLUE);
+        
+        Tile[][]  board = {
+            {n, n, n,n, j, t7R, t8R, n, n, n, n, n, n, n, n}
+        };
+
+        Tile[][]  rack = {{n, t4B, n, n, j, n, n, n, n, n, n, n, n, n, n}};
+
+        Game test = new Game((byte) 3, false);
+        System.out.println(test.isValidBoard(board));
+    }
 }
