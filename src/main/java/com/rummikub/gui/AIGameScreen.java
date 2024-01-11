@@ -111,7 +111,7 @@ class AIGameScreen extends Pane {
                     finishMove();
                 }
             } else { // player is human
-                if (gameboard.stateNotChanged()) {
+                if (gameboard.stateNotChanged() ) { // TODO if no tiles in the pool to draw 
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
                 } else {
@@ -157,6 +157,7 @@ class AIGameScreen extends Pane {
     }
 
     void processAIMove(ArrayList<ArrayList<Tile>> aiMove) {
+
         removeTilesFromBoard(aiMove, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove in memory
         GameboardGUI.getInstance().removeAIMove(); 
         makeAIMoves(aiMove, GameboardGUI.getInstance().getState()); // add tiles from aimove2 to memory
@@ -165,6 +166,7 @@ class AIGameScreen extends Pane {
         RackGUI.getInstance().handToRack(newHand); // update the hand in the GUI
         finishAIMove();
         System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+
     }
 
     void finishAIMove() {
@@ -198,7 +200,7 @@ class AIGameScreen extends Pane {
                         space = 0;
                     }
 
-                    if (!done && space >= aiMove.size()) { // enough space for the move
+                    if (!done && space > aiMove.size()) { // enough space for the move
                         for (int z = y - space + 1, aiIndex = 0; aiIndex < aiMove.size(); z++, aiIndex++) {
                             board[i][z] = aiMove.get(aiIndex);
                         }
