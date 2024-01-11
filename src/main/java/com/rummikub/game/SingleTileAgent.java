@@ -129,7 +129,7 @@ public class SingleTileAgent {
             }
         }
 
-        if (possibleTiles.size() == 0) { // no possible tiles
+        if (possibleTiles.isEmpty()) { // no possible tiles
             return null;
         }
         for (ArrayList<Tile> move : runMoves) {
