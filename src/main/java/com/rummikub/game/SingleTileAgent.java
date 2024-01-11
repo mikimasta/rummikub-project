@@ -237,11 +237,12 @@ public class SingleTileAgent {
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
 
-        Tile t9B = new Tile((byte) 9, Color.BLACK);
-        Tile t10B = new Tile((byte) 10, Color.BLACK);
-        Tile t11B = new Tile((byte) 11, Color.BLACK);
-        Tile t12B = new Tile((byte) 12, Color.BLACK);
-        Tile t13B = new Tile((byte) 13, Color.BLACK);
+        Tile t8B = new Tile((byte) 8, Color.ORANGE);
+        Tile t9B = new Tile((byte) 9, Color.ORANGE);
+        Tile t10B = new Tile((byte) 10, Color.ORANGE);
+        Tile t11B = new Tile((byte) 11, Color.ORANGE);
+        Tile t12B = new Tile((byte) 12, Color.ORANGE);
+        Tile t13B = new Tile((byte) 13, Color.ORANGE);
         
         Tile t1B = new Tile((byte) 12, Color.BLUE);
         Tile t1R = new Tile((byte) 12, Color.RED);
@@ -249,10 +250,10 @@ public class SingleTileAgent {
         Tile t1Bl = new Tile((byte) 12, Color.BLACK);
 
         Tile[][]  board = {
-            {n, n, n,n, n, n, n, n, t10B, t11B, t12B, t13B, n, n, n}
+            {n, n, n,n, n, n, n, t9B, t10B, t11B, t12B, n, n, n, n}
         };
         System.out.println(Game.printBoard(board));
-        Tile[][]  rack = {{n, j, n, n, n, n, n, n, n, n, n, n, n, n, n}};
+        Tile[][]  rack = {{n, t8B, n, n, n, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> singleTileMoves = singleTilemove(rack, board);
 
