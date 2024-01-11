@@ -11,6 +11,7 @@ import java.util.HashMap;
 
 public class ValidSets {
     private static final HashMap<String, ArrayList<Tile>> immutableMap = generateImmutableHashMap();
+    private static final ArrayList<ArrayList<Tile>> uniqueSets = generateArrayListUniqueSets();
     private static HashMap<String, ArrayList<Tile>> generateImmutableHashMap() {
         HashMap<String, ArrayList<Tile>> validSets =new HashMap<>();
         try {
@@ -41,8 +42,41 @@ public class ValidSets {
         }
         return validSets;
     }
+    private static ArrayList<ArrayList<Tile>> generateArrayListUniqueSets() {
+        ArrayList<ArrayList<Tile>> arrayListUniqueSets = new ArrayList<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("src/main/java/com/rummikub/game/SetNoJockers.txt"));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(";");
+                String[] sets = parts[1].replaceAll("[{}]", "").split("\\.");
+                ArrayList<Tile> setComponents= new ArrayList<>();
+                for (String set : sets) {
+                    if (!set.isEmpty()) {
+                        String[] numColor = set.replaceAll("[()]", "").split(",");
+                        Tile tile = new Tile(Byte.parseByte(numColor[0]), getColorFromString(numColor[1]));
+                        setComponents.add(tile);
+                    } else {
+                        setComponents.add(null);
+                    }
+                }
+
+                arrayListUniqueSets.add(setComponents);
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return arrayListUniqueSets;
+    }
     public static HashMap<String, ArrayList<Tile>> getImmutableMap() {
         return immutableMap;
+    }
+
+    public static ArrayList<ArrayList<Tile>> getArrayListUniqueSets(){
+        return uniqueSets;
     }
 
     public static ArrayList<Tile> getSetForKey(String key) {
