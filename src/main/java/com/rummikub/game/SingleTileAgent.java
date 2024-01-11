@@ -140,11 +140,11 @@ public class SingleTileAgent {
                 for (Tile tile : possibleTiles) {
                     int firstNum = move.get(0).getNumber();
                     int lastNum = move.get(move.size() - 1).getNumber();
-                    if ((firstNum > 1 && tile.getNumber() == firstNum - 1) || tile.getColorString().equals("z")) {
+                    if (firstNum > 1 && (tile.getNumber() == firstNum - 1 || tile.getColorString().equals("z"))) {
                         copy.add(0, tile); // add tile at the beginning of the list
                         addedTile = true;
                     }
-                    if ((lastNum < 13 && tile.getNumber() == lastNum + 1) || tile.getColorString().equals("z") && !copy.contains(tile) ) {
+                    if (lastNum < 13 && (tile.getNumber() == lastNum + 1 || tile.getColorString().equals("z")) && !copy.contains(tile) ) {
                         copy.add(tile); // add tile at the end of the list
                         addedTile = true;
                     }
@@ -241,6 +241,7 @@ public class SingleTileAgent {
         Tile t10B = new Tile((byte) 10, Color.BLACK);
         Tile t11B = new Tile((byte) 11, Color.BLACK);
         Tile t12B = new Tile((byte) 12, Color.BLACK);
+        Tile t13B = new Tile((byte) 13, Color.BLACK);
         
         Tile t1B = new Tile((byte) 12, Color.BLUE);
         Tile t1R = new Tile((byte) 12, Color.RED);
@@ -248,10 +249,10 @@ public class SingleTileAgent {
         Tile t1Bl = new Tile((byte) 12, Color.BLACK);
 
         Tile[][]  board = {
-            {n, n, n,n, n, n, n, n, t10B, t11B, t12B, j, n, n, n}
+            {n, n, n,n, n, n, n, n, t10B, t11B, t12B, t13B, n, n, n}
         };
         System.out.println(Game.printBoard(board));
-        Tile[][]  rack = {{n, t9B, n, n, n, n, n, n, n, n, n, n, n, n, n}};
+        Tile[][]  rack = {{n, j, n, n, n, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> singleTileMoves = singleTilemove(rack, board);
 
