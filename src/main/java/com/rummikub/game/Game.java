@@ -69,7 +69,7 @@ public class Game {
         players = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
             players.add(new Player("Player " + i, isAnAI));
-            isAnAI = false;
+            //isAnAI = false;
         }
 
         byte firstPlayer = (byte) (0 + (byte) (Math.random() * numPlayers - 1));
@@ -495,10 +495,10 @@ public class Game {
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
 
-        Tile t6R = new Tile((byte) 9, Color.RED);
-        Tile t7R = new Tile((byte) 2, Color.RED);
-        Tile t8R = new Tile((byte) 13, Color.RED);
-        Tile t9R = new Tile((byte) 3, Color.RED);
+        Tile t10R = new Tile((byte) 9, Color.BLUE);
+        Tile t11R = new Tile((byte) 2, Color.BLUE);
+        Tile t12R = new Tile((byte) 13, Color.BLUE);
+        Tile t13R = new Tile((byte) 3, Color.RED);
         Tile t1OR = new Tile((byte) 13, Color.RED);
 
         Tile t9Bl = new Tile((byte) 9, Color.BLACK);
@@ -512,7 +512,7 @@ public class Game {
         Tile t4B = new Tile((byte) 4, Color.BLUE);
         
         Tile[][]  board = {
-            {n, n, n,n, j, j, j, t8R, j, n, n, n, n, n, n}
+            {n, n, n,n, n, n, j, t10R, t11R, t12R, t13R, n, n, n, n}
         };
 
         Tile[][]  rack = {{n, t4B, n, n, j, n, n, n, n, n, n, n, n, n, n}};

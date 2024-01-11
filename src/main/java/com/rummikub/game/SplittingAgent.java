@@ -88,6 +88,8 @@ public class SplittingAgent {
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
 
+        Tile t4B = new Tile((byte) 4, Color.BLACK);
+        Tile t5B = new Tile((byte) 5, Color.BLACK);
         Tile t6B = new Tile((byte) 6, Color.BLACK);
         Tile t7B = new Tile((byte) 7, Color.BLACK);
         Tile t8B = new Tile((byte) 8, Color.BLACK);
@@ -101,11 +103,11 @@ public class SplittingAgent {
         Tile t9Bbis = new Tile((byte) 9, Color.BLACK);
         
         Tile[][]  board = {
-            {n, n, n,n, n, n, n, t6B, t7B, t8B, t9B, t10B, t11B, t12B, t13B}
+            {n, n, n,n, n, t4B, t5B, j, t7B, t8B, n, n, n, n, n}
         };
         
         System.out.println(Game.printBoard(board));
-        Tile[][]  rack = {{n, n, n, t9Bbis, n, n, n, n, n, n, n, n, n, n, n}};
+        Tile[][]  rack = {{n, n, n, t6B, n, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> splitMoves = splittingMoves(rack, board);
         if (splitMoves != null && !splitMoves.isEmpty()) {

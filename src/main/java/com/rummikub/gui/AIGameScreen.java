@@ -93,13 +93,13 @@ class AIGameScreen extends Pane {
                     System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
                 } else {
                     aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                    if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
+                    if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
                         System.out.println("Move with single tiles");
                         System.out.println(BaselineAgent.printMoves(aimove));
                         processAIMove(aimove);
                     } else {
                         aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                        if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
+                        if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
                             System.out.println("Move with splitting method");
                             System.out.println(BaselineAgent.printMoves(aimove));
                             processAIMove(aimove);
