@@ -126,7 +126,7 @@ class GameboardGUI extends Pane {
                 
                 Tile t = state[i][j];
 
-                if (t != null && !t.isLocked()) {
+                if (t != null) { // && !t.isLocked()
 
                     TileGUI tGui = new TileGUI(t); 
                     tGui.setPrevBoardCoords(j, i);
@@ -144,7 +144,41 @@ class GameboardGUI extends Pane {
 
 
     public void removeAIMove() {
+        /* 
+        for (int i = 0; i < state.length; i++) {
+            for (int j = 0; j < state[i].length; j++) {
+                
+                Tile t = state[i][j];
+                if (t != null) {
+
+                }
+            }
+        }
+        for (Node node : getChildren()) {
+            if (node instanceof TileGUI) {
+                TileGUI tGui = (TileGUI) node;
+                if (tGui.isAddedToBoard() ) { 
+                    getChildren().remove(tGui);
+
+                }
+            }
+        }
+        */
         Iterator<Node> iterator = getChildren().iterator();
+        while (iterator.hasNext()) {
+            Node node = iterator.next();
+            if (node instanceof TileGUI) {
+                TileGUI tGui = (TileGUI) node;                
+                if (tGui.isAddedToBoard()) {
+                    iterator.remove(); 
+                }
+            }
+        }
+    }
+    
+    
+    /*
+     * Iterator<Node> iterator = getChildren().iterator();
         while (iterator.hasNext()) {
             Node node = iterator.next();
             if (node instanceof TileGUI) {
@@ -156,7 +190,7 @@ class GameboardGUI extends Pane {
                 }
             }
         }
-    }
+     */
 
 
     public void setState(Tile[][] newState) {
