@@ -307,6 +307,7 @@ public class Game {
     public boolean isGameOver() {
          for (Player player : players) {
             if (player.getHand() == null) {
+                System.out.println("game is over");
                 return true;
             }
         }

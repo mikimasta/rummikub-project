@@ -57,112 +57,6 @@ public class BaselineAgent {
         return findNonOverlappingMoves(listOfMoves);
     }
 
-    /**
-     * 
-     * @param dupRack players rack
-     * @return moves that the player can play using the rack with jokers@   q
-     */
-    public static ArrayList<ArrayList<Tile>> jokerBaselineAgent(Tile[][] dupRack) {
-        ArrayList<Tile> rackk = new ArrayList<>(TwodArrayToArrayList(dupRack));
-        ArrayList<Tile> jokers = new ArrayList<>();
-        
-        for (int i = 0; i < rackk.size(); i++) {
-            if (rackk.get(i).getNumber() == (byte) -1) {
-                jokers.add(rackk.get(i));
-            }
-        }
-
-        ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(TwodArrayToArrayList(dupRack)));
-        rack.removeAll(jokers); // remove all jokers
-        ArrayList<Tile> groups = new ArrayList<>(rack); 
-        Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
-
-        ArrayList<Tile> runs = new ArrayList<>(rack); 
-        Game.orderRackByStairs(runs); 
-
-        ArrayList<Tile> move = new ArrayList<>(); 
-        ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
-        ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
-        ArrayList<Tile> jokersCopy = new ArrayList<>(jokers);
-        
-        if (jokers.size() > 0) {
-            int move_size = 2;
-            while (true) {
-                System.out.println(move_size);
-                jokers.clear();
-                jokers = jokersCopy;
-                for (int i = 0; i < groups.size() - move_size + 1; i++) {
-                    for (int j = 0; j < move_size; j++) {
-                        move.add(groups.get(i + j));
-                    }
-                    move.add(jokers.get(0)); // add joker to set TODO problem here
-                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
-                        printMove(move);
-                        listOfMoves.add(new ArrayList<>(move));
-                        jokers.remove(0);
-                    }
-                    move.clear();
-                }
-                for (int i = 0; i < runs.size() - move_size + 1; i++) {
-                    for (int j = 0; j < move_size; j++) {
-                        move.add(runs.get(i + j));
-                    }
-                    move.add(jokers.get(0));
-                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
-                        printMove(move);
-                        listOfMoves.add(new ArrayList<>(move));
-                        jokers.remove(0);
-                    }
-                    move.clear();
-                }
-                if (listOfMoves.size() == 0) {
-                    listOfMoves = prevListOfMoves;
-                    break;
-                } else {
-                    prevListOfMoves = new ArrayList<>(listOfMoves);
-                    listOfMoves.clear();
-                }
-                move_size++;
-            }
-            System.out.println(listOfMoves.size());
-        } else {
-            int move_size = 3;
-            while (true) {
-                System.out.println(move_size);
-                for (int i = 0; i < groups.size() - move_size + 1; i++) {
-                    for (int j = 0; j < move_size; j++) {
-                        move.add(groups.get(i + j));
-                    }
-                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
-                        printMove(move);
-                        listOfMoves.add(new ArrayList<>(move));
-                    }
-                    move.clear();
-                }
-                for (int i = 0; i < runs.size() - move_size + 1; i++) {
-                    for (int j = 0; j < move_size; j++) {
-                        move.add(runs.get(i + j));
-                    }
-                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
-                        printMove(move);
-                        listOfMoves.add(new ArrayList<>(move));
-                    }
-                    move.clear();
-                }
-                if (listOfMoves.size() == 0) {
-                    listOfMoves = prevListOfMoves;
-                    break;
-                } else {
-                    prevListOfMoves = new ArrayList<>(listOfMoves);
-                    listOfMoves.clear();
-                }
-                move_size++;
-            }
-            System.out.println(listOfMoves.size());
-        } 
-        
-        return findNonOverlappingMoves(listOfMoves);
-    }
 
     /**
      * takes the rack and the board ordered them and makes moves with them comined and ordered
@@ -184,7 +78,7 @@ public class BaselineAgent {
         ArrayList<Tile> move = new ArrayList<>(); 
         ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
-        ArrayList<ArrayList<Tile>> finalMove = new ArrayList<>();
+        ArrayList<ArrayList<Tile>> finalMove = new ArrayList<ArrayList<Tile>>();
 
         int move_size = 3;
         while (true) {
@@ -217,7 +111,10 @@ public class BaselineAgent {
         }
 
         finalMove = findNonOverlappingMoves(listOfMoves);
-        
+        // finalMove = SingleTileAgent.singleTilemove(dupRack, AIGameScreen.);
+
+        // TODO : add the single tiles to that and the split method
+
         // check if tiles on the board are still on the board
         if ((BaselineAgent.nestedArrayListToArrayList(finalMove)).containsAll(BaselineAgent.TwodArrayToArrayList(board))){
             return finalMove;
@@ -447,4 +344,114 @@ public class BaselineAgent {
         possibleMoveAddingRackToBoard(rack, board);
 
     }
+
+    /*
+     *  
+     * 
+     * @param dupRack players rack
+     * @return moves that the player can play using the rack with jokers@   q
+     */
+    /* 
+    public static ArrayList<ArrayList<Tile>> jokerBaselineAgent(Tile[][] dupRack) {
+        ArrayList<Tile> rackk = new ArrayList<>(TwodArrayToArrayList(dupRack));
+        ArrayList<Tile> jokers = new ArrayList<>();
+        
+        for (int i = 0; i < rackk.size(); i++) {
+            if (rackk.get(i).getNumber() == (byte) -1) {
+                jokers.add(rackk.get(i));
+            }
+        }
+
+        ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(TwodArrayToArrayList(dupRack)));
+        rack.removeAll(jokers); // remove all jokers
+        ArrayList<Tile> groups = new ArrayList<>(rack); 
+        Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
+
+        ArrayList<Tile> runs = new ArrayList<>(rack); 
+        Game.orderRackByStairs(runs); 
+
+        ArrayList<Tile> move = new ArrayList<>(); 
+        ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
+        ArrayList<Tile> jokersCopy = new ArrayList<>(jokers);
+        
+        if (jokers.size() > 0) {
+            int move_size = 2;
+            while (true) {
+                System.out.println(move_size);
+                jokers.clear();
+                jokers = jokersCopy;
+                for (int i = 0; i < groups.size() - move_size + 1; i++) {
+                    for (int j = 0; j < move_size; j++) {
+                        move.add(groups.get(i + j));
+                    }
+                    move.add(jokers.get(0)); // add joker to set TODO problem here
+                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                        printMove(move);
+                        listOfMoves.add(new ArrayList<>(move));
+                        jokers.remove(0);
+                    }
+                    move.clear();
+                }
+                for (int i = 0; i < runs.size() - move_size + 1; i++) {
+                    for (int j = 0; j < move_size; j++) {
+                        move.add(runs.get(i + j));
+                    }
+                    move.add(jokers.get(0));
+                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
+                        printMove(move);
+                        listOfMoves.add(new ArrayList<>(move));
+                        jokers.remove(0);
+                    }
+                    move.clear();
+                }
+                if (listOfMoves.size() == 0) {
+                    listOfMoves = prevListOfMoves;
+                    break;
+                } else {
+                    prevListOfMoves = new ArrayList<>(listOfMoves);
+                    listOfMoves.clear();
+                }
+                move_size++;
+            }
+            System.out.println(listOfMoves.size());
+        } else {
+            int move_size = 3;
+            while (true) {
+                System.out.println(move_size);
+                for (int i = 0; i < groups.size() - move_size + 1; i++) {
+                    for (int j = 0; j < move_size; j++) {
+                        move.add(groups.get(i + j));
+                    }
+                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                        printMove(move);
+                        listOfMoves.add(new ArrayList<>(move));
+                    }
+                    move.clear();
+                }
+                for (int i = 0; i < runs.size() - move_size + 1; i++) {
+                    for (int j = 0; j < move_size; j++) {
+                        move.add(runs.get(i + j));
+                    }
+                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
+                        printMove(move);
+                        listOfMoves.add(new ArrayList<>(move));
+                    }
+                    move.clear();
+                }
+                if (listOfMoves.size() == 0) {
+                    listOfMoves = prevListOfMoves;
+                    break;
+                } else {
+                    prevListOfMoves = new ArrayList<>(listOfMoves);
+                    listOfMoves.clear();
+                }
+                move_size++;
+            }
+            System.out.println(listOfMoves.size());
+        } 
+        
+        return findNonOverlappingMoves(listOfMoves);
+    }
+     */
 }

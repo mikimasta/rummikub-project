@@ -81,7 +81,14 @@ class AIGameScreen extends Pane {
 
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI()) {
-
+                /* 
+                aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                if (aimove != null && !aimove.isEmpty() && aimove.size() > 0){
+                    System.out.println("Move with single tiles");
+                    System.out.println(BaselineAgent.printMoves(aimove));
+                    processAIMove(aimove);
+                }
+                */
                 ArrayList<ArrayList<Tile>> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand());
                 if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
                     System.out.println("move with baseline agent");
@@ -112,7 +119,7 @@ class AIGameScreen extends Pane {
                     System.out.println("No more tiles in the pool");
                 } 
 
-            System.out.println("the size of the pool is : " + Game.getInstance().getPoolSize(Game.getInstance().getPool()));
+            // System.out.println("the size of the pool is : " + Game.getInstance().getPoolSize(Game.getInstance().getPool()));
             finishMove();
             
             } else { // player is human

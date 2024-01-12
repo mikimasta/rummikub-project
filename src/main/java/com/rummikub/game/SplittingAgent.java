@@ -1,7 +1,6 @@
 package com.rummikub.game;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import javafx.scene.paint.Color;
 
 public class SplittingAgent {
