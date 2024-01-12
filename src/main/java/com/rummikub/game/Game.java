@@ -119,6 +119,10 @@ public class Game {
         }
     }
 
+    public int getPoolSize(List<Tile> pool){
+        return pool.size();
+    }
+
      /**
      * this method checks the state of the entire board after a move has been made.
      * @param   gameBoard  the game board
@@ -215,10 +219,10 @@ public class Game {
             return false;
         } 
         // check if all same color
-        Color colorOfFirst = set.get(0).getColor();
+        String colorOfFirst = set.get(0).getColorString();
         for (int i = 1; i < set.size(); i++) {
-            Color color = set.get(i).getColor();
-            if (set.get(0).getNumber() == -1){ // first tile is a joker
+            String color = set.get(i).getColorString();
+            if (colorOfFirst.equals("z")){ // first tile is a joker
                 colorOfFirst = color;
             } else if (set.get(i).getNumber() != -1 && !colorOfFirst.equals(color)) {
                 return false;
@@ -495,27 +499,17 @@ public class Game {
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
 
-        Tile t10R = new Tile((byte) 9, Color.BLUE);
-        Tile t11R = new Tile((byte) 2, Color.BLUE);
-        Tile t12R = new Tile((byte) 13, Color.BLUE);
-        Tile t13R = new Tile((byte) 3, Color.RED);
-        Tile t1OR = new Tile((byte) 13, Color.RED);
-
-        Tile t9Bl = new Tile((byte) 9, Color.BLACK);
-        Tile t9B = new Tile((byte) 9, Color.BLUE);
-        Tile t9O = new Tile((byte) 9, Color.ORANGE);
-
-
-        Tile t1B = new Tile((byte) 1, Color.BLUE);
-        Tile t2B = new Tile((byte) 2, Color.BLUE);
-        Tile t3B = new Tile((byte) 3, Color.BLUE);
-        Tile t4B = new Tile((byte) 4, Color.BLUE);
+        Tile t9B = new Tile((byte) 9, Color.BLACK);
+        Tile t10B = new Tile((byte) 10, Color.BLACK);
+        Tile t11B = new Tile((byte) 11, Color.BLACK);
+        Tile t12Bl = new Tile((byte) 12, Color.BLUE);
+        Tile t13B = new Tile((byte) 13, Color.BLACK);
         
         Tile[][]  board = {
-            {n, n, n,n, n, n, j, t10R, t11R, t12R, t13R, n, n, n, n}
+            {n, n, n,n, n, n, j, t9B, t10B, t11B, t12Bl, n, n, n, n}
         };
 
-        Tile[][]  rack = {{n, t4B, n, n, j, n, n, n, n, n, n, n, n, n, n}};
+        Tile[][]  rack = {{n, n, n, n, j, n, n, n, n, n, n, n, n, n, n}};
 
         Game test = new Game((byte) 3, false);
         System.out.println(test.isValidBoard(board));
