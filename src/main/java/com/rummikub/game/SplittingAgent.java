@@ -37,7 +37,6 @@ public class SplittingAgent {
                 ArrayList<Tile> restOfMove = new ArrayList<>(move);
 
                 if (extendMove != null && !extendMove.isEmpty() && Game.checkIfStairs(extendMove.get(0))) {
-                    System.out.println("move after expansion : " + BaselineAgent.printMove(extendMove.get(0)));
                     restOfMove.removeAll(extendMove.get(0));
                     
                     if (restOfMove != null && !restOfMove.isEmpty() && Game.checkIfStairs(restOfMove)) {
@@ -45,12 +44,13 @@ public class SplittingAgent {
                         dupRack = BaselineAgent.arrayListToRack(rack, dupRack);
 
                         System.out.println("Split is valid");
+                        System.out.println("Original move : " + BaselineAgent.printMove(move) + " split into : " + BaselineAgent.printMove(extendMove.get(0)) + " and : " + BaselineAgent.printMove(restOfMove));
 
                         splitMove.add(extendMove.get(0));
                         splitMove.add(restOfMove); // add the rest of the original move to the splitMove
                     }
                 } else {
-                    System.out.println("Extended move is empty or not valid");
+                    // System.out.println("Extended move is empty or not valid");
                 }
             }
         }
