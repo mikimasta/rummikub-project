@@ -92,31 +92,35 @@ class AIGameScreen extends Pane {
                     RackGUI.getInstance().handToRack(newHand);
                     finishAIMove();
                     System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
-                } else {
-                    aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                    if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-                        System.out.println("Move with single tiles");
-                        System.out.println(BaselineAgent.printMoves(aimove));
-                        processAIMove(aimove);
-                    } else {
-                        aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                        if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-                            System.out.println("Move with splitting method");
-                            System.out.println(BaselineAgent.printMoves(aimove));
-                            processAIMove(aimove);
-                        } else { // no move is possible draw a tile
-                            System.out.println("No move possible for computer. Drawing a tile...");
-                            Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
-                        }
-                    }
-                    finishMove();
+                } 
+                aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
+                    System.out.println("Move with single tiles");
+                    System.out.println(BaselineAgent.printMoves(aimove));
+                    processAIMove(aimove);
                 }
+                aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
+                    System.out.println("Move with splitting method");
+                    System.out.println(BaselineAgent.printMoves(aimove));
+                    processAIMove(aimove);
+                }
+                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
+                    System.out.println("No move possible for computer. Drawing a tile...");
+                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){
+                    System.out.println("No more tiles in the pool");
+                } 
+
+            System.out.println("the size of the pool is : " + Game.getInstance().getPoolSize(Game.getInstance().getPool()));
+            finishMove();
+            
             } else { // player is human
-                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) != 0) { // TODO if no tiles in the pool to draw 
+                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) { 
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
                 } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){
-                    System.out.println("There are no more tiles to draw");
+                    System.out.println("No more tiles in the pool");
                 } else {
                     humanPlayerMove();
                 }
@@ -150,6 +154,7 @@ class AIGameScreen extends Pane {
 
     void finishMove() {
 
+        Game.getInstance().isGameOver();
         GameboardGUI.getInstance().setPrevState();
         GameboardGUI.getInstance().lockTiles();
         Game.getInstance().nextPlayer();
@@ -173,6 +178,7 @@ class AIGameScreen extends Pane {
     }
 
     void finishAIMove() {
+        Game.getInstance().isGameOver();
         GameboardGUI.getInstance().setState(GameboardGUI.getInstance().getState());
         GameboardGUI.getInstance().lockTiles();
     }
