@@ -17,48 +17,40 @@ public class SplittingAgent {
             return null;
         }
 
-        ArrayList<ArrayList<Tile>> runs = SingleTileAgent.listOfMovesRuns(board);
+        ArrayList<ArrayList<Tile>> runs = new ArrayList<ArrayList<Tile>>(SingleTileAgent.listOfMovesRuns(board, 4));
         if (runs == null || runs.isEmpty()) {
             return null;
         }
     
-        ArrayList<ArrayList<Tile>> splitMove = new ArrayList<>();
+        ArrayList<ArrayList<Tile>> splitMove = new ArrayList<ArrayList<Tile>>();
         ArrayList<Tile> rack = new ArrayList<>();
     
-        // remove moves with size less than 3
-        Iterator<ArrayList<Tile>> iterator = runs.iterator();
-        while (iterator.hasNext()) {
-            ArrayList<Tile> move = iterator.next();
-            if (move.size() < 3) {
-                iterator.remove();
-            }
-        }
-    
         for (ArrayList<Tile> move : runs) {
-            ArrayList<ArrayList<Tile>> split = splitMoves(move);
-        
-            System.out.println("Splitted moves:  " + BaselineAgent.printMoves(split));
+            ArrayList<ArrayList<Tile>> split = new ArrayList<ArrayList<Tile>>(splitMoves(move));
+            
+            // System.out.println("Splitted moves:  " + BaselineAgent.printMoves(split));
         
             for (ArrayList<Tile> splittedMove : split) {
-                ArrayList<ArrayList<Tile>> extendMove = new ArrayList<>();
+                ArrayList<ArrayList<Tile>> extendMove = new ArrayList<ArrayList<Tile>>();
                 extendMove.add(0, splittedMove);
-                System.out.println("move before expansion : " + BaselineAgent.printMoves(extendMove));;
                 extendMove = SingleTileAgent.runMoves(dupRack, extendMove);
-                System.out.println("move after expansion : " + BaselineAgent.printMoves(extendMove));
-    
+                ArrayList<Tile> restOfMove = new ArrayList<>(move);
+
                 if (extendMove != null && !extendMove.isEmpty() && Game.checkIfStairs(extendMove.get(0))) {
-                    rack.removeAll(extendMove.get(0));
-                    dupRack = BaselineAgent.arrayListToRack(rack, dupRack);
-                    System.out.println("Split is valid");
-    
-                    splitMove.add(extendMove.get(0));
-    
-                    // add the rest of the original move to the splitMove
-                    ArrayList<Tile> restOfMove = new ArrayList<>(move);
+                    System.out.println("move after expansion : " + BaselineAgent.printMove(extendMove.get(0)));
                     restOfMove.removeAll(extendMove.get(0));
-                    splitMove.add(restOfMove);
+                    
+                    if (restOfMove != null && !restOfMove.isEmpty() && Game.checkIfStairs(restOfMove)) {
+                        rack.removeAll(extendMove.get(0));
+                        dupRack = BaselineAgent.arrayListToRack(rack, dupRack);
+
+                        System.out.println("Split is valid");
+
+                        splitMove.add(extendMove.get(0));
+                        splitMove.add(restOfMove); // add the rest of the original move to the splitMove
+                    }
                 } else {
-                    System.out.println("Extend move is empty or not valid.");
+                    System.out.println("Extended move is empty or not valid");
                 }
             }
         }
@@ -73,7 +65,7 @@ public class SplittingAgent {
      */
     static ArrayList<ArrayList<Tile>> splitMoves(ArrayList<Tile> move) {
         ArrayList<ArrayList<Tile>> splittedMoves = new ArrayList<ArrayList<Tile>>();
-        splittedMoves.add(new ArrayList<>(move));
+        //splittedMoves.add(new ArrayList<>(move));
 
         for (int i = 1; i < move.size(); i++) {
             splittedMoves.add(new ArrayList<>(move.subList(0, i)));

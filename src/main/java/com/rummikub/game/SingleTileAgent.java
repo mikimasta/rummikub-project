@@ -16,7 +16,7 @@ public class SingleTileAgent {
             return null;
         }
 
-        ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<ArrayList<Tile>>(listOfMovesRuns(board)); // returns list of moves which are runs
+        ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<ArrayList<Tile>>(listOfMovesRuns(board, 3)); // returns list of moves which are runs
         ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<ArrayList<Tile>>(listOfMovesGroups(board)); // returns list of moves which are groups
         ArrayList<ArrayList<Tile>> extendedRuns = null;
         ArrayList<ArrayList<Tile>> extendedGroups = null;
@@ -37,7 +37,7 @@ public class SingleTileAgent {
      * @param board board
      * @return list of moves which are groups
      */
-    static ArrayList<ArrayList<Tile>> listOfMovesRuns(Tile[][] board) {
+    static ArrayList<ArrayList<Tile>> listOfMovesRuns(Tile[][] board, int minSizeOfRun) {
         if (board == null) {
             return null;
         }
@@ -51,14 +51,14 @@ public class SingleTileAgent {
                 if (tile != null) {
                     move.add(tile);
                 } else { // tile is null
-                    if (move.size() > 2 && Game.checkIfStairs(move)) { // // move is stairs
+                    if (move.size() >= minSizeOfRun && Game.checkIfStairs(move)) { // // move is stairs
                         movesRuns.add(new ArrayList<>(move));
                     }
                     move.clear();
                 }
             }
     
-            if (move.size() > 2 && Game.checkIfStairs(move)) { // check if the last sequence forms stairs
+            if (move.size() >= minSizeOfRun && Game.checkIfStairs(move)) { // check if the last sequence forms stairs
                 movesRuns.add(new ArrayList<>(move));
             }
             move.clear(); // clear move for the next row
@@ -144,6 +144,10 @@ public class SingleTileAgent {
                         copy.add(0, tile); // add tile at the beginning of the list
                         addedTile = true;
                     }
+                    if (move.size() != copy.size()) {
+                        possibleTiles.remove(tile);
+                        break;
+                    }   
                     if (lastNum < 13 && (tile.getNumber() == lastNum + 1 || tile.getColorString().equals("z")) && !copy.contains(tile) ) {
                         copy.add(tile); // add tile at the end of the list
                         addedTile = true;
@@ -237,12 +241,12 @@ public class SingleTileAgent {
         Tile n = null;
         Tile j = new Tile((byte) -1, Color.RED);
 
-        Tile t8B = new Tile((byte) 8, Color.ORANGE);
-        Tile t9B = new Tile((byte) 9, Color.ORANGE);
-        Tile t10B = new Tile((byte) 10, Color.ORANGE);
-        Tile t11B = new Tile((byte) 11, Color.ORANGE);
-        Tile t12B = new Tile((byte) 12, Color.ORANGE);
-        Tile t13B = new Tile((byte) 13, Color.ORANGE);
+        Tile t8B = new Tile((byte) 8, Color.BLACK);
+        Tile t9B = new Tile((byte) 9, Color.BLACK);
+        Tile t10B = new Tile((byte) 10, Color.BLACK);
+        Tile t11B = new Tile((byte) 11, Color.BLACK);
+        Tile t12Bl = new Tile((byte) 12, Color.BLUE);
+        Tile t13B = new Tile((byte) 13, Color.BLACK);
         
         Tile t1B = new Tile((byte) 12, Color.BLUE);
         Tile t1R = new Tile((byte) 12, Color.RED);
@@ -250,17 +254,17 @@ public class SingleTileAgent {
         Tile t1Bl = new Tile((byte) 12, Color.BLACK);
 
         Tile[][]  board = {
-            {n, n, n,n, n, n, n, t9B, t10B, t11B, t12B, n, n, n, n}
+            {n, n, n,n, n, n, j, t9B, t10B, t11B, n, n, n, n, n}
         };
         System.out.println(Game.printBoard(board));
-        Tile[][]  rack = {{n, t8B, n, n, n, n, n, n, n, n, n, n, n, n, n}};
+        Tile[][]  rack = {{n, t13B, n, n, t12Bl, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> singleTileMoves = singleTilemove(rack, board);
 
-        if (singleTileMoves != null) {
-            System.out.println(BaselineAgent.printMoves(singleTileMoves));
-        }else {
+        if (singleTileMoves == null || singleTileMoves.isEmpty()) {
             System.out.println("no move");
+        }else {
+            System.out.println(BaselineAgent.printMoves(singleTileMoves));
         }
     }
 }
