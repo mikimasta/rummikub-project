@@ -3,6 +3,7 @@ package com.rummikub.gui;
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.SingleTileAgent;
+import com.rummikub.game.SplittingAgent;
 import com.rummikub.game.Tile;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -98,7 +99,7 @@ class AIGameScreen extends Pane {
                         System.out.println(BaselineAgent.printMoves(aimove));
                         processAIMove(aimove);
                     } else {
-                        aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                        aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
                         if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
                             System.out.println("Move with splitting method");
                             System.out.println(BaselineAgent.printMoves(aimove));
@@ -111,9 +112,11 @@ class AIGameScreen extends Pane {
                     finishMove();
                 }
             } else { // player is human
-                if (gameboard.stateNotChanged() ) { // TODO if no tiles in the pool to draw 
+                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) != 0) { // TODO if no tiles in the pool to draw 
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
+                } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){
+                    System.out.println("There are no more tiles to draw");
                 } else {
                     humanPlayerMove();
                 }
@@ -170,7 +173,7 @@ class AIGameScreen extends Pane {
     }
 
     void finishAIMove() {
-        GameboardGUI.getInstance().setPrevState();
+        GameboardGUI.getInstance().setState(GameboardGUI.getInstance().getState());
         GameboardGUI.getInstance().lockTiles();
     }
 
