@@ -1,5 +1,6 @@
 package com.rummikub.gui;
 
+import com.rummikub.Utils;
 import com.rummikub.game.Game;
 
 import javafx.scene.control.Button;
@@ -70,12 +71,12 @@ class GameScreen extends Pane {
         //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
         orderByStairs.setOnAction(e -> {
-            Game.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
+            Utils.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
         
         orderByGroup.setOnAction(e -> {
-            Game.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
+            Utils.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
 

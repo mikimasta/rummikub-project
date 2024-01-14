@@ -1,5 +1,6 @@
 package com.rummikub.model;
 
+import com.rummikub.Utils;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
 import javafx.scene.paint.Color;
@@ -16,7 +17,7 @@ public class BaselineAgent {
      * @return the best move to make based on that rack
      */
     public static ArrayList<Tile> baselineAgent(Tile[][] dupRack){
-        ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(TwodArrayToArrayList(dupRack)));
+        ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(Utils.Array2DToArrayList(dupRack)));
 
         ArrayList<Tile> groups = new ArrayList<>(rack); 
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
@@ -158,22 +159,7 @@ public class BaselineAgent {
         }
     }
         
-    /**
-     * transforms a 2D array to an arraylist
-     * @param arr 2D array
-     * @return an arraylist
-     */
-    public static ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
-        ArrayList<Tile> arrList = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr[i].length; j++) {
-                if (arr[i][j] != null) {
-                    arrList.add(arr[i][j]);
-                }
-            }
-        }
-        return arrList;
-    }
+
 
     /**
      * prints an arraylist of tiles

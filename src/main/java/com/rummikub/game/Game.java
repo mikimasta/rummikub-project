@@ -412,50 +412,7 @@ public class Game {
         return true;
     }
     
-    /**
-     * sorting method to order tiles by runs
-     * @param rack 2D array representing the rack of the player
-     * @return the oredered by runs tiles of the player
-     */
-    public static Tile[][] orderRackByStairs(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
 
-        //sort the arraylist
-        tileList.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
-
-        // add null tiles to the the set so that number of tiles in set 
-        // equals the number of tiles in arraylist
-        for (int i = tileList.size(); i < rack[0].length * 2; i++){
-            tileList.add(null);
-        }
-
-        BaselineAgent.arrayListToRack(tileList, rack);
-
-        return rack;
-    }
-
-    /**
-     * sorting method to order tiles by groups
-     * @param player 2D array representing the rack of the player
-     * @return the ordered by groups tiles of the player
-     */
-    public static Tile[][] orderRackByGroup(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
-
-        //sort the arraylist
-        tileList.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
-    
-        // add null tiles to the the set so that number of tiles in set 
-        // equals the number of tiles in arraylist
-        for (int i = tileList.size(); i < rack[0].length * 2; i++){
-            tileList.add(null);
-        }
-
-        rack = BaselineAgent.arrayListToRack(tileList, rack);
-
-        return rack;
-    }
-    
     /**
      * sorting method to order tiles by groups
      * @param set rack of tiles of the player

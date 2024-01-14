@@ -1,6 +1,8 @@
 package com.rummikub.model;
 
 import java.util.ArrayList;
+
+import com.rummikub.Utils;
 import javafx.scene.paint.Color;
 
 import com.rummikub.game.Tile;
@@ -17,8 +19,8 @@ public class BaseImplementation {
      */
     public ArrayList<Tile> possibleMoveAddingRackToBoard(Tile[][] rack, Tile[][] board){
 
-        ArrayList<Tile> combined = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack)); 
-        combined.addAll(BaselineAgent.TwodArrayToArrayList(board)); // arraylist combining rack and board tiles
+        ArrayList<Tile> combined = new ArrayList<>(Utils.Array2DToArrayList(rack));
+        combined.addAll(Utils.Array2DToArrayList(board)); // arraylist combining rack and board tiles
 
         ArrayList<Tile> groups = Game.orderRackByGroup(combined);
 
@@ -74,7 +76,7 @@ public class BaseImplementation {
         ArrayList<Tile> finalMove = BaselineAgent.chooseBestMove(runMove, groupMove);
 
         // check if tiles on the board are still on the board
-        if (finalMove.containsAll(BaselineAgent.TwodArrayToArrayList(board))){
+        if (finalMove.containsAll(Utils.Array2DToArrayList(board))){
             return finalMove;
         }
         return null;
@@ -97,7 +99,7 @@ public class BaseImplementation {
 
     /**
      * finds all moves that don't use the same tiles
-     * @param listOfMovesGroups list of moves
+     * @param listOfMoves list of moves
      * @return list of moves that don't use the same tiles
      */
     static ArrayList<ArrayList<Tile>> findNonOverlappingMoves(ArrayList<ArrayList<Tile>> listOfMoves) {

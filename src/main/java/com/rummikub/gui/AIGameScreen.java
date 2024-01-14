@@ -1,5 +1,6 @@
 package com.rummikub.gui;
 
+import com.rummikub.Utils;
 import com.rummikub.game.Game;
 import com.rummikub.game.Tile;
 import com.rummikub.model.AgentImplementation;
@@ -11,6 +12,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import jdk.jshell.execution.Util;
 
 import java.util.ArrayList;
 
@@ -75,12 +77,12 @@ class AIGameScreen extends Pane {
         //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
         orderByStairs.setOnAction(e -> {
-            Game.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
+            Utils.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
         
         orderByGroup.setOnAction(e -> {
-            Game.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
+            Utils.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
 

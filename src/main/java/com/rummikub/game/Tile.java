@@ -2,10 +2,12 @@ package com.rummikub.game;
 
 import javafx.scene.paint.Color;
 
+import java.util.Comparator;
+
 /**
  * This class is a memory representation of a tile in the game
  */
-public class Tile {
+public class Tile implements Comparable, Cloneable {
 
     private final byte number;
     private final Color color;
@@ -59,4 +61,32 @@ public class Tile {
     }
 
 
+    @Override
+    public int compareTo(Object o) {
+        Tile other = (Tile) o;
+        int numberComparison = Integer.compare(this.getNumber(), other.getNumber());
+
+        if (numberComparison != 0) {
+            return numberComparison;
+        }
+
+        int colorComparison = this.getColorString().compareTo(other.getColorString());
+
+        if (colorComparison != 0) {
+            return colorComparison;
+        }
+
+        // Compare object identity to ensure distinct objects are not considered equal
+        return System.identityHashCode(this) - System.identityHashCode(other);
+    }
+    @Override
+    public Tile clone() {
+        try {
+            // No need to perform a deep copy for javafx.scene.paint.Color (immutable)
+            return (Tile) super.clone();
+        } catch (CloneNotSupportedException e) {
+            // Handle the exception or throw it further
+            return null;
+        }
+    }
 }
