@@ -5,78 +5,23 @@ import com.rummikub.game.Tile;
 import java.util.ArrayList;
 
 public class AgentImplementation {
-
     public static Object[] makeMove(Tile[][] initialHand, Tile[][] initialBoard){
         ArrayList<ArrayList<Tile>> arrayBoard =  board2ArrayList(initialBoard);
         ArrayList<Tile> arrayHand = hand2ArrayList(initialHand);
-        ArrayList<ArrayList<Tile>> solutionBoard = new ArrayList<>();
 
-        solutionBoard = AgentNB.possibleMoves(arrayHand, arrayBoard);
-
-        //System.out.println(solutionBoard);
-        if(solutionBoard == null){
+        Object[] possiblemoves = AgentNB.possibleMoves(arrayHand, arrayBoard);
+        boolean isMovePossible = (boolean) possiblemoves[2];
+        if(!isMovePossible){
             //System.out.println("solution NOT found");
-            return null;
+            return new Object[]{initialHand, initialBoard, false};
         }
-        //System.out.println("solution found");
-        ArrayList<Tile> solutionHand = getHand(board2ArrayList(initialBoard), solutionBoard, arrayHand);
 
-        Tile[][] finalHand = hand2matrix(solutionHand);
-        Tile[][] finalBoard = board2matrix(solutionBoard);
+        Tile[][] finalHand = hand2matrix((ArrayList<Tile>) possiblemoves[1]);
+        Tile[][] finalBoard = board2matrix((ArrayList<ArrayList<Tile>>) possiblemoves[0]);
 
-        return new Object[]{finalHand, finalBoard};
+        return new Object[]{finalHand, finalBoard, true};
 
     }
-
-    private static ArrayList<Tile> getHand(ArrayList<ArrayList<Tile>> intialBoard, ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<Tile> hand){
-        ArrayList<Tile> usedTiles = new ArrayList<>();
-   
-        // Iterate through list1
-        for (ArrayList<Tile> sublist1 : solutionBoard) {
-            for (Tile tile : sublist1) {
-                // Check if the tile is not present in list2
-                if (!isTilePresent(tile, intialBoard)) {
-                    usedTiles.add(tile);
-                }
-            }
-        }
-        
-        ArrayList<Tile> finalHand = removeUsedTile(hand, usedTiles);
-        
-        return finalHand;
-    }
-
-    public static ArrayList<Tile> removeUsedTile(ArrayList<Tile> hand, ArrayList<Tile> used){
-        ArrayList<Tile> result = new ArrayList<>();
-        for(int i = 0; i < hand.size(); i++){
-                Tile currentFromHand = hand.get(i);
-                boolean tileUsed = false;
-            for(int j = 0; j < used.size(); j++){
-                Tile currentFromused = used.get(j);
-                if((currentFromHand.getColorString().equals(currentFromused.getColorString()))){
-                    if(currentFromHand.getNumber() == currentFromused.getNumber()){
-                        tileUsed = true;
-                    }   
-                }
-            }
-            if(!tileUsed){
-                result.add(currentFromHand);
-            }
-        }
-        return result;
-    }
-    
-
-    public static boolean isTilePresent(Tile tile, ArrayList<ArrayList<Tile>> list) {
-        // Check if the tile is present in any sublist of the list
-        for (ArrayList<Tile> sublist : list) {
-            if (sublist.contains(tile)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private static Tile[][] board2matrix(ArrayList<ArrayList<Tile>> board) {
         Tile[][] matrix = new Tile[7][20];
     
@@ -139,7 +84,6 @@ public class AgentImplementation {
                     set = new ArrayList<>();
                     currentSet = false;
                 }
-                
             }
         }
 
@@ -160,11 +104,8 @@ public class AgentImplementation {
                    if(hand[i][j] != null){
                        handArray.add(hand[i][j]);
                    }
-
-                   
                }
            }
-   
            return handArray;
     }
 

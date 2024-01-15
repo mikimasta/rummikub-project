@@ -11,18 +11,14 @@ import javafx.scene.paint.Color;
 public class CaseBased {
 
     public static Object[] baselineAgentNB(ArrayList<Tile> hand, ArrayList<String> board) {
-        Object[] result = new Object[3];
         int count = 0;
         ArrayList<ArrayList<Tile>> newboard = new ArrayList<>();
 
         //FIRST ONLY LOOK AT THE RACK
         if(hand.size()>2) {
-            //System.out.println("check possible moves from the rack");
             do {
                 ArrayList<Tile> resultRack = playTheRack(hand);
-                //System.out.println(resultRack);
                 if (resultRack == null) {
-                    //System.out.println("no possible moves from the rack ");
                     break;
                 } else {
                     System.out.println(" moves from the rack ");
@@ -31,7 +27,6 @@ public class CaseBased {
                             hand.remove(hand.indexOf(tilerack));
                         }
                     }
-                    //hand.removeAll(resultRack);
                     newboard.add(resultRack);
                     count += resultRack.size();
                 }
@@ -46,8 +41,6 @@ public class CaseBased {
             ArrayList<Tile> setTile = Game.orderSetStairs(ValidSets.getSetForKey(set));
             ArrayList<Tile> createNewSet = new ArrayList<>();
             ArrayList<Tile> setNB = ValidSetsNB.getNBForKey(set);
-            //System.out.println(set);
-            //System.out.println(setTile.size());
             //REARRANGEMENT
             if (setTile!=null && setTile.size()>3) {
                 //Set stairs
@@ -126,10 +119,10 @@ public class CaseBased {
                         }
                     }
                 }
-                //IF THE SET STARTS WITH JOCKER
             }
             /*
-            if (set.startsWith("-1") &&(setTile.size()>3)) {
+            //IF THE SET STARTS WITH JOCKER
+            if (set.startsWith("-1") &&(setTile.size()>3)&&countset==0) {
                 System.out.println("condition joker");
                 ArrayList<Tile> setOrder = Game.orderSetStairs(setTile);
                 Tile joker = setOrder.get(setTile.size()-1);
@@ -148,6 +141,7 @@ public class CaseBased {
                         newboard.add(createNewSet);
                         //newboard.add(setTile);
                         count += 2;
+                        countset++;
                     }else{
                         System.out.println("joker in Group + sameNum ");
                         createNewSet.add(sameNum.get(0));
@@ -158,6 +152,7 @@ public class CaseBased {
                         newboard.add(createNewSet);
                         //newboard.add(setTile);
                         count += 2;
+                        countset++;
                     }
                 }else if(Game.checkIfStairs(setTile)&&((sameNum!=null)||(consecutive!=null))){
                     if(consecutive!=null){
@@ -169,6 +164,7 @@ public class CaseBased {
                         hand.remove(createNewSet.get(1));
                         newboard.add(createNewSet);
                         count += 2;
+                        countset++;
                     }else{
                         System.out.println("joker in Group + sameNum ");
                         createNewSet.add(sameNum.get(0));
@@ -178,13 +174,14 @@ public class CaseBased {
                         hand.remove(createNewSet.get(1));
                         newboard.add(createNewSet);
                         count += 2;
+                        countset++;
                     }
                 }else{
                     setTile.add(joker);
                 }
-            }*/
-
-            if(setTile!=null&&setTile.size()==5){
+            }
+            */
+            if(setTile!=null&&setTile.size()==5&&countset==0){
                 Iterator<Tile> handIterator = hand.iterator();
                 while (handIterator.hasNext()) {
                     Tile tileHand = handIterator.next();
@@ -198,14 +195,17 @@ public class CaseBased {
                         setTile.remove(setTile.get(0));
                         setTile.remove(setTile.get(1));
                         count++;
+                        countset++;
                         break;
                     }
                 }
             }
             //SEARCH BASED ON ONE NB
+
             if(setTile!=null&&countset==0) {
                 for (Tile NB : setNB) {
-                    for(Tile tileHand: hand){
+                    ArrayList<Tile> handNoDuplicates = new ArrayList<>(new HashSet<>(hand));
+                    for(Tile tileHand: handNoDuplicates){
                         if (NB == null) {break;}
                         if ((NB.getColor() == tileHand.getColor()) && (NB.getNumber() == tileHand.getNumber())) { //there is a Match
                             System.out.println("There's a valid NB");
@@ -215,34 +215,17 @@ public class CaseBased {
                             hand.remove(hand.indexOf(tileHand));
                             count++;
                             setTile = Game.orderSetStairs(setTile);
-                            /*
-                            if(setTile.get(setTile.size()-1).getNumber()==-1){
-                                ArrayList<ArrayList<Tile>> boardSet = new ArrayList<>();
-                                boardSet.add(setTile);
-                                setTile = ValidSets.getSetForKey(Game.boardListToSetKey(boardSet).get(0));
-                                System.out.println("re order joker"+setTile);
-
-                            }
-                            */
-
-                            System.out.println("hand " + hand);
+                            countset++;
                             break;
                         }
                     }
                 }
                 newboard.add(setTile);
             }
+
         }
-        result[0] = newboard;
-        result[1] = hand;
-        result[2] = count;
-        //System.out.println(newboard);
-        //System.out.println(hand);
-
-        return result;
+        return new Object[]{newboard,hand,count};
     }
-
-
     public static ArrayList<Tile> getTilesWithSameNumbers(ArrayList<Tile> tiles) {
         tiles = Game.orderSetGroup(tiles);
         ArrayList<Tile> resultTiles = new ArrayList<>();
@@ -299,7 +282,7 @@ public class CaseBased {
         ArrayList<Tile> newSet = new ArrayList<>();
         if (!consecutive.isEmpty()) {
             for (int i = 0; i < consecutive.size(); i += 2) {
-                boolean condition1 = ((consecutive.get(i).getNumber()) == tile.getNumber()+1) && (consecutive.get(i).getColor() == tile.getColor());
+                boolean condition1 = ((consecutive.get(i).getNumber()) == tile.getNumber()+1) && (consecutive.get(i).getColor() == tile.getColor())&& (consecutive.get(i+1).getNumber()) != tile.getNumber();
                 boolean condition2 = ((consecutive.get(i).getNumber() + 2) == tile.getNumber()) && (consecutive.get(i).getColor() == tile.getColor());
                 boolean condition3 = (tile.getNumber()==-1);
                 if (condition1 ||condition2||condition3) {
@@ -314,15 +297,12 @@ public class CaseBased {
     }
 
     public static ArrayList<Tile> playTheRack(ArrayList<Tile> hand) {
-        //System.out.println(hand);
+
         ArrayList<Tile> set = new ArrayList<>();
         ArrayList<Tile> handNoDuplicates = new ArrayList<>(new HashSet<>(hand));
-        //System.out.println(handNoDuplicates);
-
 
         //SET STAIRS
         handNoDuplicates = Game.orderSetStairs(handNoDuplicates);
-        //System.out.println(handNoDuplicates);
         for (int i = 0; i < handNoDuplicates.size() - 2; i++) {
             Tile t1 = handNoDuplicates.get(i);
             Tile t2 = handNoDuplicates.get(i + 1);
@@ -337,7 +317,6 @@ public class CaseBased {
 
         //SET GROUP
         handNoDuplicates = Game.orderSetGroup(handNoDuplicates);
-        //System.out.println(handNoDuplicates);
         for (int i = 0; i < handNoDuplicates.size() - 2; i++) {
             Tile t1 = handNoDuplicates.get(i);
             Tile t2 = handNoDuplicates.get(i + 1);
@@ -350,8 +329,6 @@ public class CaseBased {
                 return set;
             }
         }
-
-        //JOKER
         /*
         if (handNoDuplicates.get(0).getNumber() == -1) {
             ArrayList<Tile> consecutiveTiles = AgentNBHelper.getTilesWithConsecutiveNumbers(hand);
@@ -369,7 +346,8 @@ public class CaseBased {
                 set.add(handNoDuplicates.get(0));
                 return set;
             }
-        }*/
+        }
+        */
 
         return null;
     }

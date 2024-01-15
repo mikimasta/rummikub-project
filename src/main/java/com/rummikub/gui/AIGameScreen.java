@@ -66,13 +66,10 @@ class AIGameScreen extends Pane {
         rackIV.setFitWidth(1000);
         rackIV.setLayoutX(Rummikub.xCenter - 500);
         rackIV.setLayoutY(888);
-        //System.out.println(rackIV.getLayoutBounds().getHeight());
 
         getChildren().addAll(timer, players, gameboard, rackIV, rack, endTurn, orderByGroup, orderByStairs, quit);
 
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
-        //System.out.println(Game.getInstance().currentPlayer + "'s hand is " + Game.printBoard(Game.getInstance().currentPlayer.getHand()));
-        //System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
 
         orderByStairs.setOnAction(e -> {
             Game.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
@@ -108,23 +105,22 @@ class AIGameScreen extends Pane {
                     }
                 }
                 finishMove();}
-            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.MAIN) { // player is AI;
+            else if (Game.getInstance().currentPlayer.isAI() && Game.getInstance().currentPlayer.getAiType() == Type.MAIN) { // player is AI NB;
                 System.out.println("");
-                System.out.println("MAIN AGENT:");
-                Object[] aimove;
-                aimove = AgentImplementation.makeMove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState()); 
-            
-                if (aimove != null) {
+                //System.out.println("MAIN AGENT:");
+                Object[] aimove = AgentImplementation.makeMove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+                boolean isAIMovePossible = (boolean) aimove[2];
+                if (isAIMovePossible) {
                     Tile[][] rack = (Tile[][]) aimove[0];
                     Tile[][] board = (Tile[][]) aimove[1];
-                    //TO DO aiMove[0] is the new hand and aiMove[1] is the 
+
                     GameboardGUI.getInstance().setState(board);
                     GameboardGUI.getInstance().renderNewBoard();
                     Game.getInstance().currentPlayer.setHand(rack);
                     RackGUI.getInstance().handToRack(rack);
 
                 }else{ 
-                    System.out.println("no move possible for computer");
+                    //System.out.println("no move possible for computer");
                     if(!Game.getInstance().getPool().isEmpty()) {
                         Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     }
