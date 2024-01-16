@@ -10,7 +10,7 @@ import com.rummikub.game.Tile;
 public class MCTS {
     private int NUM_SIMULATIONS = 1000;
 
-    public void mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
+    public ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         Node root = new Node(stateBoard, stateHand);
         for(int i = 0; i < NUM_SIMULATIONS; i++){
             Node node = select(root);
@@ -18,11 +18,11 @@ public class MCTS {
             for(Node child : children){
                 double reward = simulate(child.getStateBoard(), child.getStateHand(), opponentHand, pile);
                 child.updateScore(reward);
+                backpropagate(child, reward);
 
             }
-            root = backpropagate(child, reward);
         }
-        return selectBestMove(root);
+        return selectBestMove(root).getStateBoard;
     }
 
     private Node select(Node node) {
@@ -52,7 +52,6 @@ public class MCTS {
     private double UCT(Node child) {
 
         double explotation= (double) child.getReward() / child.getVisits();
-
         double constant = 1.0;
         double exploration = constant *   Math.sqrt(Math.log(child.getParent().getVisits()) / child.getVisits());      
         double uct = explotation + exploration;
@@ -159,13 +158,26 @@ public class MCTS {
 
     private ArrayList<ArrayList<Tile>> getRandMove(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
     }
-    private Node backpropagate(Node node, double reward){
+
+    private void backpropagate(Node node, double reward){
         while (node.getParent() != null) {
             
             node.updateScore(reward);
             node = node.getParent();
         }
-
-        return node;
     }
+
+    private Node selectBestMove(Node root){
+        List<Node> children = root.getChildren();
+        double bestReward = 0;
+        Node bestNode = null;
+        for(Node child : children){
+            if(child.getReward() > bestReward){
+                bestReward = child.getReward();
+                bestNode = child;
+            }
+        }
+        return bestNode;
+    }
+
 }

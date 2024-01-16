@@ -54,7 +54,7 @@ public class Tile {
 
     @Override
     public String toString() {
-        return "Tile" + number + colorString;
+        return "Tile " + number + " " + colorString;
         //return " " + number;
     }
 
