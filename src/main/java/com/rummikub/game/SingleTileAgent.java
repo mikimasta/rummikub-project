@@ -17,7 +17,7 @@ public class SingleTileAgent {
         }
 
         ArrayList<ArrayList<Tile>> movesRuns = new ArrayList<ArrayList<Tile>>(listOfMovesRuns(board, 3)); // returns list of moves which are runs
-        ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<ArrayList<Tile>>(listOfMovesGroups(board)); // returns list of moves which are groups
+        ArrayList<ArrayList<Tile>> movesGroups = new ArrayList<ArrayList<Tile>>(listOfMovesGroups(board, 3)); // returns list of moves which are groups
         ArrayList<ArrayList<Tile>> extendedRuns = null;
         ArrayList<ArrayList<Tile>> extendedGroups = null;
     
@@ -72,7 +72,7 @@ public class SingleTileAgent {
      * @param board board
      * @return list of moves which are groups
      */
-    static ArrayList<ArrayList<Tile>> listOfMovesGroups(Tile[][] board) {
+    static ArrayList<ArrayList<Tile>> listOfMovesGroups(Tile[][] board, int minSizeOfRun) {
         if (board == null) {
             return null;
         }
@@ -86,14 +86,14 @@ public class SingleTileAgent {
                 if (tile != null) {
                     move.add(tile);
                 } else { // tile is null
-                    if (move.size() > 2 && Game.checkIfGroup(move)) { // move is group
+                    if (move.size() >= minSizeOfRun && Game.checkIfGroup(move)) { // move is group
                         movesGroups.add(new ArrayList<>(move));
                     }
                         move.clear();
                 }
             }
 
-            if (move.size() > 2 && Game.checkIfGroup(move)) { // check if the last sequence forms a group
+            if (move.size() >= minSizeOfRun && Game.checkIfGroup(move)) { // check if the last sequence forms a group
                 movesGroups.add(new ArrayList<>(move));
             }
             move.clear(); // clear move for the next row
@@ -266,5 +266,7 @@ public class SingleTileAgent {
         }else {
             System.out.println(BaselineAgent.printMoves(singleTileMoves));
         }
+
+        
     }
 }
