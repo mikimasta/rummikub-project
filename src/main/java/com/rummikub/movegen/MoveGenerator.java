@@ -5,11 +5,9 @@ import com.rummikub.game.Tile;
 import javafx.scene.paint.Color;
 
 
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-// LESGOO U GOT THIS EZ SLAP
 public class MoveGenerator {
 
 
@@ -42,6 +40,7 @@ public class MoveGenerator {
         RUNS
     }
     private TreeMap<Tile, TreeMap<Type, ArrayList<ArrayList<Tile>>>> potentialSets;
+    private TreeMap<Tile, Integer> tileOccurrences;
 
     private TreeMap<Integer, ArrayList<ArrayList<Tile>>> permutations;
     private static MoveGenerator instance;
@@ -61,6 +60,7 @@ public class MoveGenerator {
     }
 
     public void load(Tile[][] currentState, Tile[][] currentHand) {
+        this.tileOccurrences = new TreeMap<>();
         this.tiles = new ArrayList<>();
         this.potentialSets = new TreeMap<>();
         this.validSets = new ArrayList<>();
@@ -79,12 +79,11 @@ public class MoveGenerator {
 
     void findPotentialSets() {
 
-        // 1. gather a single group and run for each tile (for runs just for the smallest tile of a given colour), store them in the TreeMap
-        // 2. get all the combinations of that particular group and run (decompose), reassign the TreeMap value
-        // 3. check for validity, add the unique valid ones to potentialGroups and potentialRuns respectively
 
-
-        // TODO now the groups and runs are generated well. I will need to filter out the invalid ones and find a way to distinguish equal/not equal groups
+        // TODO generate permutations of runs from each tile (only the lowest one of each color interests me)
+        // TODO then filter out the groups so that we have no duplicates (1b1r1o and 1r1o1b are duplicates, 2b2r2o and 2b2r2o are not, basically if they come from the same tile)
+        // TODO add all valid sets to the the list, then come up with a backtracking approach to find valid board configurations
+        // TODO basically done? u got this
         for (Tile tile : tiles) {
             TreeMap<Type, ArrayList<ArrayList<Tile>>> potentialSets = new TreeMap<>();
             ArrayList<ArrayList<Tile>> potentialGroups = new ArrayList<>();
@@ -99,8 +98,13 @@ public class MoveGenerator {
             tileGroup.add(tile);
             tileRun.add(tile);
 
+            int tileCount = 1;
+
             for (Tile tile2 : tiles) {
 
+                if (sameTile(tile, tile2) && (tile != tile2)) {
+                    tileCount++;
+                }
 
                 if ((tile2.getColor() == tile.getColor()) && (tile2.getNumber() > tile.getNumber()) && (!isNumberInRun(tileRun, tile2)) && isValidRun(tileRun, tile2)) {
 
@@ -116,13 +120,58 @@ public class MoveGenerator {
 
             }
 
-            potentialGroups.add(tileGroup);
-            potentialRuns.add(tileRun);
+            tileOccurrences.put(tile, tileCount);
+
+            if (tileGroup.size() >= 3)
+                potentialGroups.add(tileGroup);
+
+            if (tileRun.size() >= 3) {
+                ArrayList<ArrayList<Tile>> decomposedRun = decompose(tileRun);
+                potentialRuns.addAll(decomposedRun);
+            }
+
 
             this.potentialSets.put(tile, potentialSets);
         }
 
     }
+
+    boolean sameTile(Tile t1, Tile t2) {
+        return (t1.getNumber() == t2.getNumber()) && (t1.getColor() == t2.getColor());
+    }
+    void generateAllRuns() {
+        for (Tile tile : potentialSets.keySet()) {
+
+
+
+        }
+    }
+
+    ArrayList<ArrayList<Tile>> decompose(ArrayList<Tile> run) {
+
+        int size = run.size();
+
+
+        ArrayList<ArrayList<Tile>> decomposedRun = new ArrayList<>();
+
+        while (size >= 3) {
+
+            ArrayList<Tile> partialRun = new ArrayList<>();
+
+            for (int i = 0; i <= size - 1; i++) {
+                partialRun.add(run.get(i));
+            }
+
+            size--;
+
+            decomposedRun.add(partialRun);
+
+        }
+
+        return decomposedRun;
+
+    }
+
 
     private boolean isUniqueColor(ArrayList<Tile> tileGroup, Tile tileToAdd) {
         for (Tile tile : tileGroup)  {
@@ -146,7 +195,7 @@ public class MoveGenerator {
         ArrayList<Tile> tileRunCopy = Utils.deepCopy(tileRun);
         tileRunCopy.add(tileToAdd.clone());
 
-        for (int i = 0; i < tileRunCopy.size()- 1; i++) {
+        for (int i = 0; i < tileRunCopy.size() - 1; i++) {
             if (tileRunCopy.get(i + 1).getNumber() - tileRunCopy.get(i).getNumber() != 1) {
                 return false;
             }
@@ -157,6 +206,7 @@ public class MoveGenerator {
 
 
     public static void main(String[] args) {
+
         Tile t1 = new Tile((byte) 1, Color.RED);
         Tile t2 = new Tile((byte) 2, Color.RED);
         Tile t3 = new Tile((byte) 3, Color.RED);
@@ -184,12 +234,19 @@ public class MoveGenerator {
         MoveGenerator.getInstance().load(testBoard, testHand);
         MoveGenerator.getInstance().findPotentialSets();
 
-        System.out.println(MoveGenerator.getInstance().potentialSets.size());
+        MoveGenerator gen = MoveGenerator.getInstance();
+
 
         for (Tile t : MoveGenerator.getInstance().potentialSets.keySet()) {
             System.out.printf("Tile %d %s : %s\n", t.getNumber(), t.getColorString(), MoveGenerator.getInstance().potentialSets.get(t));
         }
 
+        System.out.println(gen.tileOccurrences);
+        System.out.println("-------");
+
+        for (Tile t : MoveGenerator.getInstance().potentialSets.keySet()) {
+            System.out.printf("Tile %d %s : %d\n", t.getNumber(), t.getColorString(), gen.tileOccurrences.get(t));
+        }
     }
 
 
