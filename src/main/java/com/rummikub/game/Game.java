@@ -268,14 +268,14 @@ public class Game {
                             
                             if (board[i][j - 1] != null) {
 
-                                if (board[i][j + 1] == board[i][j - 1]) {
+                                if (board[i][j + 1].getNumber() == board[i][j - 1].getNumber()) {
                                     total += board[i][j + 1].getNumber();
                                 } else {
                                     total += board[i][j - 1].getNumber() + 1;
                                 }
 
                             } else {
-                                if (board[i][j + 1] == board[i][j + 2]) {
+                                if (board[i][j + 1].getNumber() == board[i][j + 2].getNumber()) {
                                     total += board[i][j + 1].getNumber();
                                 } else {
                                     total += board[i][j + 1].getNumber() - 1;
@@ -284,7 +284,7 @@ public class Game {
 
                         } else {
 
-                            if (board[i][j - 1] == board[i][j - 2]) {
+                            if (board[i][j - 1].getNumber() == board[i][j - 2].getNumber()) {
                                 total += board[i][j - 1].getNumber();
                             } else {
                                 total += board[i][j - 1].getNumber() + 1;
