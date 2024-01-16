@@ -64,7 +64,7 @@ public class test {
         for(ArrayList<Tile> set : solution){
            System.out.print("Set: ");
            for( Tile tile : set){
-            System.out.print(tile.toString());
+            System.out.print(tile.toString() + " ");
            }
            System.out.println(" ");
         }

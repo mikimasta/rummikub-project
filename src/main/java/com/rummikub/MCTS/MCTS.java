@@ -22,7 +22,8 @@ public class MCTS {
 
             }
         }
-        return selectBestMove(root).getStateBoard;
+        return null;
+        //return selectBestMove(root).getStateBoard;
     }
 
     private Node select(Node node) {
@@ -63,9 +64,11 @@ public class MCTS {
         // Get the current game state (board and hand)
         ArrayList<ArrayList<Tile>> stateBoard = node.getStateBoard();
         ArrayList<Tile> stateHand = node.getStateHand();
+
+        SolutionFinderAll finder = new SolutionFinderAll();
         
         // Generate all possible child nodes
-        ArrayList<ArrayList<ArrayList<Tile>>> validMoves = generateValidMoves(stateBoard, stateHand);
+        ArrayList<ArrayList<ArrayList<Tile>>> validMoves = finder.getAllSolutions(stateHand, stateBoard);
         for(ArrayList<ArrayList<Tile>> moveBoard : validMoves){
             ArrayList<Tile> moveHand = getNewHand(moveBoard, stateBoard, stateHand);
             Node child = new Node(moveBoard, moveHand);
@@ -76,10 +79,10 @@ public class MCTS {
         return node;
     }
 
-    private  ArrayList<ArrayList<ArrayList<Tile>>> generateValidMoves(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
+   // private  ArrayList<ArrayList<ArrayList<Tile>>> generateValidMoves(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
         ArrayList<ArrayList<ArrayList<Tile>>> validMoves = new ArrayList<ArrayList<ArrayList<Tile>>>();
         //fill this in
-    }
+    //}
 
     private  ArrayList<Tile> getNewHand(ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<ArrayList<Tile>> intialBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
@@ -135,11 +138,11 @@ public class MCTS {
         initalBoard = stateBoard;
         while(stateHand != null && opponentHand != null){
             if(player == 0){
-                stateBoard = getRandMove(stateBoard, stateHand);
+                //stateBoard = getRandMove(stateBoard, stateHand);
                 stateHand = getNewHand(initalBoard, stateBoard, stateHand);
             }
             else if(player == 1){
-                stateBoard = getRandMove(stateBoard, opponentHand);
+                //stateBoard = getRandMove(stateBoard, opponentHand);
                 opponentHand = getNewHand(initalBoard, stateBoard, opponentHand);
             }
         }
@@ -156,8 +159,8 @@ public class MCTS {
         return count;
     }
 
-    private ArrayList<ArrayList<Tile>> getRandMove(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
-    }
+    //private ArrayList<ArrayList<Tile>> getRandMove(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
+    //}
 
     private void backpropagate(Node node, double reward){
         while (node.getParent() != null) {

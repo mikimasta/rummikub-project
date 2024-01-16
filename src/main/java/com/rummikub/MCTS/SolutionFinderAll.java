@@ -17,7 +17,8 @@ public class SolutionFinderAll {
     static boolean solutionFound;
      
 
-    static ArrayList<ArrayList<ArrayList<Tile>>> getAllSolutions(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
+    ArrayList<ArrayList<ArrayList<Tile>>> getAllSolutions(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
+        allSolutions = new ArrayList<ArrayList<ArrayList<Tile>>>();
         findSolution(initalHand, initalBoard);
         return allSolutions;
     }
@@ -27,7 +28,7 @@ public class SolutionFinderAll {
         hand = initalHand;
         allTilesBoard = new ArrayList<>();
         solutionPerHand = new ArrayList<>();
-        solutionFound = false;
+        //solutionFound = false;
 
         // Flatten the 2D board into a single list of tiles
         for (ArrayList<Tile> list : initalBoard) {
@@ -46,8 +47,12 @@ public class SolutionFinderAll {
         // Iterative deepening loop
         for (int segmentSize = 1; segmentSize <= hand.size(); segmentSize++) {
             //System.out.println("segmenent size (depth) " + segmentSize);
-            solutionFound = false;
-            allSolutions.add(solution);
+            //solutionFound = false;
+            if(solution != null){
+                if(!solution.isEmpty()){
+                //allSolutions.add(solution);
+            }
+            }
             prevSolution = solution;
             solution = new ArrayList<>();  // Reset solutions at the start of each iteration
             
@@ -69,11 +74,22 @@ public class SolutionFinderAll {
 
      private static void segementHand(ArrayList<Tile> hand, int numTiles, int start, ArrayList<Tile> current) {
         if (numTiles == 0) {
-            //System.out.println("hand segment " + current);
             ArrayList<ArrayList<Tile>> segmentSolution = getSolutionPerSegment(current, allTilesBoard);
             if (!segmentSolution.isEmpty()) {
+                 allSolutions.add(segmentSolution);
+                 //print out
+                 System.out.println("Solution:");
+                 for(ArrayList<Tile> set : segmentSolution){
+                    System.out.print("Set: ");
+                    for( Tile tile : set){
+                     System.out.print(tile.toString() + " ");
+                    }
+                    System.out.println(" ");
+                 }
+                 System.out.println(" ");
+
                  solution = segmentSolution;
-                 return;
+                 //return;
              }
             return;
         }
@@ -83,9 +99,9 @@ public class SolutionFinderAll {
             segementHand(hand, numTiles - 1, i + 1, current);
             current.remove(current.size() - 1);
 
-            if(solutionFound){
-                return;
-            }
+            // if(solutionFound){
+            //     return;
+            // }
         }
      }
      
@@ -120,7 +136,7 @@ public class SolutionFinderAll {
      */
 
     private static ArrayList<ArrayList<Tile>> generatePossibleMovePerHand(ArrayList<Tile> allTiles){
-        solutionFound = false;
+        //solutionFound = false;
         generateAllMovesHelper(allTiles, new ArrayList<>());
         return solutionPerHand;
     }
@@ -138,7 +154,7 @@ public class SolutionFinderAll {
         
                 ArrayList<ArrayList<Tile>> deepCopy = deepCopyBoard(currentBoard);
                 solutionPerHand = deepCopy;
-                solutionFound = true;
+                //solutionFound = true;
                 //System.out.print("solution found at hand segment level");
               
             }
@@ -164,9 +180,9 @@ public class SolutionFinderAll {
             // Backtrack by removing the last added tile from the current row
             currentBoard.get(i).remove(currentBoard.get(i).size() - 1);
         // Check the flag to see if a solution has been found, and return if true
-        if (solutionFound) {
-            return;
-        }
+        // if (solutionFound) {
+        //     return;
+        // }
         }
     
         // If needed, create a new row and add the tile
@@ -184,9 +200,9 @@ public class SolutionFinderAll {
         // Backtrack by removing the last added row
         currentBoard.remove(currentBoard.size() - 1);
         // Check the flag to see if a solution has been found, and return if true
-    if (solutionFound) {
-        return;
-    }
+    // if (solutionFound) {
+    //     return;
+    // }
     }
     
      /**
