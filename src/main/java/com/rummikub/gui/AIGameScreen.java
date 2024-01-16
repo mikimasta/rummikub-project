@@ -81,37 +81,8 @@ class AIGameScreen extends Pane {
 
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI()) {
-                /* 
-                aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                if (aimove != null && !aimove.isEmpty() && aimove.size() > 0){
-                    System.out.println("Move with single tiles");
-                    System.out.println(BaselineAgent.printMoves(aimove));
-                    processAIMove(aimove);
-                }
-                */
-                ArrayList<ArrayList<Tile>> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand());
-                if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
-                    System.out.println("move with baseline agent");
-                    System.out.println(BaselineAgent.printMoves(aimove));
-                    makeAIMoves(aimove, GameboardGUI.getInstance().getState());
-                    GameboardGUI.getInstance().renderAIMove();
-                    Tile[][] newHand = removeTilesFromRack(aimove, Game.getInstance().currentPlayer.getHand());
-                    RackGUI.getInstance().handToRack(newHand);
-                    finishAIMove();
-                    System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
-                } 
-                aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-                    System.out.println("Move with single tiles");
-                    System.out.println(BaselineAgent.printMoves(aimove));
-                    processAIMove(aimove);
-                }
-                aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-                if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-                    System.out.println("Move with splitting method");
-                    System.out.println(BaselineAgent.printMoves(aimove));
-                    processAIMove(aimove);
-                }
+                AImoveAgents();
+
                 if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
                     System.out.println("No move possible for computer. Drawing a tile...");
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
@@ -126,7 +97,7 @@ class AIGameScreen extends Pane {
                 if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) { 
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
-                } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){
+                } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){ 
                     System.out.println("No more tiles in the pool");
                 } else {
                     humanPlayerMove();
@@ -171,6 +142,39 @@ class AIGameScreen extends Pane {
 
     }
 
+    void AImoveAgents() {
+        /* 
+        aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+        if (aimove != null && !aimove.isEmpty() && aimove.size() > 0){
+            System.out.println("Move with single tiles");
+            System.out.println(BaselineAgent.printMoves(aimove));
+            processAIMove(aimove);
+        }
+        */
+        ArrayList<ArrayList<Tile>> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand());
+        if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
+            System.out.println("move with baseline agent");
+            System.out.println(BaselineAgent.printMoves(aimove));
+            makeAIMoves(aimove, GameboardGUI.getInstance().getState());
+            GameboardGUI.getInstance().renderAIMove();
+            Tile[][] newHand = removeTilesFromRack(aimove, Game.getInstance().currentPlayer.getHand());
+            RackGUI.getInstance().handToRack(newHand);
+            finishAIMove();
+            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+        } 
+        aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+        if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
+            System.out.println("Move with single tiles");
+            System.out.println(BaselineAgent.printMoves(aimove));
+            processAIMove(aimove);
+        }
+        aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
+        if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
+            System.out.println("Move with splitting method");
+            System.out.println(BaselineAgent.printMoves(aimove));
+            processAIMove(aimove);
+        }
+    }
     void processAIMove(ArrayList<ArrayList<Tile>> aiMove) {
 
         removeTilesFromBoard(aiMove, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove in memory
@@ -287,5 +291,5 @@ class AIGameScreen extends Pane {
         return board;
     }
 
- 
+
 }
