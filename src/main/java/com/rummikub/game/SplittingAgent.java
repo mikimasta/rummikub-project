@@ -74,6 +74,30 @@ public class SplittingAgent {
         return splittedMoves;
     }
 
+    // step 1: take groups of tile that are size 4
+    // step 2: reorder in different combinations ex:(1, 2, 3, 4) -> 
+    // step 3: 
+
+    /* 
+    public static ArrayList<ArrayList<Tile>> splittingMovesForRuns(Tile[][] dupRack, Tile[][] board) {
+        if (board == null) {
+            return null;
+        }
+
+        ArrayList<ArrayList<Tile>> groups = new ArrayList<ArrayList<Tile>>(SingleTileAgent.listOfMovesGroups(board, 4));
+        if (groups == null || groups.isEmpty()) {
+            return null;
+        }
+
+        for (ArrayList<Tile> group : groups) {
+            ArrayList<Tile> possibleTiles = 
+        }
+        
+    }
+*/
+    // For experiments, run many time how many times does it win, 
+    // estimating how many times it wins
+
     public static void main(String[] args) {
 
         Tile n = null;

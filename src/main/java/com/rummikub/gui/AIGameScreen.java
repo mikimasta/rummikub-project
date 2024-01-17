@@ -142,6 +142,7 @@ class AIGameScreen extends Pane {
 
     }
 
+    
     void AImoveAgents() {
         /* 
         aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
@@ -175,6 +176,8 @@ class AIGameScreen extends Pane {
             processAIMove(aimove);
         }
     }
+
+
     void processAIMove(ArrayList<ArrayList<Tile>> aiMove) {
 
         removeTilesFromBoard(aiMove, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove in memory
