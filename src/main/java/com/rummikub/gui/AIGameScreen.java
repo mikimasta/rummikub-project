@@ -186,7 +186,7 @@ class AIGameScreen extends Pane {
     }
 
     void processAIMove2_3(ArrayList<ArrayList<Tile>> aiMove) {
-
+        
         removeTilesFromBoard(aiMove, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove in memory
         GameboardGUI.getInstance().removeAIMove(); 
         makeAIMoves(aiMove, GameboardGUI.getInstance().getState()); // add tiles from aimove2 to memory
@@ -199,18 +199,22 @@ class AIGameScreen extends Pane {
     }
 
     void finishAIMove() {
+
         Game.getInstance().isGameOver();
         GameboardGUI.getInstance().setState(GameboardGUI.getInstance().getState());
         GameboardGUI.getInstance().lockTiles();
+        
     }
 
     void MCTS() {
+
         ArrayList<Node> MCTSList = MCTS.findBestMove(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
+        MCTSList = removeDuplicateLists(MCTSList);
 
         for (Node node : MCTSList) {
             if (node.getAgentUsed() != 100) {
                 ArrayList<ArrayList<Tile>> MCTSmove = new ArrayList<ArrayList<Tile>>();
-                if (node.getAgentUsed() == 1) {
+                if (node.getAgentUsed() == 0) {
                     MCTSmove.add(node.getMove());
                     processAIMove1(MCTSmove);
                 } else if ((node.getAgentUsed() == 2)) {
@@ -321,6 +325,7 @@ class AIGameScreen extends Pane {
         return board;
     }
 
+
     public static ArrayList<ArrayList<Tile>> arrayListToNestedArrayList(ArrayList<Tile> aiMove) {
         ArrayList<ArrayList<Tile>> moves = new ArrayList<>();
         ArrayList<Tile> list = new ArrayList<>();
@@ -339,7 +344,52 @@ class AIGameScreen extends Pane {
     
         return moves;
     }
-    
+
+    /**
+     * checks if the move of a node have have common elements, if they do keep the node with biggest move
+     * @param MCTSList list of nodes
+     * @return new list containing unique nodes
+     */
+    private ArrayList<Node> removeDuplicateLists(ArrayList<Node> MCTSList) {
+        ArrayList<Node> resultList = new ArrayList<>();
+
+        for (int i = 0; i < MCTSList.size(); i++) {
+            Node node = MCTSList.get(i);
+            boolean isDuplicate = false;
+
+            for (Node resultNode : resultList) {
+                if (haveCommonElement(resultNode.getMove(), node.getMove())) {
+                    isDuplicate = true;
+                    if (node.getMove().size() > resultNode.getMove().size()) {
+                            resultList.remove(resultNode);
+                            resultList.add(node);
+                    }
+                    break;
+                }
+            }
+            if (!isDuplicate) {
+                resultList.add(node);
+            }
+        }
+        return resultList;
+    }
+
+    /**
+     * checks if two lists have commun elements
+     * @param move move
+     * @param move2 move2
+     * @return true if the moves have commun elements
+     */
+    private boolean haveCommonElement(ArrayList<Tile> move, ArrayList<Tile> move2) {
+        HashSet<Tile> set = new HashSet<>(move);
+        
+        for (Tile t : move2) {
+            if (set.contains(t)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }
