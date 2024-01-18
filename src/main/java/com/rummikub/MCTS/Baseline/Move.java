@@ -10,7 +10,7 @@ import java.util.HashSet;
 
 public class Move {
 
-    public ArrayList<ArrayList<Tile>> getMove(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
+    public static ArrayList<ArrayList<Tile>> getMove(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
         
         Tile[][] rack = hand2ArrayList(initalHand);
         Tile[][] board = board2matrix(initalBoard);
@@ -88,7 +88,7 @@ public class Move {
      * @param board gameboard
      * @return updated gameboard
      */
-    private Tile[][] removeTilesFromRack(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] rack) {
+    static Tile[][] removeTilesFromRack(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] rack) {
         if (aiMoves == null) {
             return rack;
         }

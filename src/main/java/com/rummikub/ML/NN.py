@@ -26,3 +26,4 @@ Theta2_1d = np.reshape(Theta2, Theta2.size, order='F')
 nn_params = np.hstack((Theta1_1d, Theta2_1d))
 
 
+

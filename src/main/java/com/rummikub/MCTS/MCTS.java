@@ -3,6 +3,7 @@ package com.rummikub.MCTS;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rummikub.MCTS.Baseline.Move;
 import com.rummikub.game.Tile;
 
 
@@ -138,11 +139,11 @@ public class MCTS {
         initalBoard = stateBoard;
         while(stateHand != null && opponentHand != null){
             if(player == 0){
-                //stateBoard = getRandMove(stateBoard, stateHand);
+                stateBoard = Move.getMove(stateHand, stateBoard);
                 stateHand = getNewHand(initalBoard, stateBoard, stateHand);
             }
             else if(player == 1){
-                //stateBoard = getRandMove(stateBoard, opponentHand);
+                stateBoard = Move.getMove(opponentHand, stateBoard);
                 opponentHand = getNewHand(initalBoard, stateBoard, opponentHand);
             }
         }
