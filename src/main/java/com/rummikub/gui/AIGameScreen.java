@@ -1,7 +1,9 @@
 package com.rummikub.gui;
 
 import com.rummikub.game.BaselineAgent;
+import com.rummikub.game.MCTS;
 import com.rummikub.game.Game;
+import com.rummikub.game.Node;
 import com.rummikub.game.SingleTileAgent;
 import com.rummikub.game.SplittingAgent;
 import com.rummikub.game.Tile;
@@ -81,8 +83,8 @@ class AIGameScreen extends Pane {
 
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI()) {
-                AImoveAgents();
-
+                //AImoveAgents();
+                MCTS();
                 if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
                     System.out.println("No move possible for computer. Drawing a tile...");
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
@@ -156,29 +158,34 @@ class AIGameScreen extends Pane {
         if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
             System.out.println("move with baseline agent");
             System.out.println(BaselineAgent.printMoves(aimove));
-            makeAIMoves(aimove, GameboardGUI.getInstance().getState());
-            GameboardGUI.getInstance().renderAIMove();
-            Tile[][] newHand = removeTilesFromRack(aimove, Game.getInstance().currentPlayer.getHand());
-            RackGUI.getInstance().handToRack(newHand);
-            finishAIMove();
-            System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+            processAIMove1(aimove);
         } 
         aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
         if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
             System.out.println("Move with single tiles");
             System.out.println(BaselineAgent.printMoves(aimove));
-            processAIMove(aimove);
+            processAIMove2_3(aimove);
         }
         aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
         if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
             System.out.println("Move with splitting method");
             System.out.println(BaselineAgent.printMoves(aimove));
-            processAIMove(aimove);
+            processAIMove2_3(aimove);
         }
     }
 
+    void processAIMove1(ArrayList<ArrayList<Tile>> aiMove) {
 
-    void processAIMove(ArrayList<ArrayList<Tile>> aiMove) {
+        makeAIMoves(aiMove, GameboardGUI.getInstance().getState());
+        GameboardGUI.getInstance().renderAIMove();
+        Tile[][] newHand = removeTilesFromRack(aiMove, Game.getInstance().currentPlayer.getHand());
+        RackGUI.getInstance().handToRack(newHand);
+        finishAIMove();
+        System.out.println(Game.printBoard(GameboardGUI.getInstance().getState()));
+
+    }
+
+    void processAIMove2_3(ArrayList<ArrayList<Tile>> aiMove) {
 
         removeTilesFromBoard(aiMove, GameboardGUI.getInstance().getState()); // remove tiles already on board which are used in the aimove in memory
         GameboardGUI.getInstance().removeAIMove(); 
@@ -195,6 +202,26 @@ class AIGameScreen extends Pane {
         Game.getInstance().isGameOver();
         GameboardGUI.getInstance().setState(GameboardGUI.getInstance().getState());
         GameboardGUI.getInstance().lockTiles();
+    }
+
+    void MCTS() {
+        ArrayList<Node> MCTSList = MCTS.findBestMove(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
+
+        for (Node node : MCTSList) {
+            if (node.getAgentUsed() != 100) {
+                ArrayList<ArrayList<Tile>> MCTSmove = new ArrayList<ArrayList<Tile>>();
+                if (node.getAgentUsed() == 1) {
+                    MCTSmove.add(node.getMove());
+                    processAIMove1(MCTSmove);
+                } else if ((node.getAgentUsed() == 2)) {
+                    MCTSmove = arrayListToNestedArrayList(node.getMove());
+                    processAIMove2_3(MCTSmove);
+                } else {
+                    MCTSmove.add(node.getMove());
+                    processAIMove2_3(MCTSmove);
+                }
+            }
+        }
     }
 
     /**
@@ -293,6 +320,26 @@ class AIGameScreen extends Pane {
 
         return board;
     }
+
+    public static ArrayList<ArrayList<Tile>> arrayListToNestedArrayList(ArrayList<Tile> aiMove) {
+        ArrayList<ArrayList<Tile>> moves = new ArrayList<>();
+        ArrayList<Tile> list = new ArrayList<>();
+    
+        for (Tile tile : aiMove) {
+            if (tile != null) {
+                list.add(tile);
+            } else {
+                moves.add(list);
+                list = new ArrayList<>();
+            }
+        }
+        if (!list.isEmpty()) {
+            moves.add(list);
+        }
+    
+        return moves;
+    }
+    
 
 
 }
