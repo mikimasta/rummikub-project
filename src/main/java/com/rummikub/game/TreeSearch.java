@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Stack;
 import javafx.scene.paint.Color;
 
-public class MCTS {
+public class TreeSearch {
     
     private static final int NUMBER_OF_AGENTS = 3;
 

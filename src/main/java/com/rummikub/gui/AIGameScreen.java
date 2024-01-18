@@ -1,7 +1,7 @@
 package com.rummikub.gui;
 
 import com.rummikub.game.BaselineAgent;
-import com.rummikub.game.MCTS;
+import com.rummikub.game.TreeSearch;
 import com.rummikub.game.Game;
 import com.rummikub.game.Node;
 import com.rummikub.game.SingleTileAgent;
@@ -203,12 +203,12 @@ class AIGameScreen extends Pane {
         Game.getInstance().isGameOver();
         GameboardGUI.getInstance().setState(GameboardGUI.getInstance().getState());
         GameboardGUI.getInstance().lockTiles();
-        
+
     }
 
     void MCTS() {
 
-        ArrayList<Node> MCTSList = MCTS.findBestMove(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
+        ArrayList<Node> MCTSList = TreeSearch.findBestMove(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
         MCTSList = removeDuplicateLists(MCTSList);
 
         for (Node node : MCTSList) {
