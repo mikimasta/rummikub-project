@@ -23,7 +23,7 @@ public class MCTS {
 
             }
         }
-        return null;
+        return selectBestMove(root).getStateBoard();
         //return selectBestMove(root).getStateBoard;
     }
 
@@ -80,10 +80,10 @@ public class MCTS {
         return node;
     }
 
-   // private  ArrayList<ArrayList<ArrayList<Tile>>> generateValidMoves(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
-        ArrayList<ArrayList<ArrayList<Tile>>> validMoves = new ArrayList<ArrayList<ArrayList<Tile>>>();
-        //fill this in
-    //}
+//    // private  ArrayList<ArrayList<ArrayList<Tile>>> generateValidMoves(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
+//         ArrayList<ArrayList<ArrayList<Tile>>> validMoves = new ArrayList<ArrayList<ArrayList<Tile>>>();
+//         //fill this in
+//     //}
 
     private  ArrayList<Tile> getNewHand(ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<ArrayList<Tile>> intialBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
