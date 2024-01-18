@@ -42,6 +42,7 @@ public class SplittingAgent {
                         rack.removeAll(extendMove.get(0));
                         dupRack = BaselineAgent.arrayListToRack(rack, dupRack);
 
+                        System.out.println("Split is valid");
                         System.out.println("Original move : " + BaselineAgent.printMove(move) + " split into : " + BaselineAgent.printMove(extendMove.get(0)) + " and : " + BaselineAgent.printMove(restOfMove));
 
                         splitMove.add(extendMove.get(0));
