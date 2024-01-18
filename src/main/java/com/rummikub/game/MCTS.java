@@ -3,8 +3,9 @@ package com.rummikub.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Stack;
+
+import javafx.scene.paint.Color;
 
 public class MCTS {
     
@@ -12,75 +13,119 @@ public class MCTS {
     private static final int NUMBER_OF_AGENTS = 3;
 
     ArrayList<Tile> move = new ArrayList<>();
-    ArrayList<ArrayList<Node>> moves = new ArrayList<ArrayList<Node>>();
     
     public static ArrayList<Node> findBestMove(Tile[][] board, Tile[][] rack) {
-        Node rootNode = new Node(board, rack, -1, 0);
-
-        for (Node node : rootNode.getChildren()) {
+        Node rootNode = new Node(copyBoard(board), copyRack(rack), 100, 0);
+        
+        if (!rootNode.isLeafNode) {
             for (int i = 0; i < NUMBER_OF_AGENTS; i++) {
-                Node selectedNode = select(rootNode);
-                double simulationResult = simulate(selectedNode);
-                backpropagate(selectedNode, simulationResult);
-    
-                // Expand the tree by adding nodes based on different agents if the node is not a leaf
-                if (!node.isLeafNode) {
-                    expandTree(selectedNode, board, rack, i);
-                }
-
+                expandTree(rootNode, copyBoard(board), copyRack(rack), i); 
             }
+            //Node selectedNode = select(rootNode);
+            //double simulationResult = simulate(selectedNode);
+            //backpropagate(selectedNode, simulationResult);
         }
-
+        /* 
+        String s = "";
+        for (Node node : rootNode.getChildren()) {
+            System.out.println("agent used " + node.getAgentUsed());
+            System.out.println(BaselineAgent.printMove(node.getMove()));
+            System.out.println("value of node " + node.getValue() + " total value " + node.getTotalValue());
+        }
+        System.out.println("number of children " + rootNode.getChildren().size());
+        */
         // Choose the best move based on the tree exploration
         Node maxTotalValueNode = findNodeWithMaxTotalValue(rootNode);
+        // System.out.println("maxTotal Value Of Node " + maxTotalValueNode.getValue());
         ArrayList<Node> pathToNode = getPathToNode(maxTotalValueNode);
         return pathToNode;
     }
-
+ 
     private static void expandTree(Node parent, Tile[][] board, Tile[][] rack, int agentIndex) {
         Node newNode = new Node(board, rack, agentIndex, 0);
-    
-        // Based on the agent index, determine the move using the corresponding agent
+        parent.addChild(newNode);
+
         ArrayList<ArrayList<Tile>> moves = getMovesForAgent(agentIndex, rack, board);
-    
-        if (moves == null || moves.isEmpty() || moves.stream().allMatch(ArrayList::isEmpty)) {
+        System.out.println(BaselineAgent.printMoves(moves));
+        ArrayList<Tile> move = new ArrayList<>();
+
+        if (moves == null || moves.isEmpty() || moves.size() < 1) {
             newNode.isLeafNode = true;
         } else {
-            ArrayList<Tile> move = getHighestScoringMove(moves, newNode);
+            if (agentIndex == 2) { // splitting agent
+                move = BaselineAgent.nestedArrayListToArrayList(moves);
+            } else {
+                move = getHighestScoringMove(moves, newNode);
+            }
+
+            System.out.println("the move is " + BaselineAgent.printMove(move));
             newNode.setMove(move);
-            parent.addChild(newNode); // add the new node as a child to the parent
-            int value = getValueOfMove(parent, newNode);
+            
+            if (agentIndex == 0) {
+                logicForAgent1(newNode, move, copyBoard(parent.getBoard()), copyRack(parent.getRack()));
+            } else if (agentIndex == 1 || agentIndex == 3) {
+                logicForAgent2_3(newNode, move, copyBoard(parent.getBoard()), copyRack(parent.getRack()));
+            }
+
+            int value = getValueOfMove(parent.getBoard(), newNode.getBoard());
             newNode.setValue(value);
             newNode.setTotalValue(value);
-            ArrayList<ArrayList<Tile>> m = new ArrayList<ArrayList<Tile>>(); 
-            m.add(move);
-            
-            Tile [][] newBoard = makeAIMoves(m, board);
-            newNode.setBoard(newBoard);
-            
-            Tile [][] newHand = removeTilesFromRack(moves, rack);
-            newNode.setRack(newHand);
+            newNode.setAgentUsed(agentIndex);
+            // System.out.println("parent node " + Game.printBoard(parent.getRack()) + " and node : " + Game.printBoard(newNode.getRack()));
 
             for (int i = 0; i < NUMBER_OF_AGENTS; i++) {
-                expandTree(newNode, newNode.getBoard(), newNode.getRack(), i);
+                expandTree(newNode, copyBoard(newNode.getBoard()), copyRack(newNode.getRack()), i);
             }
         }
     }
+
+    public static void logicForAgent1(Node node, ArrayList<Tile> move, Tile[][] board, Tile[][] rack) {
+        Tile[][] newBoard = makeAIMove(move, copyBoard(board));
+        node.setBoard(newBoard);
+        Tile[][] newHand = removeTilesFromRack(move, copyRack(rack));
+        node.setRack(newHand);
+    }
+    
+    public static void logicForAgent2_3(Node node, ArrayList<Tile> move, Tile[][] board, Tile[][] rack) {
+        Tile[][] newBoard = removeTilesFromBoard(move, copyBoard(board));
+        newBoard = makeAIMove(move, newBoard);
+        node.setBoard(newBoard);
+        Tile[][] newHand = removeTilesFromRack(move, copyRack(rack));
+        node.setRack(newHand);
+    }
+    
+    private static Tile[][] copyBoard(Tile[][] board) {
+        Tile[][] copy = new Tile[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            System.arraycopy(board[i], 0, copy[i], 0, board[0].length);
+        }
+        return copy;
+    }
+    
+    private static Tile[][] copyRack(Tile[][] rack) {
+        Tile[][] copy = new Tile[rack.length][rack[0].length];
+        for (int i = 0; i < rack.length; i++) {
+            System.arraycopy(rack[i], 0, copy[i], 0, rack[0].length);
+        }
+        return copy;
+    }
+    
     
 
     private static ArrayList<ArrayList<Tile>> getMovesForAgent(int agentIndex, Tile[][] rack, Tile[][] board) {
         switch (agentIndex) {
             case 0:
-                return BaselineAgent.baselineAgent(rack);
+                return BaselineAgent.baselineAgent(copyRack(rack));
             case 1:
-                return SingleTileAgent.singleTilemove(rack, board);
+                return SingleTileAgent.singleTilemove(copyRack(rack), copyBoard(board));
             case 2:
-                return SplittingAgent.splittingMoves(rack, board);
+                return SplittingAgent.splittingMoves(copyRack(rack), copyBoard(board));
             default:
                 throw new IllegalArgumentException("Invalid agent index");
         }
     }
 
+    /* 
     private static double simulate(Node node) {
         // Implement the simulation logic
         // Simulate a random play-out from the given node
@@ -100,38 +145,46 @@ public class MCTS {
         // Return the selected child node
         return getBestChild(node);
     }
+    */
 
+    /**
+     * performs a depth first search algorithm to find the node with the biggest total value
+     * @param rootNode root node of the tree
+     * @return node with the biggest total value
+     */
     public static Node findNodeWithMaxTotalValue(Node rootNode) {
         if (rootNode == null) {
             return null;
         }
 
-        double maxTotalValue = Double.MIN_VALUE;
+        int maxTotalValue = Integer.MIN_VALUE;
         Node maxTotalValueNode = null;
 
-        // Perform depth-first traversal
         Stack<Node> stack = new Stack<>();
         stack.push(rootNode);
 
         while (!stack.isEmpty()) {
             Node node = stack.pop();
 
-            // Check if the current node has a higher total value
-            if (node.getValue() > maxTotalValue) {
+            if (node.getTotalValue() > maxTotalValue) {
                 maxTotalValue = node.getValue();
                 maxTotalValueNode = node;
             }
 
-            // Push children onto the stack for further exploration
-            for (Node child : node.getChildren()) {
+            for (Node child : node.getChildren()) { // push children onto the stack 
                 stack.push(child);
             }
         }
 
-        System.out.println(maxTotalValue);
+        System.out.println("Max value is " + maxTotalValueNode.getTotalValue());
         return maxTotalValueNode;
     }
     
+    /**
+     * gets the path to the node with the highest total value
+     * @param node node with highest total value
+     * @return the path to the node with the highest total value
+     */
     public static ArrayList<Node> getPathToNode(Node node) {
         ArrayList<Node> path = new ArrayList<>();
         
@@ -149,7 +202,7 @@ public class MCTS {
         Node bestValueNode = null;
 
         for (Node child : node.getChildren()) {
-            int valueOfNode = getValueOfMove(node, child);
+            int valueOfNode = getValueOfMove(node.getBoard(), child.getBoard());
             if (valueOfNode > bestValue) {
                 bestValue = valueOfNode;
                 bestValueNode = child;
@@ -160,23 +213,24 @@ public class MCTS {
     }
 
     public static ArrayList<Tile> getHighestScoringMove(ArrayList<ArrayList<Tile>> moves, Node node) {
-        int biggestValue = 0;
+        int biggestValue = Integer.MIN_VALUE;
         ArrayList<Tile> biggestMove = new ArrayList<>();
 
         for (ArrayList<Tile> move : moves) {
-            int valueOfMove = getValueOfMove(node.getParent(), node);
+            int valueOfMove = getValueOfMove(node.getParent().getBoard(), node.getBoard());
             if (valueOfMove >  biggestValue) {
                 biggestValue = valueOfMove;
                 node.setMove(move);
                 node.setValue(biggestValue);
+                node.setTotalValue(biggestValue);
                 biggestMove = move;
             }
         }
         return biggestMove;
     }
 
-    public static int getValueOfMove (Node previousNode, Node actualNode) {
-        return getValueOfBoard(actualNode.getBoard()) - getValueOfBoard(previousNode.getBoard());
+    public static int getValueOfMove(Tile[][] parentBoard, Tile[][] newNodeBoard) {
+        return getValueOfBoard(newNodeBoard) - getValueOfBoard(parentBoard);
     }
 
     public static int getValueOfBoard(Tile[][] board) {
@@ -220,62 +274,59 @@ public class MCTS {
 
     /**
      * updates the gameboard in memory by finding spaces on the board to place the AI moves
-     * @param aiMoves list of moves of tiles
+     * @param aiMove move of tiles
      * @param board gameboard
      * @return updated gameboard
      */
-    public static Tile[][] makeAIMoves(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] board) {
-        if (aiMoves == null) {
+    public static Tile[][] makeAIMove(ArrayList<Tile> aiMove, Tile[][] board) {
+        if (aiMove == null) {
             return board;
         }
 
-        for (ArrayList<Tile> aiMove : aiMoves) {
-            int space = 0;
-            boolean done = false;
-            int leaveSpace = 0;
+        int space = 0;
+        boolean done = false;
+        int leaveSpace = 0;
 
-            for (int i = 0; i < board.length; i++) {
-                for (int y = 0; y < board[i].length; y++) {
-                    if (board[i][y] == null) {
-                        if (leaveSpace < 1) leaveSpace++;
-                        else space++;
-                    } else {
-                        leaveSpace = 0;
-                        space = 0;
-                    }
-
-                    if (!done && space > aiMove.size()) { // enough space for the move
-                        for (int z = y - space + 1, aiIndex = 0; aiIndex < aiMove.size(); z++, aiIndex++) {
-                            board[i][z] = aiMove.get(aiIndex);
-                        }
-                        done = true;
-                        break;
-                    }
+        for (int i = 0; i < board.length; i++) {
+            for (int y = 0; y < board[i].length; y++) {
+                if (board[i][y] == null) {
+                    if (leaveSpace < 1) leaveSpace++;
+                    else space++;
+                } else {
+                    leaveSpace = 0;
+                    space = 0;
                 }
 
-                if (done) break;
-                space = 0; leaveSpace = 0;
+                if (!done && space > aiMove.size()) { // enough space for the move
+                    for (int z = y - space + 1, aiIndex = 0; aiIndex < aiMove.size(); z++, aiIndex++) {
+                        board[i][z] = aiMove.get(aiIndex);
+                    }
+                    done = true;
+                    break;
+                }
             }
+
+            if (done) break;
+            space = 0; leaveSpace = 0;
         }
+        
 
         return board;
     }
 
     /**
      * removes tiles used in the AI move from its rack 
-     * @param aiMoves list of moves of tiles
+     * @param aiMove move of tiles
      * @param board gameboard
      * @return updated gameboard
      */
-    public static Tile[][] removeTilesFromRack(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] rack) {
-        if (aiMoves == null) {
+    public static Tile[][] removeTilesFromRack(ArrayList<Tile> aiMove, Tile[][] rack) {
+        if (aiMove == null) {
             return rack;
         }
 
         HashSet<Tile> tilesToRemove = new HashSet<>();
-        for (ArrayList<Tile> aiMove : aiMoves) {
-            tilesToRemove.addAll(aiMove);
-        }
+        tilesToRemove.addAll(aiMove);
 
         for (int i = 0; i < rack.length; i++) {
             for (int j = 0; j < rack[i].length; j++) {
@@ -290,19 +341,17 @@ public class MCTS {
 
     /**
      * removes tiles from the gameboard in memory.
-     * @param aiMoves list of moves of tiles
+     * @param aiMove move of tiles
      * @param board gameboard
      * @return updated gameboard
      */
-    public static Tile[][] removeTilesFromBoard(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] board) {
-        if (aiMoves == null) {
+    public static Tile[][] removeTilesFromBoard(ArrayList<Tile> aiMove, Tile[][] board) {
+        if (aiMove == null) {
             return board;
         }
 
         HashSet<Tile> tilesToRemove = new HashSet<>();
-        for (ArrayList<Tile> aiMove : aiMoves) {
-            tilesToRemove.addAll(aiMove);
-        }
+        tilesToRemove.addAll(aiMove);
         
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -313,6 +362,78 @@ public class MCTS {
         }
 
         return board;
+    }
+
+    public static void main(String[] args) {
+        
+        Tile n = null;
+        Tile j = new Tile((byte) -1, Color.RED);
+
+        Tile t4B = new Tile((byte) 4, Color.BLACK);
+        Tile t5B = new Tile((byte) 5, Color.BLACK);
+        Tile t6B = new Tile((byte) 6, Color.BLACK);
+        Tile t7B = new Tile((byte) 7, Color.BLACK);
+        Tile t8B = new Tile((byte) 8, Color.BLACK);
+        Tile t9B = new Tile((byte) 9, Color.BLACK);
+        Tile t10B = new Tile((byte) 10, Color.BLACK);
+        Tile t11B = new Tile((byte) 11, Color.BLACK);
+        Tile t12B = new Tile((byte) 12, Color.BLACK);
+        Tile t13B = new Tile((byte) 13, Color.BLACK);
+
+
+        Tile t9Bbis = new Tile((byte) 9, Color.BLACK);
+        
+        Tile[][]  board = {
+            {n, n, n,n, n, n, n, n, n, n, n, n, n, n, n}
+        };
+        
+        System.out.println(Game.printBoard(board));
+        Tile[][]  rack = {{n, n, n, t6B, n, n, t10B, n, n, n, n, n, n, n, n},
+                        {n, t4B, n, t12B, n, t11B, n, n, t5B, n, n, n, t13B, n, n}
+                        };
+
+        ArrayList<Node> pathToNode = findBestMove(board, rack);
+        
+        System.out.println("length of path " + pathToNode.size());
+        
+        String s = "";
+        for (Node node : pathToNode) {
+            s += node.getAgentUsed() + " with value : " + node.getValue() + " with move : " + BaselineAgent.printMove(node.getMove()) + "\n";
+        }
+        System.out.println(s);
+        /*
+        Node n1 = new Node(board, rack, 1, 0);
+        Node n2 = new Node(board, rack, 1, 2);
+        Node n3 = new Node(board, rack, 1, 3);
+        Node n4 = new Node(board, rack, 1, 6);
+        Node n5 = new Node(board, rack, 1, 1);
+        Node n6 = new Node(board, rack, 1, 10);
+        Node n7 = new Node(board, rack, 1, 9);
+
+        n1.addChild(n2);
+        n1.addChild(n3);
+        n1.addChild(n4);
+        n3.addChild(n5);
+        n3.addChild(n6);
+        n6.addChild(n7);
+
+
+        System.out.println("n5 total value is " + n5.getTotalValue());
+        System.out.println("n7 total value is " + n7.getTotalValue());
+        Node node = findNodeWithMaxTotalValue(n1);
+        // System.out.println("value is " + node.getValue());
+        
+        ArrayList<Node> list = getPathToNode(node);
+        System.out.println("list size " + list.size());
+
+        String s = "";
+        for (Node nn : list) {
+
+            System.out.println(nn.getValue());
+            s += nn.getValue() + " ";
+        }
+        System.out.println(s);
+        */
     }
     
 }
