@@ -12,22 +12,18 @@ public class Node {
     private int visits;
     private ArrayList<Node> children;
     private ArrayList<Tile> move;
-    // private ArrayList<ArrayList<Tile>> moves;
     private Node parent;
-    boolean isLeafNode;
+    protected boolean isLeafNode;
 
     public Node(Tile[][] board, Tile[][] rack, int agentUsed, int valueOfNode) {
         this.board = board;
         this.rack = rack;
         this.children = new ArrayList<>();
         this.move = new ArrayList<>();
-        //this.moves = new ArrayList<ArrayList<Tile>>();
         this.parent = null;
         this.agentUsed = agentUsed;
         this.valueOfNode = valueOfNode;
         this.isLeafNode = false;
-
-        
     }
 
     public Tile[][] getBoard() {
@@ -84,7 +80,6 @@ public class Node {
         } else {
             this.totalValue = value;
         } 
-        // could have written : this.totalValue = value + (parent != null ? parent.getTotalValue() : 0);
     }
 
     public Node getParent() {
@@ -96,33 +91,9 @@ public class Node {
         child.parent = this;
         child.setTotalValue(child.getValue());
     }
-    
 
     public int getVisits() {
         return visits;
     }
-
-/*
- *  public boolean getIsLeafNode() {
-        return isLeafNode;
-    }
-    public ArrayList<Integer> getAgentsUsed(Node node) {
-        ArrayList<Integer> agentsUsed = new ArrayList<>();
-        
-        for (Node n : node.getChildren()) {
-            agentsUsed.add(n.getAgentUsed());
-        }
-
-        return agentsUsed;
-    }
-    
-    public ArrayList<ArrayList<Tile>> getMoves() {
-        return moves;
-    }
-
-    public void addToMoves(ArrayList<Tile> move) {
-        this.moves.add(move);
-    }
- */
 
 }
