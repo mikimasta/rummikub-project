@@ -6,6 +6,10 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * This class represents the main menu screen of the game.<br>
  * Extends the {@link Pane} class, allowing for use as a root node.
@@ -37,6 +41,19 @@ public class MainMenu extends Pane {
         HoverButton rules = new HoverButton("Rules");
         rules.setLayoutX(Rummikub.xCenter - 200);
         rules.setLayoutY(Rummikub.yCenter + 100);
+        rules.setOnAction(e -> {
+            try {
+                File pdfFile = new File("src/main/resources/RulesRummy.pdf");
+
+                if (pdfFile.exists()) {
+                    Desktop.getDesktop().open(pdfFile);
+                } else {
+                    System.out.println("Couldn't find the path");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
         // exit button
         HoverButton exit = new HoverButton("Quit");
