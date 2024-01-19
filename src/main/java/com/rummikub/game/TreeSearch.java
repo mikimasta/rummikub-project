@@ -21,11 +21,14 @@ public class TreeSearch {
             }
         }
         
-        Node maxTotalValueNode = findNodeWithMaxTotalValue(rootNode);
-        ArrayList<Node> pathToNode = getPathToNode(maxTotalValueNode);
+        // Node maxTotalValueNode = findNodeWithMaxTotalValue(rootNode);
+        // ArrayList<Node> pathToNode = getPathToNode(maxTotalValueNode);
+        Node maxTilesUsed = findNodeWithMinRackTiles(rootNode);
+        ArrayList<Node> pathToNode = getPathToNode(maxTilesUsed);
         return pathToNode;
     }
  
+
     private static void expandTree(Node parent, Tile[][] board, Tile[][] rack, int agentIndex) {
         if (!isRackEmpty(rack)) {
             Node newNode = new Node(board, rack, agentIndex, 0);
@@ -40,7 +43,8 @@ public class TreeSearch {
                 if (agentIndex == 2) { // splitting agent
                     move = BaselineAgent.nestedArrayListToArrayList(moves);
                 } else {
-                    move = getHighestScoringMove(moves, newNode);
+                    // move = getHighestScoringMove(moves, newNode);
+                    move = getBiggestMove(moves, newNode);
                 }
     
                 System.out.println("the move is : " + BaselineAgent.printMove(move));
@@ -69,6 +73,7 @@ public class TreeSearch {
         node.setBoard(newBoard);
         Tile[][] newHand = removeTilesFromRack(move, copyRack(rack));
         node.setRack(newHand);
+        node.setTilesInRack(Node.tilesInRack(newHand));
     }
     
     public static void logicForAgent2_3(Node node, ArrayList<Tile> move, Tile[][] board, Tile[][] rack) {
@@ -77,6 +82,7 @@ public class TreeSearch {
         node.setBoard(newBoard);
         Tile[][] newHand = removeTilesFromRack(move, copyRack(rack));
         node.setRack(newHand);
+        node.setTilesInRack(Node.tilesInRack(newHand));
     }
     
     private static Tile[][] copyBoard(Tile[][] board) {
@@ -126,6 +132,34 @@ public class TreeSearch {
             }
         }
         return count == size;
+    }
+
+    private static Node findNodeWithMinRackTiles(Node rootNode) {
+        if (rootNode == null) {
+            return null;
+        }
+
+        int minNumberOfTiles = Integer.MAX_VALUE;
+        Node nodeWithMinTiles = null;
+
+        Stack<Node> stack = new Stack<>();
+        stack.push(rootNode);
+
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+
+            if (node.getTilesInRack() < minNumberOfTiles) {
+                minNumberOfTiles = node.getTilesInRack();
+                nodeWithMinTiles = node;
+            }
+
+            for (Node child : node.getChildren()) { // push children onto the stack 
+                stack.push(child);
+            }
+        }
+
+        System.out.println("Node with smallest amount of Tiles in rack : " + nodeWithMinTiles.getTilesInRack());
+        return nodeWithMinTiles;
     }
 
     /**
@@ -178,6 +212,20 @@ public class TreeSearch {
         return path;
     }
 
+    public static ArrayList<Tile> getBiggestMove(ArrayList<ArrayList<Tile>> moves, Node node) {
+        int biggestSizeMove = Integer.MIN_VALUE;
+        ArrayList<Tile> biggestMove = new ArrayList<>();
+
+        for (ArrayList<Tile> move : moves) {
+            if (move.size() > biggestSizeMove) {
+                biggestSizeMove = move.size();
+                biggestMove = move;
+            }
+        }
+
+        return biggestMove;
+    }
+
     public static ArrayList<Tile> getHighestScoringMove(ArrayList<ArrayList<Tile>> moves, Node node) {
         int biggestValue = Integer.MIN_VALUE;
         ArrayList<Tile> biggestMove = new ArrayList<>();
@@ -186,12 +234,10 @@ public class TreeSearch {
             int valueOfMove = getValueOfMove(node.getParent().getBoard(), node.getBoard());
             if (valueOfMove >  biggestValue) {
                 biggestValue = valueOfMove;
-                node.setMove(move);
-                node.setValue(biggestValue);
-                node.setTotalValue(biggestValue);
                 biggestMove = move;
             }
         }
+
         return biggestMove;
     }
 
@@ -361,10 +407,10 @@ public class TreeSearch {
         ArrayList<Node> pathToNode = findBestMove(board, rack);
         
         System.out.println("length of path : " + pathToNode.size());
-        
+        System.out.println();
         String s = "";
         for (Node node : pathToNode) {
-            s += node.getAgentUsed() + " with value : " + node.getValue() + " with move : " + BaselineAgent.printMove(node.getMove()) + "\n";
+            s += node.getAgentUsed() + " with value : " + node.getValue() +  " still " + node.getTilesInRack() + " with move : " + BaselineAgent.printMove(node.getMove()) + "\n";
         }
         System.out.println(s);
         /*

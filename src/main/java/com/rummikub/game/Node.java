@@ -9,7 +9,7 @@ public class Node {
     private int valueOfNode;
     private int totalValue;
     private int agentUsed;
-    private int visits;
+    private int tilesInRack;
     private ArrayList<Node> children;
     private ArrayList<Tile> move;
     private Node parent;
@@ -24,6 +24,7 @@ public class Node {
         this.agentUsed = agentUsed;
         this.valueOfNode = valueOfNode;
         this.isLeafNode = false;
+        this.tilesInRack = tilesInRack(rack);
     }
 
     public Tile[][] getBoard() {
@@ -82,6 +83,14 @@ public class Node {
         } 
     }
 
+    public int getTilesInRack() {
+        return tilesInRack;
+    }
+
+    public void setTilesInRack(int tilesInRack) {
+        this.tilesInRack = tilesInRack;
+    }
+
     public Node getParent() {
         return parent;
     }
@@ -92,8 +101,17 @@ public class Node {
         child.setTotalValue(child.getValue());
     }
 
-    public int getVisits() {
-        return visits;
-    }
+    
+    public static int tilesInRack(Tile[][] rack) {
+        int count = 0;
 
+        for (int i = 0; i < rack.length; i++) {
+            for (int y = 0; y < rack[i].length; y++) {
+                if (rack[i][y] != null) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
