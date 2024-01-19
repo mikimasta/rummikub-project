@@ -26,15 +26,16 @@ public class Game {
 
     public static byte NUM_OF_PLAYERS;
     public static boolean isAIGame;
+    public static byte GAME_MODE;
 
     public static Game getInstance() {
         if (instance == null)
-            instance = new Game(NUM_OF_PLAYERS, isAIGame);
+            instance = new Game(NUM_OF_PLAYERS, isAIGame, GAME_MODE);
         return instance;
     }
-     public static Game getInstance(byte numPlayers, boolean gameAI) {
+     public static Game getInstance(byte numPlayers, boolean gameAI, byte GAME_MODE) {
         if (instance == null)
-            instance = new Game(numPlayers, gameAI);
+            instance = new Game(numPlayers, gameAI, GAME_MODE);
         return instance;
     }
 
@@ -53,23 +54,34 @@ public class Game {
      * @param numPlayers number of players for the game
      * @param isAIGame if a game is ai
      */
-    Game(byte numPlayers, boolean isAIGame) {
+    Game(byte numPlayers, boolean isAIGame, byte gameMode) {
 
         if (numPlayers > 4 || numPlayers < 2)
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
 
-        Game.isAIGame = isAIGame;  
+        Game.isAIGame = isAIGame;
+        Game.GAME_MODE = gameMode;
+
+        System.out.println("the isai " + isAIGame);
+        System.out.println("the game mode is " + gameMode);
 
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {
                 //board[row][col] = new Tile("lol", (byte) 0);
             }
         }
+
         boolean isAnAI = true;
+        if (gameMode == 1) {
+            isAnAI = false;
+        }
+
         players = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
             players.add(new Player("Player " + i, isAnAI));
-            //isAnAI = false;
+            if (gameMode != 3) {
+                isAnAI = false;
+            }
         }
 
         byte firstPlayer = (byte) (0 + (byte) (Math.random() * numPlayers - 1));
@@ -512,7 +524,7 @@ public class Game {
 
         Tile[][]  rack = {{n, n, n, n, j, n, n, n, n, n, n, n, n, n, n}};
 
-        Game test = new Game((byte) 3, false);
+        Game test = new Game((byte) 3, false, (byte)1);
         System.out.println(test.isValidBoard(board));
     }
 }
