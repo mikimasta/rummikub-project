@@ -62,9 +62,6 @@ public class Game {
         Game.isAIGame = isAIGame;
         Game.GAME_MODE = gameMode;
 
-        System.out.println("the isai " + isAIGame);
-        System.out.println("the game mode is " + gameMode);
-
         for (int row = 0; row < GRID_ROWS; ++row) {
             for (int col = 0; col < GRID_COLS; ++col) {
                 //board[row][col] = new Tile("lol", (byte) 0);
@@ -107,7 +104,7 @@ public class Game {
                 }
             }
         }
-        // the interger 0 will be used in regard to a joker
+        // the interger -1 will be used in regard to a joker
         // two jokers are added into our game
         // pool.add(new Tile((byte) -1, Color.RED));
         // pool.add(new Tile((byte) -1, Color.BLACK));
@@ -317,13 +314,28 @@ public class Game {
 
 
     public boolean isGameOver() {
-         for (Player player : players) {
-            if (player.getHand() == null) {
-                System.out.println("game is over");
+        for (Player player : players) {
+            Tile[][] playersRack = player.getHand();
+            boolean isRackEmpty = true;
+    
+            for (int i = 0; i < playersRack.length; i++) {
+                for (int j = 0; j < playersRack[i].length; j++) {
+                    if (playersRack[i][j] != null) {
+                        isRackEmpty = false;
+                        break;
+                    }
+                }
+                if (!isRackEmpty) {
+                    break;
+                }
+            }
+            if (isRackEmpty) {
+                System.out.println("Player " + player.getName() + " has an empty rack");
                 return true;
             }
         }
-       return false;
+    
+        return false;
     }
 
 
@@ -334,7 +346,6 @@ public class Game {
             currentPlayer = players.get(0);
         }
     }
-
 
 
     public static String printBoard(Tile[][] board) {
@@ -505,6 +516,8 @@ public class Game {
         }
         return -count;
     }
+
+    
     public static Tile[][] hand2ArrayList(ArrayList<Tile> hand){
         Tile[][] matrix = new Tile[2][15];
 
@@ -590,26 +603,5 @@ public class Game {
         return allSets;
 
     }
-
-
-    public static void main(String[] args) {
-
-        Tile n = null;
-        Tile j = new Tile((byte) -1, Color.RED);
-
-        Tile t9B = new Tile((byte) 9, Color.BLACK);
-        Tile t10B = new Tile((byte) 10, Color.BLACK);
-        Tile t11B = new Tile((byte) 11, Color.BLACK);
-        Tile t12Bl = new Tile((byte) 12, Color.BLUE);
-        Tile t13B = new Tile((byte) 13, Color.BLACK);
-        
-        Tile[][]  board = {
-            {n, n, n,n, n, n, j, t9B, t10B, t11B, t12Bl, n, n, n, n}
-        };
-
-        Tile[][]  rack = {{n, n, n, n, j, n, n, n, n, n, n, n, n, n, n}};
-
-        Game test = new Game((byte) 3, false, (byte)1);
-        System.out.println(test.isValidBoard(board));
-    }
+ 
 }
