@@ -56,7 +56,7 @@ public class Tile implements Comparable, Cloneable {
 
     @Override
     public String toString() {
-        return "Tile" + number + colorString;
+        return number + colorString;
         //return " " + number;
     }
 

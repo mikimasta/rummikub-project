@@ -120,14 +120,15 @@ public class MoveGenerator {
 
             }
 
-            tileOccurrences.put(tile, tileCount);
+            this.tileOccurrences.put(tile, tileCount);
 
-            if (tileGroup.size() >= 3)
+            if (tileGroup.size() >= 3) {
                 potentialGroups.add(tileGroup);
+            }
 
             if (tileRun.size() >= 3) {
-                ArrayList<ArrayList<Tile>> decomposedRun = decompose(tileRun);
-                potentialRuns.addAll(decomposedRun);
+
+                potentialRuns.addAll(decomposeRun(tileRun));
             }
 
 
@@ -139,39 +140,81 @@ public class MoveGenerator {
     boolean sameTile(Tile t1, Tile t2) {
         return (t1.getNumber() == t2.getNumber()) && (t1.getColor() == t2.getColor());
     }
-    void generateAllRuns() {
-        for (Tile tile : potentialSets.keySet()) {
 
 
-
-        }
-    }
-
-    ArrayList<ArrayList<Tile>> decompose(ArrayList<Tile> run) {
+    ArrayList<ArrayList<Tile>> decomposeRun(ArrayList<Tile> run) {
 
         int size = run.size();
-
-
         ArrayList<ArrayList<Tile>> decomposedRun = new ArrayList<>();
 
-        while (size >= 3) {
+        if (size > 3) {
 
-            ArrayList<Tile> partialRun = new ArrayList<>();
+            while (size >= 3) {
 
-            for (int i = 0; i <= size - 1; i++) {
-                partialRun.add(run.get(i));
+                ArrayList<Tile> partialRun = new ArrayList<>();
+
+                for (int i = 0; i <= size - 1; i++) {
+                    partialRun.add(run.get(i));
+                }
+
+                size--;
+
+                decomposedRun.add(partialRun);
+
             }
-
-            size--;
-
-            decomposedRun.add(partialRun);
-
+        } else {
+            decomposedRun.add(run);
         }
 
         return decomposedRun;
 
     }
 
+    ArrayList<ArrayList<Tile>> decomposeGroup(ArrayList<Tile> group) {
+
+        int size = group.size();
+
+
+        ArrayList<ArrayList<Tile>> decomposedGroup = new ArrayList<>();
+
+        if (size > 3) {
+
+            for (int i = 0; i < 4; i++) {
+
+                ArrayList<Tile> partialGroup = new ArrayList<>();
+
+                switch (i) {
+                    case 0:
+                        partialGroup.add(group.get(0));
+                        partialGroup.add(group.get(1));
+                        partialGroup.add(group.get(2));
+                        break;
+                    case 1:
+                        partialGroup.add(group.get(1));
+                        partialGroup.add(group.get(2));
+                        partialGroup.add(group.get(3));
+                        break;
+                    case 2:
+                        partialGroup.add(group.get(0));
+                        partialGroup.add(group.get(2));
+                        partialGroup.add(group.get(3));
+                        break;
+                    case 3:
+                        partialGroup.add(group.get(0));
+                        partialGroup.add(group.get(1));
+                        partialGroup.add(group.get(3));
+                        break;
+                }
+
+                decomposedGroup.add(partialGroup);
+            }
+
+        } else {
+            decomposedGroup.add(group);
+        }
+
+        return decomposedGroup;
+    }
 
     private boolean isUniqueColor(ArrayList<Tile> tileGroup, Tile tileToAdd) {
         for (Tile tile : tileGroup)  {
@@ -203,6 +246,35 @@ public class MoveGenerator {
         return true;
     }
 
+    void filterGroupsAndRuns() {
+
+        ArrayList<Tile> tilesToIgnore = new ArrayList<>();
+
+        for (Tile t : this.potentialSets.keySet()) {
+
+            this.validSets.addAll(this.potentialSets.get(t).get(Type.RUNS));
+
+
+            if (!tilesToIgnore.contains(t)) {
+
+                try {
+                    ArrayList<Tile> group = this.potentialSets.get(t).get(Type.GROUPS).get(0);
+
+                    for (int i = 1; i < group.size(); i++) {
+                        tilesToIgnore.add(group.get(i));
+                    }
+
+                    ArrayList<ArrayList<Tile>> decomposedGroup = decomposeGroup(group);
+                    this.validSets.addAll(decomposedGroup);
+
+
+                } catch (IndexOutOfBoundsException ex) {
+                    continue;
+                }
+            }
+        }
+    }
+
 
 
     public static void main(String[] args) {
@@ -224,6 +296,7 @@ public class MoveGenerator {
         Tile tz = new Tile((byte) 13, Color.BLACK);
 
 
+
         Tile t13 = new Tile((byte) 1, Color.BLUE);
         Tile t14 = new Tile((byte) 3, Color.BLACK);
         Tile t15 = new Tile((byte) 5, Color.BLACK);
@@ -241,12 +314,18 @@ public class MoveGenerator {
             System.out.printf("Tile %d %s : %s\n", t.getNumber(), t.getColorString(), MoveGenerator.getInstance().potentialSets.get(t));
         }
 
-        System.out.println(gen.tileOccurrences);
         System.out.println("-------");
 
         for (Tile t : MoveGenerator.getInstance().potentialSets.keySet()) {
             System.out.printf("Tile %d %s : %d\n", t.getNumber(), t.getColorString(), gen.tileOccurrences.get(t));
         }
+
+        System.out.println("-------------");
+        gen.filterGroupsAndRuns();
+
+        System.out.println("VALID SETS:");
+        System.out.println(gen.validSets);
+        //System.out.println(gen.validSets.size());
     }
 
 
