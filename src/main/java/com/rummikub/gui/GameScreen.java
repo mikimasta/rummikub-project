@@ -84,7 +84,7 @@ class GameScreen extends Pane {
             if (gameboard.stateNotChanged()) {
 
                 Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
-                if(Game.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()).isEmpty()){
+                if(Game.getInstance().isGameOver()){
                     Rummikub.gameWindow.getScene().setRoot(new EndGameScreen(Game.getInstance().currentPlayer.getName()));
                 }
                 finishMove();
@@ -120,7 +120,10 @@ class GameScreen extends Pane {
     }
 
     void finishMove() {
-
+        
+        if(Game.getInstance().isGameOver()){
+            Rummikub.gameWindow.getScene().setRoot(new EndGameScreen(Game.getInstance().currentPlayer.getName()));
+        }
         GameboardGUI.getInstance().setPrevState();
         GameboardGUI.getInstance().lockTiles();
         Game.getInstance().nextPlayer();
