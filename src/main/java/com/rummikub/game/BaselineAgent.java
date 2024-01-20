@@ -302,48 +302,34 @@ public class BaselineAgent {
         }
         return sum;
     }
-    public static void main(String[] args) {
+    public static boolean isGameOver2(Tile[][] rack) {
+        if (rack == null) {
+            System.out.println("game is over");
+            return true;
+        }
+        System.out.println("le rack est  bon");
+   return false;
+}
+ public static void main(String[] args) {
 
-        Tile n = null;
-        Tile j = new Tile((byte) -1, Color.RED);
-        Tile t11R = new Tile((byte) 7, Color.RED);
-        Tile t12R = new Tile((byte) 8, Color.RED);
-        Tile t13R = new Tile((byte) 9, Color.RED);
-        Tile t1R = new Tile((byte) 10, Color.RED);
+     Tile n = null;
+     Tile j = new Tile((byte) -1, Color.RED);
 
-        Tile t10O = new Tile((byte) 10, Color.ORANGE);
-        Tile t10B = new Tile((byte) 10, Color.BLUE);
-        Tile t10R = new Tile((byte) 10, Color.BLACK);
+     Tile t9B = new Tile((byte) 9, Color.BLACK);
+     Tile t10B = new Tile((byte) 10, Color.BLACK);
+     Tile t11B = new Tile((byte) 11, Color.BLACK);
+     Tile t12Bl = new Tile((byte) 12, Color.BLUE);
+     Tile t13B = new Tile((byte) 13, Color.BLACK);
+     
+     Tile[][]  board = {
+         {n, n, n,n, n, n, j, t9B, t10B, t11B, t12Bl, n, n, n, n}
+     };
 
-        Tile t4R = new Tile((byte) 4, Color.RED);
-        Tile t7R = new Tile((byte) 7, Color.RED);
+     Tile[][]  rack = {{n, n, n, n, n, n, n, n, n, n, n, n, n, n, n}};
 
-        // Tile[][]  rack = {{t4R, n, t10R, n, n, t7R, n, t10O, n, t11R, t13R, t12R, j, t10B, n}};
-
-        // 8 8 8 and 6 - 7 - 8
-        Tile t8R = new Tile((byte) 8, Color.RED);
-        Tile t8B = new Tile((byte) 8, Color.BLUE);
-        Tile t8O = new Tile((byte) 8, Color.ORANGE);
-        Tile t9R = new Tile((byte) 9, Color.RED);
-        
-        Tile[][]  rack = {{t8R, n, t8B, n, t8O, t7R, n, t10O, n, t9R, t13R, t12R, n, t10B, n}};
-        System.out.println("the rack");
-        System.out.println(Game.printBoard(rack));
-        baselineAgent(rack);
-        System.out.println("le final");
-        System.out.println(printMoves(baselineAgent(rack)));
-
-        Tile t5R = new Tile((byte) 5, Color.RED);
-        Tile t6R = new Tile((byte) 6, Color.RED);
-
-        Tile t2O = new Tile((byte) 2, Color.ORANGE);
-        Tile t2B = new Tile((byte) 2, Color.BLUE);
-        Tile t2R = new Tile((byte) 2, Color.RED);
-        Tile[][]  board = {{n, t5R, t6R, t7R, n, n, n, t2O, t2B, t2R, n, n, n, n, n}};
-
-        possibleMoveAddingRackToBoard(rack, board);
-
-    }
+     Game test = new Game((byte) 3, false, (byte)1);
+     System.out.println(" game is Over " + isGameOver2(rack));
+ }
 
     /*
      *  
