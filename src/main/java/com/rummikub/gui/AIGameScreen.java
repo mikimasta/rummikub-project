@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-class AIGameScreen extends Pane {
+public class AIGameScreen extends Pane {
 
     RackGUI rack;
     GameboardGUI gameboard;
@@ -134,7 +134,9 @@ class AIGameScreen extends Pane {
 
     void finishMove() {
 
-        Game.getInstance().isGameOver();
+        if(Game.getInstance().isGameOver()){
+            Rummikub.gameWindow.getScene().setRoot(new EndGameScreen(Game.getInstance().currentPlayer.getName()));
+        }
         GameboardGUI.getInstance().setPrevState();
         GameboardGUI.getInstance().lockTiles();
         Game.getInstance().nextPlayer();
@@ -200,7 +202,9 @@ class AIGameScreen extends Pane {
 
     void finishAIMove() {
 
-        Game.getInstance().isGameOver();
+        if(Game.getInstance().isGameOver()){
+            Rummikub.gameWindow.getScene().setRoot(new EndGameScreen(Game.getInstance().currentPlayer.getName()));
+        }
         GameboardGUI.getInstance().setState(GameboardGUI.getInstance().getState());
         GameboardGUI.getInstance().lockTiles();
 
@@ -234,7 +238,7 @@ class AIGameScreen extends Pane {
      * @param board gameboard
      * @return updated gameboard
      */
-    private Tile[][] makeAIMoves(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] board) {
+    public static Tile[][] makeAIMoves(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] board) {
         if (aiMoves == null) {
             return board;
         }
