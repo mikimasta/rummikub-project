@@ -22,4 +22,5 @@ abstract class Images {
     static final Image rummyCenter = new Image("/rummikubCenter.jpg");
     static final Image sun = new Image("/sun.png");
     static final Image volumen = new Image("/volumen.png");
+    static final Image endScreen = new Image("/endScreen.png");
 } 
