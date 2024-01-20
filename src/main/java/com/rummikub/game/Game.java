@@ -421,7 +421,7 @@ public class Game {
 
     /**
      * sorting method to order tiles by groups
-     * @param player 2D array representing the rack of the player
+     * @param rack 2D array representing the rack of the player
      * @return the ordered by groups tiles of the player
      */
     public static Tile[][] orderRackByGroup(Tile[][] rack) {

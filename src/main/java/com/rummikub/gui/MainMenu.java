@@ -23,9 +23,13 @@ public class MainMenu extends Pane {
 
         // start button
         //
-        HoverButton start = new HoverButton("Start");
-        start.setLayoutX(Rummikub.xCenter - 200);
-        start.setLayoutY(Rummikub.yCenter - 50);
+        ImageView startImage = new ImageView(Images.start);
+        startImage.setFitWidth(300);
+        startImage.setFitHeight(150);
+        HoverButton start = new HoverButton("");
+        start.setGraphic(startImage);
+        start.setLayoutX(Rummikub.xCenter - 350);
+        start.setLayoutY(Rummikub.yCenter);
         start.setOnAction(e -> {
 
             Rummikub.gameWindow.getScene().setRoot(new ModeSelection());
@@ -33,14 +37,27 @@ public class MainMenu extends Pane {
         });
         
         // settings button
-        HoverButton settings = new HoverButton("Settings");
-        settings.setLayoutX(Rummikub.xCenter - 200);
-        settings.setLayoutY(Rummikub.yCenter + 25);
+        ImageView settingsImage = new ImageView(Images.settings);
+        settingsImage.setFitWidth(300);
+        settingsImage.setFitHeight(150);
+        HoverButton settings = new HoverButton("");
+        settings.setGraphic(settingsImage);
+        settings.setLayoutX(Rummikub.xCenter - 750);
+        settings.setLayoutY(Rummikub.yCenter);
+        settings.setOnAction(e -> {
+
+            Rummikub.gameWindow.getScene().setRoot(new SettingsPane());
+
+        });
         
         // rules button
-        HoverButton rules = new HoverButton("Rules");
-        rules.setLayoutX(Rummikub.xCenter - 200);
-        rules.setLayoutY(Rummikub.yCenter + 100);
+        ImageView rulesImage = new ImageView(Images.rules);
+        rulesImage.setFitWidth(300);
+        rulesImage.setFitHeight(150);
+        HoverButton rules = new HoverButton("");
+        rules.setGraphic(rulesImage);
+        rules.setLayoutX(Rummikub.xCenter + 50);
+        rules.setLayoutY(Rummikub.yCenter);
         rules.setOnAction(e -> {
             try {
                 File pdfFile = new File("src/main/resources/RulesRummy.pdf");
@@ -56,9 +73,13 @@ public class MainMenu extends Pane {
         });
 
         // exit button
-        HoverButton exit = new HoverButton("Quit");
-        exit.setLayoutX(Rummikub.xCenter - 200);
-        exit.setLayoutY(Rummikub.yCenter + 175);
+        ImageView quitImage = new ImageView(Images.quit);
+        quitImage.setFitWidth(300);
+        quitImage.setFitHeight(150);
+        HoverButton exit = new HoverButton("");
+        exit.setGraphic(quitImage);
+        exit.setLayoutX(Rummikub.xCenter + 450);
+        exit.setLayoutY(Rummikub.yCenter );
         exit.setOnAction(e -> {
             System.exit(0);
         });
@@ -67,11 +88,11 @@ public class MainMenu extends Pane {
         setBackground(new Background(new BackgroundFill(Color.web("#4A6B3C"), null, null)));
         getStylesheets().add("styling.css");
 
-        ImageView rummikubLogoIV = new ImageView(Images.rummikubLogo);
-        rummikubLogoIV.setX(400);
+        ImageView rummikubLogoIV = new ImageView(Images.rummyCenter);
+        rummikubLogoIV.setX(460);
         rummikubLogoIV.setY(100);
         rummikubLogoIV.setPreserveRatio(true);
-        rummikubLogoIV.setFitWidth(600);
+        rummikubLogoIV.setFitWidth(1000);
 
         getChildren().addAll(rummikubLogoIV, start, settings, exit, rules);
 
