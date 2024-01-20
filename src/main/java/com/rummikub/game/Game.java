@@ -109,8 +109,8 @@ public class Game {
         }
         // the interger 0 will be used in regard to a joker
         // two jokers are added into our game
-        pool.add(new Tile((byte) -1, Color.RED));
-        pool.add(new Tile((byte) -1, Color.BLACK));
+        // pool.add(new Tile((byte) -1, Color.RED));
+        // pool.add(new Tile((byte) -1, Color.BLACK));
 
         Collections.shuffle(pool);
     }

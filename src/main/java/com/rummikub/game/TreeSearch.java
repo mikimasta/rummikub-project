@@ -329,7 +329,7 @@ public class TreeSearch {
     /**
      * removes tiles used in the AI move from its rack 
      * @param aiMove move of tiles
-     * @param board gameboard
+     * @param rack players hand
      * @return updated gameboard
      */
     public static Tile[][] removeTilesFromRack(ArrayList<Tile> aiMove, Tile[][] rack) {
