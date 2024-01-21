@@ -75,6 +75,9 @@ public class MoveGenerator {
         tiles.addAll(handTiles);
 
         tiles = Utils.orderByStairs(tiles);
+
+        findPotentialSets();
+        filterGroupsAndRuns();
     }
 
     void findPotentialSets() {
@@ -178,7 +181,7 @@ public class MoveGenerator {
         ArrayList<ArrayList<Tile>> decomposedGroup = new ArrayList<>();
 
         if (size > 3) {
-
+            decomposedGroup.add(group);
             for (int i = 0; i < 4; i++) {
 
                 ArrayList<Tile> partialGroup = new ArrayList<>();
@@ -294,7 +297,21 @@ public class MoveGenerator {
         Tile tx = new Tile((byte) 11, Color.BLACK);
         Tile ty = new Tile((byte) 12, Color.BLACK);
         Tile tz = new Tile((byte) 13, Color.BLACK);
-
+        t1.lock();
+        t2.lock();
+        t3.lock();
+        t4.lock();
+        t5.lock();
+        t6.lock();
+        t7.lock();
+        t8.lock();
+        t9.lock();
+        t10.lock();
+        t11.lock();
+        t12.lock();
+        tx.lock();
+        ty.lock();
+        tz.lock();
 
 
         Tile t13 = new Tile((byte) 1, Color.BLUE);
@@ -305,7 +322,7 @@ public class MoveGenerator {
         Tile[][] testHand = {{t13, t14, t15, tx, ty, tz}};
 
         MoveGenerator.getInstance().load(testBoard, testHand);
-        MoveGenerator.getInstance().findPotentialSets();
+
 
         MoveGenerator gen = MoveGenerator.getInstance();
 
@@ -321,11 +338,11 @@ public class MoveGenerator {
         }
 
         System.out.println("-------------");
-        gen.filterGroupsAndRuns();
+
 
         System.out.println("VALID SETS:");
         System.out.println(gen.validSets);
-        //System.out.println(gen.validSets.size());
+        System.out.println(gen.validSets.size());
     }
 
 
