@@ -80,7 +80,7 @@ public class Game {
         for (int i = 1; i <= numPlayers; i++) {
             if(i==1){
                 type = AI1;
-            }if(i==1){
+            }if(i==2){
                 type = AI2;
             }
             players.add(new Player("Player " + i, isAnAI, type));

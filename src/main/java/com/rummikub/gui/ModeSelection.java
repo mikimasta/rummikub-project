@@ -90,7 +90,7 @@ class ModeSelection extends Pane {
             getChildren().add(AIcomboBox);
 
             ComboBox<String> AIcomboBoxType = new ComboBox<>(FXCollections.observableArrayList("Greedy", "MCTS+NN", "Tree Search"));
-            AIcomboBoxType.setValue("Greedy");
+            AIcomboBoxType.setValue("Select");
             AIcomboBoxType.setLayoutX(Rummikub.xCenter + 300);
             AIcomboBoxType.setLayoutY(Rummikub.yCenter + 70);
             getChildren().add(AIcomboBoxType);
@@ -99,7 +99,7 @@ class ModeSelection extends Pane {
                 if (AIcomboBoxType.getSelectionModel().getSelectedItem() == "Greedy") {
                     Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
                     Game.AI1type = 0;
-                    //Game.AI2type = -1;
+                    Game.AI2type = -1;
                     Game.GAME_MODE = 2;
                     if (!getChildren().contains(startAI))
                         getChildren().add(startAI);
@@ -107,12 +107,14 @@ class ModeSelection extends Pane {
                 if (AIcomboBoxType.getSelectionModel().getSelectedItem() == "MCTS+NN") {
                     Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
                     Game.AI1type = 1;
+                    Game.AI2type = -1;
                     Game.GAME_MODE = 2;
                     if (!getChildren().contains(startAI))
                         getChildren().add(startAI);
                 }if (AIcomboBoxType.getSelectionModel().getSelectedItem() == "Tree Search") {
                     Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
                     Game.AI1type = 2;
+                    Game.AI2type = -1;
                     Game.GAME_MODE = 2;
                     if (!getChildren().contains(startAI))
                         getChildren().add(startAI);
