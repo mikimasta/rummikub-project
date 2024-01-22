@@ -168,7 +168,7 @@ public class Game {
     }
 
     // check if given tile is either group or stairs, i.e. is it legal?
-    static boolean checkTile(ArrayList<Tile> set) {
+    public static boolean checkTile(ArrayList<Tile> set) {
         return checkIfGroup(set) || checkIfStairs(set);
     }
 
@@ -177,7 +177,7 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a group false otherwise
      */
-    static boolean checkIfGroup(ArrayList<Tile> set){
+    public static boolean checkIfGroup(ArrayList<Tile> set){
 
         // up to 4 tiles (thats how many colors there are)
         if (set.size() > 4) {
@@ -222,7 +222,7 @@ public class Game {
      * @param set set of tiles
      * @return true if the tiles form a run, false otherwise
      */
-    static boolean checkIfStairs(ArrayList<Tile> set){
+    public static boolean checkIfStairs(ArrayList<Tile> set){
 
         if (set.size() < 3) {
             return false;
