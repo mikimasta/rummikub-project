@@ -31,18 +31,18 @@ public class MoveGenerator {
     //      - but then what if all comes from hand, then # of locked tiles is 0 anyway
     //      - OR add all the lists regardless, then from the valid moves list just pick a random one and propagate the constraints (count the occurrences of a tile, if not enough then the move cannot be made)
     private ArrayList<Tile> tiles;
-    private ArrayList<ArrayList<Tile>> invalidSets;
+
     private ArrayList<ArrayList<Tile>> validSets;
 
-    private ArrayList<Tile> currentHand; //important!
+    private ArrayList<Tile> currentHand;
     enum Type {
         GROUPS,
         RUNS
     }
     private TreeMap<Tile, TreeMap<Type, ArrayList<ArrayList<Tile>>>> potentialSets;
+    private int lockedTiles;
     private TreeMap<Tile, Integer> tileOccurrences;
-
-    private TreeMap<Integer, ArrayList<ArrayList<Tile>>> permutations;
+    private ArrayList<ArrayList<ArrayList<Tile>>> solutions;
     private static MoveGenerator instance;
 
 
@@ -55,7 +55,6 @@ public class MoveGenerator {
 
     private MoveGenerator() {
         this.tiles = new ArrayList<>();
-        this.invalidSets = new ArrayList<>();
         this.validSets = new ArrayList<>();
     }
 
@@ -64,9 +63,9 @@ public class MoveGenerator {
         this.tiles = new ArrayList<>();
         this.potentialSets = new TreeMap<>();
         this.validSets = new ArrayList<>();
-        this.invalidSets = new ArrayList<>();
-        this.permutations = new TreeMap<>();
+        this.solutions = new ArrayList<>();
         this.currentHand = Utils.Array2DToArrayList(currentHand);
+        this.lockedTiles = 0;
 
         ArrayList<Tile> boardTiles = Utils.Array2DToArrayList(currentState);
         ArrayList<Tile> handTiles = Utils.Array2DToArrayList(currentHand);
@@ -75,6 +74,10 @@ public class MoveGenerator {
         tiles.addAll(handTiles);
 
         tiles = Utils.orderByStairs(tiles);
+
+        for (Tile t : tiles) {
+            if (t.isLocked()) this.lockedTiles++;
+        }
 
         findPotentialSets();
         filterGroupsAndRuns();
@@ -86,7 +89,6 @@ public class MoveGenerator {
         // TODO generate permutations of runs from each tile (only the lowest one of each color interests me)
         // TODO then filter out the groups so that we have no duplicates (1b1r1o and 1r1o1b are duplicates, 2b2r2o and 2b2r2o are not, basically if they come from the same tile)
         // TODO add all valid sets to the the list, then come up with a backtracking approach to find valid board configurations
-        // TODO basically done? u got this
         for (Tile tile : tiles) {
             TreeMap<Type, ArrayList<ArrayList<Tile>>> potentialSets = new TreeMap<>();
             ArrayList<ArrayList<Tile>> potentialGroups = new ArrayList<>();
@@ -279,6 +281,61 @@ public class MoveGenerator {
     }
 
 
+    void solve() {
+
+        for (ArrayList<Tile> set : this.validSets) {
+
+            ArrayList<ArrayList<Tile>> move = new ArrayList<>();
+            move.add(set);
+
+            for (ArrayList<Tile> setToAdd : this.validSets) {
+
+                if (safeToAdd(move, setToAdd)) {
+                    move.add(setToAdd);
+                }
+
+            }
+
+            if (isValidMove(move)) {
+                this.solutions.add(move);
+            }
+
+        }
+    }
+
+    private boolean isValidMove(ArrayList<ArrayList<Tile>> move) {
+
+        int lockedTiles = 0;
+
+        for (ArrayList<Tile> set : move) {
+            for (Tile t : set) {
+                if (t.isLocked()) lockedTiles++;
+            }
+        }
+
+        return lockedTiles == this.lockedTiles;
+    }
+
+    private boolean safeToAdd(ArrayList<ArrayList<Tile>> move, ArrayList<Tile> setToAdd) {
+
+        for (ArrayList<Tile> set : move) {
+            if (conflictingTiles(set, setToAdd)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean conflictingTiles(ArrayList<Tile> set, ArrayList<Tile> setToAdd) {
+
+        for (Tile t2 : setToAdd) {
+            if (set.contains(t2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
 
@@ -294,9 +351,7 @@ public class MoveGenerator {
         Tile t10 = new Tile((byte) 2, Color.BLACK);
         Tile t11 = new Tile((byte) 3, Color.BLACK);
         Tile t12 = new Tile((byte) 4, Color.BLACK);
-        Tile tx = new Tile((byte) 11, Color.BLACK);
-        Tile ty = new Tile((byte) 12, Color.BLACK);
-        Tile tz = new Tile((byte) 13, Color.BLACK);
+
         t1.lock();
         t2.lock();
         t3.lock();
@@ -309,9 +364,6 @@ public class MoveGenerator {
         t10.lock();
         t11.lock();
         t12.lock();
-        tx.lock();
-        ty.lock();
-        tz.lock();
 
 
         Tile t13 = new Tile((byte) 1, Color.BLUE);
@@ -319,7 +371,7 @@ public class MoveGenerator {
         Tile t15 = new Tile((byte) 5, Color.BLACK);
 
         Tile[][] testBoard = {{t1, t2, t3, t4}, {t5, t6, t7, t8}, {t9, t10, t11, t12}};
-        Tile[][] testHand = {{t13, t14, t15, tx, ty, tz}};
+        Tile[][] testHand = {{t13, t14, t15}};
 
         MoveGenerator.getInstance().load(testBoard, testHand);
 
@@ -343,6 +395,16 @@ public class MoveGenerator {
         System.out.println("VALID SETS:");
         System.out.println(gen.validSets);
         System.out.println(gen.validSets.size());
+
+        System.out.println("***********************************************");
+        gen.solve();
+        System.out.println(gen.solutions.size());
+        for (ArrayList<ArrayList<Tile>> board : gen.solutions) {
+            for (ArrayList<Tile> row : board) {
+                System.out.println(row);
+            }
+            System.out.println("---");
+        }
     }
 
 
