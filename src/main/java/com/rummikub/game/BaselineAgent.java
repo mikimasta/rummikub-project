@@ -5,7 +5,7 @@ import java.util.HashSet;
 import javafx.scene.paint.Color;
 
 public class BaselineAgent {
-    
+
     /**
      * takes the rack and tries to make moves based on the tiles in that rack
      * @param dupRack rack of tiles
@@ -14,13 +14,13 @@ public class BaselineAgent {
     public static ArrayList<ArrayList<Tile>> baselineAgent(Tile[][] dupRack){
         ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(TwodArrayToArrayList(dupRack)));
 
-        ArrayList<Tile> groups = new ArrayList<>(rack); 
+        ArrayList<Tile> groups = new ArrayList<>(rack);
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
 
-        ArrayList<Tile> runs = new ArrayList<>(rack); 
-        Game.orderRackByStairs(runs); 
+        ArrayList<Tile> runs = new ArrayList<>(rack);
+        Game.orderRackByStairs(runs);
 
-        ArrayList<Tile> move = new ArrayList<>(); 
+        ArrayList<Tile> move = new ArrayList<>();
         ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
 
@@ -30,7 +30,7 @@ public class BaselineAgent {
                 for (int j = 0; j < move_size; j++) {
                     move.add(groups.get(i + j));
                 }
-                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
                     listOfMoves.add(new ArrayList<>(move));
                 }
                 move.clear();
@@ -69,13 +69,13 @@ public class BaselineAgent {
         ArrayList<Tile> combined = new ArrayList<Tile>(new HashSet<Tile>(BaselineAgent.TwodArrayToArrayList(dupRack)));
         combined.addAll(BaselineAgent.TwodArrayToArrayList(board)); // arraylist combining rack and board tiles
 
-        ArrayList<Tile> groups = new ArrayList<>(combined); 
+        ArrayList<Tile> groups = new ArrayList<>(combined);
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
 
-        ArrayList<Tile> runs = new ArrayList<>(combined); 
+        ArrayList<Tile> runs = new ArrayList<>(combined);
         Game.orderRackByStairs(runs); // if joker it will be at the front
 
-        ArrayList<Tile> move = new ArrayList<>(); 
+        ArrayList<Tile> move = new ArrayList<>();
         ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<ArrayList<Tile>> finalMove = new ArrayList<ArrayList<Tile>>();
@@ -86,7 +86,7 @@ public class BaselineAgent {
                 for (int j = 0; j < move_size; j++) {
                     move.add(groups.get(i + j));
                 }
-                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
                     listOfMoves.add(new ArrayList<>(move));
                 }
                 move.clear();
@@ -121,7 +121,7 @@ public class BaselineAgent {
         } else {
             return null;
         }
-        
+
     }
 
     /**
@@ -146,7 +146,7 @@ public class BaselineAgent {
 
         return rack;
     }
-    
+
     /**
      * transforms a list of moves to an arraylist of moves with null tiles between each of them
      * @param listOfMoves list of moves
@@ -166,7 +166,7 @@ public class BaselineAgent {
             }
             return move;
         }
-        
+
     }
 
     /**
@@ -184,10 +184,10 @@ public class BaselineAgent {
                     largestMove = move;
                 }
             }
-            return largestMove;            
+            return largestMove;
         }
     }
-        
+
     /**
      * transforms a 2D array to an arraylist
      * @param arr 2D array
@@ -275,10 +275,10 @@ public class BaselineAgent {
 
         return notOverlappingMoves;
     }
-    
+
     /**
      * are two moves possible ? yes if they use distinct tiles
-     * @param runMove move of tiles forming runs 
+     * @param runMove move of tiles forming runs
      * @param groupMove move of tiles forming groups
      * @return true if two moves are possible
      */
@@ -308,21 +308,21 @@ public class BaselineAgent {
             return true;
         }
         System.out.println("le rack est  bon");
-   return false;
-}
+        return false;
+    }
 
 
     /*
-     *  
-     * 
+     *
+     *
      * @param dupRack players rack
      * @return moves that the player can play using the rack with jokers@   q
      */
-    /* 
+    /*
     public static ArrayList<ArrayList<Tile>> jokerBaselineAgent(Tile[][] dupRack) {
         ArrayList<Tile> rackk = new ArrayList<>(TwodArrayToArrayList(dupRack));
         ArrayList<Tile> jokers = new ArrayList<>();
-        
+
         for (int i = 0; i < rackk.size(); i++) {
             if (rackk.get(i).getNumber() == (byte) -1) {
                 jokers.add(rackk.get(i));
@@ -331,17 +331,17 @@ public class BaselineAgent {
 
         ArrayList<Tile> rack = new ArrayList<Tile>(new HashSet<Tile>(TwodArrayToArrayList(dupRack)));
         rack.removeAll(jokers); // remove all jokers
-        ArrayList<Tile> groups = new ArrayList<>(rack); 
+        ArrayList<Tile> groups = new ArrayList<>(rack);
         Game.orderRackByGroup(groups); // arraylist of ordered tiles by groups
 
-        ArrayList<Tile> runs = new ArrayList<>(rack); 
-        Game.orderRackByStairs(runs); 
+        ArrayList<Tile> runs = new ArrayList<>(rack);
+        Game.orderRackByStairs(runs);
 
-        ArrayList<Tile> move = new ArrayList<>(); 
+        ArrayList<Tile> move = new ArrayList<>();
         ArrayList<ArrayList<Tile>> listOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<ArrayList<Tile>> prevListOfMoves = new ArrayList<ArrayList<Tile>>();
         ArrayList<Tile> jokersCopy = new ArrayList<>(jokers);
-        
+
         if (jokers.size() > 0) {
             int move_size = 2;
             while (true) {
@@ -353,7 +353,7 @@ public class BaselineAgent {
                         move.add(groups.get(i + j));
                     }
                     move.add(jokers.get(0)); // add joker to set TODO problem here
-                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
                         printMove(move);
                         listOfMoves.add(new ArrayList<>(move));
                         jokers.remove(0);
@@ -390,7 +390,7 @@ public class BaselineAgent {
                     for (int j = 0; j < move_size; j++) {
                         move.add(groups.get(i + j));
                     }
-                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) { 
+                    if (Game.checkIfGroup(move) || Game.checkIfStairs(move)) {
                         printMove(move);
                         listOfMoves.add(new ArrayList<>(move));
                     }
@@ -416,8 +416,8 @@ public class BaselineAgent {
                 move_size++;
             }
             System.out.println(listOfMoves.size());
-        } 
-        
+        }
+
         return findNonOverlappingMoves(listOfMoves);
     }
      */

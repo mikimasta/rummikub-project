@@ -6,8 +6,6 @@ import javafx.scene.image.Image;
  * abstract class containing images we use
  */
 abstract class Images {
-
-
     static final Image rummikubLogo = new Image("/logo.png");
     static final Image tileFace = new Image("/tileFace.png");
     static final Image tileBack= new Image("/tileBack.png");

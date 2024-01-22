@@ -2,10 +2,8 @@ package com.rummikub.game;
 
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+
 
 /**
  * This class is a memory representation of the game state. It executes and
@@ -17,6 +15,7 @@ public class Game {
     private List<Player> players;
     private List<Tile> pool;
     public Player currentPlayer;
+    
 
     private static Game instance;
 
@@ -50,6 +49,8 @@ public class Game {
         return players;
     }
 
+   
+
     /**
      * constructs a Game instance with a given number of player. <br>
      * creates the board, the pool and initializes and deals tiles.
@@ -57,6 +58,7 @@ public class Game {
      * @param numPlayers number of players for the game
      * @param isAIGame if a game is ai
      */
+
     Game(byte numPlayers, boolean isAIGame, byte gameMode, byte AI1, byte AI2) {
 
         if (numPlayers > 4 || numPlayers < 2)
@@ -412,57 +414,8 @@ public class Game {
         }
         return true;
     }
-    
-    /**
-     * sorting method to order tiles by runs
-     * @param rack 2D array representing the rack of the player
-     * @return the oredered by runs tiles of the player
-     */
-    public static Tile[][] orderRackByStairs(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
-        
-        //sort the arraylist
-        tileList.sort(Comparator.comparing(Tile::getNumber).thenComparing(Tile::getColorString));
 
-        // put jokers at the end of the list
-        tileList = positionOfJokers(tileList);
 
-        // add null tiles to the the set so that number of tiles in set 
-        // equals the number of tiles in arraylist
-        for (int i = tileList.size(); i < rack[0].length * 2; i++){
-            tileList.add(null);
-        }
-
-        BaselineAgent.arrayListToRack(tileList, rack);
-
-        return rack;
-    }
-
-    /**
-     * sorting method to order tiles by groups
-     * @param rack 2D array representing the rack of the player
-     * @return the ordered by groups tiles of the player
-     */
-    public static Tile[][] orderRackByGroup(Tile[][] rack) {
-        ArrayList<Tile> tileList = new ArrayList<>(BaselineAgent.TwodArrayToArrayList(rack));
-
-        //sort the arraylist
-        tileList.sort(Comparator.comparing(Tile::getColorString).thenComparing(Tile::getNumber));
-    
-        // put jokers at the end of the list
-        tileList = positionOfJokers(tileList);
-
-        // add null tiles to the the set so that number of tiles in set 
-        // equals the number of tiles in arraylist
-        for (int i = tileList.size(); i < rack[0].length * 2; i++){
-            tileList.add(null);
-        }
-
-        rack = BaselineAgent.arrayListToRack(tileList, rack);
-
-        return rack;
-    }
-    
     /**
      * sorting method to order tiles by groups
      * @param set rack of tiles of the player
@@ -524,7 +477,6 @@ public class Game {
         }
         return -count;
     }
-
     
     public static Tile[][] hand2ArrayList(ArrayList<Tile> hand){
         Tile[][] matrix = new Tile[2][15];
@@ -569,6 +521,7 @@ public class Game {
             colIndex++;
         }
         return matrix;
+
     }
 
     public static ArrayList<Tile> TwodArrayToArrayList(Tile[][] arr){
@@ -611,5 +564,5 @@ public class Game {
         return allSets;
 
     }
- 
+
 }

@@ -9,7 +9,9 @@ public class Player {
     private String name;
     private Tile[][] hand;
     private boolean isAI;
+
     byte aiType;
+
     public void setHand(Tile[][] hand) {
 
         this.hand = hand;
@@ -37,7 +39,9 @@ public class Player {
     public boolean isAI() {
         return isAI;
     }
+
     public int getAiType() {
+
         return aiType;
     }
     public void draw(Tile tile) {

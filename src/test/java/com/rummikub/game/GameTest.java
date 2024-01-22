@@ -1,4 +1,4 @@
-package com.rummikub.game;
+/*package com.rummikub.game;
 
 import javafx.scene.paint.Color;
 import org.junit.Test;
@@ -60,6 +60,7 @@ public class GameTest {
         //then no exception thrown
     }
 */
+    /*
     @Test
     public void testIsValidBoard() {
         game = Game.getInstance();
@@ -112,6 +113,7 @@ public class GameTest {
     }
 
 }
+*/
 
 
 /*

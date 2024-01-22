@@ -1,5 +1,6 @@
 package com.rummikub.game.MCTS;
 
+
 import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.SingleTileAgent;
 import com.rummikub.game.SplittingAgent;
@@ -87,7 +88,7 @@ public class Move {
        /**
      * removes tiles used in the AI move from its rack 
      * @param aiMoves list of moves of tiles
-     * @param board gameboard
+     * @param rack gameboard
      * @return updated gameboard
      */
     static Tile[][] removeTilesFromRack(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] rack) {

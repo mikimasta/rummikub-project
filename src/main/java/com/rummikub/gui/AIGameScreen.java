@@ -1,8 +1,9 @@
 package com.rummikub.gui;
 
-import com.rummikub.game.BaselineAgent;
-import com.rummikub.game.MCTS.MCTS;
+
+
 import com.rummikub.game.TreeSearchBaseline;
+import com.rummikub.Utils;
 import com.rummikub.game.Game;
 import com.rummikub.game.Node;
 import com.rummikub.game.SingleTileAgent;
@@ -15,6 +16,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -74,12 +76,12 @@ public class AIGameScreen extends Pane {
         rack.handToRack(Game.getInstance().currentPlayer.getHand());
 
         orderByStairs.setOnAction(e -> {
-            Game.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
+            Utils.orderRackByStairs(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
         
         orderByGroup.setOnAction(e -> {
-            Game.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
+            Utils.orderRackByGroup(Game.getInstance().currentPlayer.getHand());
             rack.handToRack(Game.getInstance().currentPlayer.getHand());
         });
 
@@ -114,7 +116,7 @@ public class AIGameScreen extends Pane {
             
             } else { // player is human
                 System.out.println("player is human");
-                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) { 
+                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
                 } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){ 
@@ -163,37 +165,6 @@ public class AIGameScreen extends Pane {
         timer.resetTimer();
 
     }
-
-    
-    void AImoveAgents() {
-        /* 
-        aimove = BaselineAgent.possibleMoveAddingRackToBoard(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-        if (aimove != null && !aimove.isEmpty() && aimove.size() > 0){
-            System.out.println("Move with single tiles");
-            System.out.println(BaselineAgent.printMoves(aimove));
-            processAIMove(aimove);
-        }
-        */
-        ArrayList<ArrayList<Tile>> aimove = BaselineAgent.baselineAgent(Game.getInstance().currentPlayer.getHand());
-        if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
-            System.out.println("move with baseline agent");
-            System.out.println(BaselineAgent.printMoves(aimove));
-            processAIMove1(aimove);
-        } 
-        aimove = SingleTileAgent.singleTilemove(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-        if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-            System.out.println("Move with single tiles");
-            System.out.println(BaselineAgent.printMoves(aimove));
-            processAIMove2_3(aimove);
-        }
-        aimove = SplittingAgent.splittingMoves(Game.getInstance().currentPlayer.getHand(), GameboardGUI.getInstance().getState());
-        if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-            System.out.println("Move with splitting method");
-            System.out.println(BaselineAgent.printMoves(aimove));
-            processAIMove2_3(aimove);
-        }
-    }
-
     void processAIMove1(ArrayList<ArrayList<Tile>> aiMove) {
 
         makeAIMoves(aiMove, GameboardGUI.getInstance().getState());
