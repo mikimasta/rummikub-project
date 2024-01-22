@@ -10,10 +10,12 @@ import javafx.scene.paint.Color;
 
 
 public class MCTS {
-    private static int NUM_SIMULATIONS = 1000;
+    private static int NUM_SIMULATIONS = 100;
+    private static Node root;
 
     public static ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
-        Node root = new Node(stateBoard, stateHand);
+        root = new Node(stateBoard, stateHand);
+        root.updateScore(0);
         for(int i = 1; i <= NUM_SIMULATIONS; i++){
             System.out.println("Simulation number : " + i);
             Node node = select(root);
@@ -32,7 +34,7 @@ public class MCTS {
     private static Node select(Node node) {
        
     if (!node.getChildren().isEmpty()){
-            node = bestUCT(node);
+            return bestUCT(node);
     }
         return node;
 
@@ -40,6 +42,7 @@ public class MCTS {
 
     private static Node bestUCT(Node node) {
         double maxUCT = Double.MIN_VALUE;
+        Node bestNode = null;
 
         for (Node child : node.getChildren()) {
 
@@ -47,10 +50,10 @@ public class MCTS {
 
             if (uct > maxUCT) {
                 maxUCT = uct;
-                node = child;
+                bestNode = child;
             }
         }
-        return node;
+        return bestNode;
     }
     
     private static double UCT(Node child) {
@@ -134,37 +137,98 @@ public class MCTS {
 
     private static double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         int player = 0;
-        ArrayList<ArrayList<Tile>> initalBoard = new ArrayList<ArrayList<Tile>>();
-        initalBoard = stateBoard;
-        while((stateHand != null && opponentHand != null) && !pile.isEmpty() ){
+        ArrayList<ArrayList<Tile>> prevBoard = new ArrayList<ArrayList<Tile>>();
+
+        ArrayList<ArrayList<Tile>> board = new ArrayList<ArrayList<Tile>>();
+    
+        board = stateBoard;
+
+        int noMoveA = 0;
+        int noMoveB = 0;
+        // System.out.println("move being simulated:");
+        // System.out.println(stateBoard);
+        // System.out.println("hand being simulated:");
+        // System.out.println(stateHand);
+
+        long startTime = System.currentTimeMillis();
+        long elapsedTime = 0;
+        while(elapsedTime < 1){
+        if(!((stateHand.isEmpty() && opponentHand.isEmpty()) && !pile.isEmpty())){
             if(player == 0){
                 ArrayList<ArrayList<Tile>> move = Move.getMove(stateHand, stateBoard);
                 if(move != null){
-                stateBoard = move;
-                stateHand = getNewHand(initalBoard, stateBoard, stateHand);
+                prevBoard = board;
+                board = move;
+                stateHand = getNewHand(board, prevBoard, stateHand);
+                noMoveA = 0;
+
                 }
                 else{
-                    stateHand.add(pile.remove(0));
+                    if(pile.isEmpty()){
+                    stateHand.add(pile.remove(0));}
+                    noMoveA++;
                 }
                 player = 1;
             }
             else if(player == 1){
                 ArrayList<ArrayList<Tile>> move = Move.getMove(opponentHand, stateBoard);
                 if(move != null){
-                stateBoard = move;
-                opponentHand = getNewHand(initalBoard, stateBoard, opponentHand);
+                    prevBoard = board;
+                    board = move;
+                    opponentHand = getNewHand(board, prevBoard, opponentHand);
+                    noMoveB = 0;
                 }
                 else{
-                    opponentHand.add(pile.remove(0));
+                    if(pile.isEmpty()){
+                    opponentHand.add(pile.remove(0));}
+                    noMoveB++;
                 }
                 player = 0;
             }
         }
+        long endTime = System.currentTimeMillis();
+        elapsedTime = endTime - startTime;
+    }
+        //System.out.println("Elapsed Time: " + elapsedTime + " milliseconds");
 
-         int handtally = tallyHand(stateHand);
-        return (100 - handtally)/100; 
+       double handtally = tallyHand(stateHand);
+       return (100 - handtally)/100; 
 
     }
+
+    // private static double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
+    //     int player = 0;
+    //     ArrayList<ArrayList<Tile>> initalBoard = new ArrayList<ArrayList<Tile>>();
+    //     initalBoard = stateBoard;
+    //     while((stateHand != null && opponentHand != null) && !pile.isEmpty() ){
+    //         if(player == 0){
+    //             ArrayList<ArrayList<Tile>> move = Move.getMove(stateHand, stateBoard);
+    //             if(move != null){
+    //             stateBoard = move;
+    //             stateHand = getNewHand(initalBoard, stateBoard, stateHand);
+    //             }
+    //             else{
+    //                 stateHand.add(pile.remove(0));
+    //             }
+    //             player = 1;
+    //         }
+    //         else if(player == 1){
+    //             ArrayList<ArrayList<Tile>> move = Move.getMove(opponentHand, stateBoard);
+    //             if(move != null){
+    //             stateBoard = move;
+    //             opponentHand = getNewHand(initalBoard, stateBoard, opponentHand);
+    //             }
+    //             else{
+    //                 opponentHand.add(pile.remove(0));
+    //             }
+    //             player = 0;
+    //         }
+    //     }
+
+    //      double handtally = tallyHand(stateHand);
+    //     return (100 - handtally)/100; 
+
+    // }
 
     private static int tallyHand(ArrayList<Tile> stateHand){
         int count = 0;
@@ -172,6 +236,14 @@ public class MCTS {
             count = count + tile.getNumber();
         }
         return count;
+    }
+
+    private static void lockBoard(ArrayList<ArrayList<Tile>> board){
+        for(ArrayList<Tile> set : board){
+            for(Tile tile: set){
+                tile.lock();
+            }
+        }
     }
 
     private double simulateNN(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){

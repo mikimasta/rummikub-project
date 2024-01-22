@@ -20,7 +20,7 @@ public class Move {
        
         ArrayList<ArrayList<Tile>> aimove = BaselineAgent.baselineAgent(rack);
         if (aimove != null && !aimove.isEmpty() && aimove.size() > 0) {
-            System.out.println("move with baseline agent");
+            //System.out.println("move with baseline agent");
            // System.out.println(BaselineAgent.printMoves(aimove));
             Tile[][] newHand = removeTilesFromRack(aimove, rack);
             RackGUI.getInstance().handToRack(newHand);
@@ -28,13 +28,13 @@ public class Move {
         } 
         aimove = SingleTileAgent.singleTilemove(rack,board);
         if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-            System.out.println("Move with single tiles");
-            System.out.println(BaselineAgent.printMoves(aimove));
+            //System.out.println("Move with single tiles");
+            //System.out.println(BaselineAgent.printMoves(aimove));
         }
         aimove = SplittingAgent.splittingMoves(rack, board);
         if (aimove != null && !aimove.isEmpty()) { // && aimove.size() > 0
-            System.out.println("Move with splitting method");
-            System.out.println(BaselineAgent.printMoves(aimove));
+            //System.out.println("Move with splitting method");
+            //System.out.println(BaselineAgent.printMoves(aimove));
         }
 
         return aimove;

@@ -256,15 +256,15 @@ public class SingleTileAgent {
         Tile[][]  board = {
             {n, n, n,n, n, n, j, t9B, t10B, t11B, n, n, n, n, n}
         };
-        System.out.println(Game.printBoard(board));
+        //System.out.println(Game.printBoard(board));
         Tile[][]  rack = {{n, t13B, n, n, t12Bl, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> singleTileMoves = singleTilemove(rack, board);
 
         if (singleTileMoves == null || singleTileMoves.isEmpty()) {
-            System.out.println("no move");
+           // System.out.println("no move");
         }else {
-            System.out.println(BaselineAgent.printMoves(singleTileMoves));
+            //System.out.println(BaselineAgent.printMoves(singleTileMoves));
         }
 
         

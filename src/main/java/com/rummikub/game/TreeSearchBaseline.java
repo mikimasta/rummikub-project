@@ -47,7 +47,7 @@ public class TreeSearchBaseline {
                     move = getBiggestMove(moves, newNode);
                 }
     
-                System.out.println("the move is : " + BaselineAgent.printMove(move));
+                //System.out.println("the move is : " + BaselineAgent.printMove(move));
                 newNode.setMove(move);
                 
                 if (agentIndex == 0) {
@@ -158,7 +158,7 @@ public class TreeSearchBaseline {
             }
         }
 
-        System.out.println("Node with smallest amount of Tiles in rack : " + nodeWithMinTiles.getTilesInRack());
+        //System.out.println("Node with smallest amount of Tiles in rack : " + nodeWithMinTiles.getTilesInRack());
         return nodeWithMinTiles;
     }
 
@@ -191,7 +191,7 @@ public class TreeSearchBaseline {
             }
         }
 
-        System.out.println("Max value is " + maxTotalValueNode.getTotalValue());
+        //System.out.println("Max value is " + maxTotalValueNode.getTotalValue());
         return maxTotalValueNode;
     }
     

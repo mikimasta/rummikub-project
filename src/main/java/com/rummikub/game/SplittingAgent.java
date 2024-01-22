@@ -42,8 +42,8 @@ public class SplittingAgent {
                         rack.removeAll(extendMove.get(0));
                         dupRack = BaselineAgent.arrayListToRack(rack, dupRack);
 
-                        System.out.println("Split is valid");
-                        System.out.println("Original move : " + BaselineAgent.printMove(move) + " split into : " + BaselineAgent.printMove(extendMove.get(0)) + " and : " + BaselineAgent.printMove(restOfMove));
+                        //System.out.println("Split is valid");
+                        //System.out.println("Original move : " + BaselineAgent.printMove(move) + " split into : " + BaselineAgent.printMove(extendMove.get(0)) + " and : " + BaselineAgent.printMove(restOfMove));
 
                         splitMove.add(extendMove.get(0));
                         splitMove.add(restOfMove); // add the rest of the original move to the splitMove
@@ -121,14 +121,14 @@ public class SplittingAgent {
             {n, n, n,n, n, t4B, t5B, j, t7B, t8B, n, n, n, n, n}
         };
         
-        System.out.println(Game.printBoard(board));
+       // System.out.println(Game.printBoard(board));
         Tile[][]  rack = {{n, n, n, t6B, n, n, n, n, n, n, n, n, n, n, n}};
 
         ArrayList<ArrayList<Tile>> splitMoves = splittingMoves(rack, board);
         if (splitMoves != null && !splitMoves.isEmpty()) {
-            System.out.println("The move split : " + BaselineAgent.printMoves(splitMoves));
+            //System.out.println("The move split : " + BaselineAgent.printMoves(splitMoves));
         }else {
-            System.out.println("no move");
+            //System.out.println("no move");
         }
         
 

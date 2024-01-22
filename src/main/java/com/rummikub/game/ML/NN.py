@@ -18,7 +18,7 @@ def trainNN():
     num_labels = 10;            # 10 labels, from 0 to 9   
 
     #Loading the data
-    mat = scipy.io.loadmat('/Users/milou/Desktop/ Machine Learning/Lab Six/Lab6_InitialCode/Initial code/digitdata.mat') #insert real data here
+    mat = scipy.io.loadmat('???') #insert real data here
     X = mat['X']
     y = mat['y']
     y = np.squeeze(y)

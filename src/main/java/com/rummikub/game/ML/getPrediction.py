@@ -3,7 +3,7 @@ import numpy as np
 
 def getPrediction(X):
 
-    trained_params = scipy.io.loadmat('/path/to/your/save/file/parameters.mat')
+    trained_params = scipy.io.loadmat('???')
     Theta1 = trained_params['Theta1']
     Theta2 = trained_params['Theta2']
 # Useful values
