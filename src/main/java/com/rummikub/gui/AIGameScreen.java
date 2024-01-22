@@ -1,12 +1,14 @@
 package com.rummikub.gui;
 
 import com.rummikub.game.BaselineAgent;
+import com.rummikub.game.MCTS.MCTS;
 import com.rummikub.game.TreeSearchBaseline;
 import com.rummikub.game.Game;
 import com.rummikub.game.Node;
 import com.rummikub.game.SingleTileAgent;
 import com.rummikub.game.SplittingAgent;
 import com.rummikub.game.Tile;
+import com.rummikub.game.MCTS.TreeSearchCollaborative;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -82,20 +84,36 @@ public class AIGameScreen extends Pane {
         });
 
         endTurn.setOnAction(e -> {
-            if (Game.getInstance().currentPlayer.isAI()) {
-                //AImoveAgents();
-                MCTS();
-                if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
-                    System.out.println("No move possible for computer. Drawing a tile...");
-                    Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
-                } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0){
-                    System.out.println("No more tiles in the pool");
-                } 
+            if (Game.getInstance().currentPlayer.isAI()) { //player is AI
+                if(Game.getInstance().currentPlayer.getAiType()==0) {
+                    Greedy();
+                    if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
+                        System.out.println("No move possible for computer. Drawing a tile...");
+                        Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0) {
+                        System.out.println("No more tiles in the pool");
+                    }
+                }if(Game.getInstance().currentPlayer.getAiType()==1){
+                    System.out.println("not implemented yet");
+                    System.exit(0);
+                    treeSearch();
+                    if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
+                        System.out.println("No move possible for computer. Drawing a tile...");
+                        Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
+                    } else if (Game.getInstance().getPoolSize(Game.getInstance().getPool()) == 0) {
+                        System.out.println("No more tiles in the pool");
+                    }
+                }if(Game.getInstance().currentPlayer.getAiType()==2){
+                    System.out.println("not implemented yet");
+                    System.exit(0);
+
+                }
 
             // System.out.println("the size of the pool is : " + Game.getInstance().getPoolSize(Game.getInstance().getPool()));
             finishMove();
             
             } else { // player is human
+                System.out.println("player is human");
                 if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) { 
                     Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
                     finishMove();
@@ -210,7 +228,7 @@ public class AIGameScreen extends Pane {
 
     }
 
-    void MCTS() {
+    void Greedy() {
 
         ArrayList<Node> MCTSList = TreeSearchBaseline.findBestMove(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
         MCTSList = removeDuplicateLists(MCTSList);
@@ -231,6 +249,18 @@ public class AIGameScreen extends Pane {
             }
         }
     }
+    void treeSearch() {
+        ArrayList<ArrayList<Tile>> finalBoard = TreeSearchCollaborative.treeSearch(Game.board2ArrayList(GameboardGUI.getInstance().getState()), Game.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()));
+        processAIMove2_3(finalBoard);
+    }
+
+    void MCTS(){
+        //ArrayList<ArrayList<Tile>> finalBoard = MCTS.mcts(Game.board2ArrayList(GameboardGUI.getInstance().getState()), Game.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()));
+        //processAIMove2_3(finalBoard);
+    }
+
+
+
 
     /**
      * updates the gameboard in memory by finding spaces on the board to place the AI moves
@@ -278,7 +308,7 @@ public class AIGameScreen extends Pane {
     /**
      * removes tiles used in the AI move from its rack 
      * @param aiMoves list of moves of tiles
-     * @param board gameboard
+     * @param rack gameboard
      * @return updated gameboard
      */
     private Tile[][] removeTilesFromRack(ArrayList<ArrayList<Tile>> aiMoves, Tile[][] rack) {

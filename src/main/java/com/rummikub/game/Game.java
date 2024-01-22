@@ -28,14 +28,17 @@ public class Game {
     public static boolean isAIGame;
     public static byte GAME_MODE;
 
+    public static byte AI1type;
+    public static byte AI2type;
+
     public static Game getInstance() {
         if (instance == null)
-            instance = new Game(NUM_OF_PLAYERS, isAIGame, GAME_MODE);
+            instance = new Game(NUM_OF_PLAYERS, isAIGame, GAME_MODE, AI1type, AI2type);
         return instance;
     }
-     public static Game getInstance(byte numPlayers, boolean gameAI, byte GAME_MODE) {
+     public static Game getInstance(byte numPlayers, boolean gameAI, byte GAME_MODE, byte AI1, byte AI2) {
         if (instance == null)
-            instance = new Game(numPlayers, gameAI, GAME_MODE);
+            instance = new Game(numPlayers, gameAI, GAME_MODE, AI1,AI2);
         return instance;
     }
 
@@ -54,7 +57,7 @@ public class Game {
      * @param numPlayers number of players for the game
      * @param isAIGame if a game is ai
      */
-    Game(byte numPlayers, boolean isAIGame, byte gameMode) {
+    Game(byte numPlayers, boolean isAIGame, byte gameMode, byte AI1, byte AI2) {
 
         if (numPlayers > 4 || numPlayers < 2)
             throw new IllegalArgumentException("A game can have a maximum of 4 players and a minimum of 2 players!");
@@ -72,10 +75,15 @@ public class Game {
         if (gameMode == 1) {
             isAnAI = false;
         }
-
+        byte type = -1;
         players = new ArrayList<>();
         for (int i = 1; i <= numPlayers; i++) {
-            players.add(new Player("Player " + i, isAnAI));
+            if(i==1){
+                type = AI1;
+            }if(i==1){
+                type = AI2;
+            }
+            players.add(new Player("Player " + i, isAnAI, type));
             if (gameMode != 3) {
                 isAnAI = false;
             }

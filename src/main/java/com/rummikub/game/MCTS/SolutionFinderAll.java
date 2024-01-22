@@ -24,7 +24,7 @@ public class SolutionFinderAll {
     }
 
     static ArrayList<ArrayList<Tile>> findSolution(ArrayList<Tile> initalHand, ArrayList<ArrayList<Tile>> initalBoard){
-        game = Game.getInstance((byte)2, false, (byte)1);        
+        //game = Game.getInstance((byte)2, false, (byte)0, (byte)0);
         hand = initalHand;
         allTilesBoard = new ArrayList<>();
         solutionPerHand = new ArrayList<>();

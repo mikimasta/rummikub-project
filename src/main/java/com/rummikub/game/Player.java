@@ -9,7 +9,7 @@ public class Player {
     private String name;
     private Tile[][] hand;
     private boolean isAI;
-
+    byte aiType;
     public void setHand(Tile[][] hand) {
 
         this.hand = hand;
@@ -22,15 +22,23 @@ public class Player {
     /**
      * constructs a Player instance with a given name, that has a hand.
      */
-    Player(String name, boolean isAI) {
+    Player(String name, boolean isAI, byte type) {
         this.name = name;
         this.hand = new Tile[2][15];
         this.firstMoveMade = false;
         this.isAI = isAI;
+        if(isAI){
+            this.aiType = type;
+        }else{
+            this.aiType = -1;
+        }
     }
 
     public boolean isAI() {
         return isAI;
+    }
+    public int getAiType() {
+        return aiType;
     }
     public void draw(Tile tile) {
 

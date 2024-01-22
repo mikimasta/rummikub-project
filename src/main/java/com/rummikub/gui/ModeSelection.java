@@ -34,8 +34,8 @@ class ModeSelection extends Pane {
             Game.getInstance();
         });
 
-        startAI = new HoverButton("AIstart");
-        startAI.setLayoutX(Rummikub.xCenter + 300);
+        startAI = new HoverButton("AI start");
+        startAI.setLayoutX(Rummikub.xCenter + 500);
         startAI.setLayoutY(Rummikub.yCenter + 50);
         startAI.setOnAction(e -> {
 
@@ -43,8 +43,8 @@ class ModeSelection extends Pane {
             Game.getInstance();
         });
 
-        startAIvsAI = new HoverButton("AIvsAIstart");
-        startAIvsAI.setLayoutX(Rummikub.xCenter + 300);
+        startAIvsAI = new HoverButton("AIvsAI start");
+        startAIvsAI.setLayoutX(Rummikub.xCenter + 600);
         startAIvsAI.setLayoutY(Rummikub.yCenter + 150);
         startAIvsAI.setOnAction(e -> {
 
@@ -86,14 +86,35 @@ class ModeSelection extends Pane {
             ComboBox<Integer> AIcomboBox = new ComboBox<>(FXCollections.observableArrayList(2, 3, 4));
             AIcomboBox.setValue(0);
             AIcomboBox.setLayoutX(Rummikub.xCenter + 180);
-            AIcomboBox.setLayoutY(Rummikub.yCenter + 50);
+            AIcomboBox.setLayoutY(Rummikub.yCenter + 70);
             getChildren().add(AIcomboBox);
 
-            AIcomboBox.setOnAction(ev -> {
-                if (AIcomboBox.getSelectionModel().getSelectedItem() != 0) {
+            ComboBox<String> AIcomboBoxType = new ComboBox<>(FXCollections.observableArrayList("Greedy", "MCTS+NN", "Tree Search"));
+            AIcomboBoxType.setValue("Greedy");
+            AIcomboBoxType.setLayoutX(Rummikub.xCenter + 300);
+            AIcomboBoxType.setLayoutY(Rummikub.yCenter + 70);
+            getChildren().add(AIcomboBoxType);
+
+            AIcomboBoxType.setOnAction(ev -> {
+                if (AIcomboBoxType.getSelectionModel().getSelectedItem() == "Greedy") {
                     Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
+                    Game.AI1type = 0;
+                    //Game.AI2type = -1;
                     Game.GAME_MODE = 2;
-                    if (!getChildren().contains(startAI)) 
+                    if (!getChildren().contains(startAI))
+                        getChildren().add(startAI);
+                }
+                if (AIcomboBoxType.getSelectionModel().getSelectedItem() == "MCTS+NN") {
+                    Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
+                    Game.AI1type = 1;
+                    Game.GAME_MODE = 2;
+                    if (!getChildren().contains(startAI))
+                        getChildren().add(startAI);
+                }if (AIcomboBoxType.getSelectionModel().getSelectedItem() == "Tree Search") {
+                    Game.NUM_OF_PLAYERS = (byte) (int) AIcomboBox.getValue();
+                    Game.AI1type = 2;
+                    Game.GAME_MODE = 2;
+                    if (!getChildren().contains(startAI))
                         getChildren().add(startAI);
                 }
             });
@@ -105,18 +126,57 @@ class ModeSelection extends Pane {
         AIvsAI.setOnAction(e -> {
 
             AIvsAI.lock();
+            ComboBox<String> AIcomboBoxType1 = new ComboBox<>(FXCollections.observableArrayList("Greedy vs. Greedy", "MCTS+NN vs. Greedy", "Tree Search vs. Greedy", "MCTS+NN vs. MCTS+NN", "MCTS+NN vs. Tree Search", "Tree Search vs. Tree Search"));
+            AIcomboBoxType1.setValue("Greedy vs. Greedy");
+            AIcomboBoxType1.setLayoutX(Rummikub.xCenter + 180);
+            AIcomboBoxType1.setLayoutY(Rummikub.yCenter + 180);
+            getChildren().add(AIcomboBoxType1);
 
-            ComboBox<Integer> AIVSAIcomboBox = new ComboBox<>(FXCollections.observableArrayList(2, 3, 4));
-            AIVSAIcomboBox.setValue(0);
-            AIVSAIcomboBox.setLayoutX(Rummikub.xCenter + 180);
-            AIVSAIcomboBox.setLayoutY(Rummikub.yCenter + 150);
-            getChildren().add(AIVSAIcomboBox);
-
-            AIVSAIcomboBox.setOnAction(ev -> {
-                if (AIVSAIcomboBox.getSelectionModel().getSelectedItem() != 0) {
-                    Game.NUM_OF_PLAYERS = (byte) (int) AIVSAIcomboBox.getValue();
+            AIcomboBoxType1.setOnAction(ev -> {
+                if (AIcomboBoxType1.getSelectionModel().getSelectedItem() == "Greedy vs. Greedy") {
+                    Game.NUM_OF_PLAYERS = 2;
+                    Game.AI1type = 0;
+                    Game.AI2type = 0;
                     Game.GAME_MODE = 3;
-                    if (!getChildren().contains(startAIvsAI)) 
+                    if (!getChildren().contains(startAIvsAI))
+                        getChildren().add(startAIvsAI);
+                }
+                if (AIcomboBoxType1.getSelectionModel().getSelectedItem() == "MCTS+NN vs. Greedy") {
+                    Game.NUM_OF_PLAYERS = 2;
+                    Game.AI1type = 1;
+                    Game.AI2type = 0;
+                    Game.GAME_MODE = 3;
+                    if (!getChildren().contains(startAIvsAI))
+                        getChildren().add(startAIvsAI);
+                }if (AIcomboBoxType1.getSelectionModel().getSelectedItem() == "Tree Search vs. Greedy") {
+                    Game.NUM_OF_PLAYERS = 2;
+                    Game.AI1type = 2;
+                    Game.AI2type = 0;
+                    Game.GAME_MODE = 3;
+                    if (!getChildren().contains(startAIvsAI))
+                        getChildren().add(startAIvsAI);
+                }
+                if (AIcomboBoxType1.getSelectionModel().getSelectedItem() == "MCTS+NN vs. MCTS+NN") {
+                    Game.NUM_OF_PLAYERS = 2;
+                    Game.AI1type = 1;
+                    Game.AI2type = 1;
+                    Game.GAME_MODE = 3;
+                    if (!getChildren().contains(startAIvsAI))
+                        getChildren().add(startAIvsAI);
+                }
+                if (AIcomboBoxType1.getSelectionModel().getSelectedItem() == "MCTS+NN vs. Tree Search") {
+                    Game.NUM_OF_PLAYERS = 2;
+                    Game.AI1type = 1;
+                    Game.AI2type = 2;
+                    Game.GAME_MODE = 3;
+                    if (!getChildren().contains(startAIvsAI))
+                        getChildren().add(startAIvsAI);
+                }if (AIcomboBoxType1.getSelectionModel().getSelectedItem() == "Tree Search vs. Tree Search") {
+                    Game.NUM_OF_PLAYERS = 2;
+                    Game.AI1type = 2;
+                    Game.AI2type = 2;
+                    Game.GAME_MODE = 3;
+                    if (!getChildren().contains(startAIvsAI))
                         getChildren().add(startAIvsAI);
                 }
             });

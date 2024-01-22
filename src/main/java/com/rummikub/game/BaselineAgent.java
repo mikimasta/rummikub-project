@@ -8,7 +8,7 @@ public class BaselineAgent {
     
     /**
      * takes the rack and tries to make moves based on the tiles in that rack
-     * @param rack rack of tiles
+     * @param dupRack rack of tiles
      * @return the possible moves to make based on the players rack
      */
     public static ArrayList<ArrayList<Tile>> baselineAgent(Tile[][] dupRack){
@@ -60,7 +60,7 @@ public class BaselineAgent {
 
     /**
      * takes the rack and the board ordered them and makes moves with them comined and ordered
-     * @param rack rack of tiles 
+     * @param dupRack rack of tiles
      * @param board board of the game
      * @return the best outcome adding the board to the rack
      */
@@ -247,7 +247,7 @@ public class BaselineAgent {
 
     /**
      * finds all moves that don't use the same tiles
-     * @param listOfMovesGroups list of moves
+     * @param listOfMoves list of moves
      * @return list of moves that don't use the same tiles
      */
     static ArrayList<ArrayList<Tile>> findNonOverlappingMoves(ArrayList<ArrayList<Tile>> listOfMoves) {
@@ -310,26 +310,7 @@ public class BaselineAgent {
         System.out.println("le rack est  bon");
    return false;
 }
- public static void main(String[] args) {
 
-     Tile n = null;
-     Tile j = new Tile((byte) -1, Color.RED);
-
-     Tile t9B = new Tile((byte) 9, Color.BLACK);
-     Tile t10B = new Tile((byte) 10, Color.BLACK);
-     Tile t11B = new Tile((byte) 11, Color.BLACK);
-     Tile t12Bl = new Tile((byte) 12, Color.BLUE);
-     Tile t13B = new Tile((byte) 13, Color.BLACK);
-     
-     Tile[][]  board = {
-         {n, n, n,n, n, n, j, t9B, t10B, t11B, t12Bl, n, n, n, n}
-     };
-
-     Tile[][]  rack = {{n, n, n, n, n, n, n, n, n, n, n, n, n, n, n}};
-
-     Game test = new Game((byte) 3, false, (byte)1);
-     System.out.println(" game is Over " + isGameOver2(rack));
- }
 
     /*
      *  

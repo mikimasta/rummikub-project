@@ -8,9 +8,9 @@ import com.rummikub.game.Tile;
 
 
 public class MCTS {
-    private int NUM_SIMULATIONS = 1000;
+    private static int NUM_SIMULATIONS = 1000;
 
-    public ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
+    public static ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         Node root = new Node(stateBoard, stateHand);
         for(int i = 0; i < NUM_SIMULATIONS; i++){
             Node node = select(root);
@@ -26,7 +26,7 @@ public class MCTS {
         //return selectBestMove(root).getStateBoard;
     }
 
-    private Node select(Node node) {
+    private static Node select(Node node) {
        
     while(node.getChildren() != null){
             node = bestUCT(node);
@@ -35,7 +35,7 @@ public class MCTS {
 
     }
 
-    private  Node bestUCT(Node node) {
+    private static Node bestUCT(Node node) {
         double maxUCT = Double.MIN_VALUE;
 
         for (Node child : node.getChildren()) {
@@ -50,7 +50,7 @@ public class MCTS {
         return node;
     }
     
-    private double UCT(Node child) {
+    private static double UCT(Node child) {
 
         double explotation= (double) child.getReward() / child.getVisits();
         double constant = 1.0;
@@ -60,7 +60,7 @@ public class MCTS {
         return uct;
     }
     
-    private Node expand(Node node){
+    private static Node expand(Node node){
         // Get the current game state (board and hand)
         ArrayList<ArrayList<Tile>> stateBoard = node.getStateBoard();
         ArrayList<Tile> stateHand = node.getStateHand();
@@ -80,7 +80,7 @@ public class MCTS {
     }
 
 
-    private  ArrayList<Tile> getNewHand(ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<ArrayList<Tile>> intialBoard, ArrayList<Tile> hand){
+    private static ArrayList<Tile> getNewHand(ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<ArrayList<Tile>> intialBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
 
         //ArrayList<Tile> deepCopy = deepCopyHand(hand);
@@ -98,7 +98,7 @@ public class MCTS {
         return finalHand;
     }
 
-    private  ArrayList<Tile> removeUsedTile(ArrayList<Tile> hand, ArrayList<Tile> used){
+    private static ArrayList<Tile> removeUsedTile(ArrayList<Tile> hand, ArrayList<Tile> used){
         ArrayList<Tile> result = new ArrayList<>();
         for(int i = 0; i < hand.size(); i++){
                 Tile currentFromHand = hand.get(i);
@@ -118,7 +118,7 @@ public class MCTS {
         return result;
     }
 
-    private  boolean isTilePresent(Tile tile, ArrayList<ArrayList<Tile>> list) {
+    private static boolean isTilePresent(Tile tile, ArrayList<ArrayList<Tile>> list) {
         // Check if the tile is present in any sublist of the list
         for (ArrayList<Tile> sublist : list) {
             if (sublist.contains(tile)) {
@@ -128,7 +128,7 @@ public class MCTS {
         return false;
     }
 
-    private double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
+    private static double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         int player = 0;
         ArrayList<ArrayList<Tile>> initalBoard = new ArrayList<ArrayList<Tile>>();
         initalBoard = stateBoard;
@@ -159,7 +159,7 @@ public class MCTS {
         return 100 - handtally; 
     }
 
-    private int tallyHand(ArrayList<Tile> stateHand){
+    private static int tallyHand(ArrayList<Tile> stateHand){
         int count = 0;
         for(Tile tile : stateHand){
             count = count + tile.getNumber();
@@ -169,11 +169,11 @@ public class MCTS {
 
     private double simulateNN(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
 
-
+        return 0;
     }
 
 
-    private void backpropagate(Node node, double reward){
+    private static void backpropagate(Node node, double reward){
         while (node.getParent() != null) {
             
             node.updateScore(reward);
@@ -181,7 +181,7 @@ public class MCTS {
         }
     }
 
-    private Node selectBestMove(Node root){
+    private static Node selectBestMove(Node root){
         List<Node> children = root.getChildren();
         double bestReward = 0;
         Node bestNode = null;
