@@ -5,6 +5,7 @@ package com.rummikub.gui;
 import com.rummikub.game.MCTS.MCTS;
 import com.rummikub.game.TreeSearchBaseline;
 import com.rummikub.Utils;
+import com.rummikub.game.BaselineAgent;
 import com.rummikub.game.Game;
 import com.rummikub.game.Node;
 import com.rummikub.game.SingleTileAgent;
@@ -12,6 +13,7 @@ import com.rummikub.game.SplittingAgent;
 import com.rummikub.game.Tile;
 import com.rummikub.game.MCTS.TreeSearchCollaborative;
 import com.rummikub.movegen.MoveGenerator;
+
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -236,9 +238,53 @@ public class AIGameScreen extends Pane {
         }
     }
     void treeSearch() {
-        ArrayList<ArrayList<Tile>> finalBoard = TreeSearchCollaborative.treeSearch(Game.board2ArrayList(GameboardGUI.getInstance().getState()), Game.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()));
+        
+        //ArrayList<ArrayList<Tile>> finalBoard = TreeSearchCollaborative.treeSearch(allSetsOnBoard(GameboardGUI.getInstance().getState()), BaselineAgent.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()));
+        ArrayList<ArrayList<ArrayList<Tile>>> allBoards = MoveGenerator.getInstance().getSolutions(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
+        ArrayList<ArrayList<Tile>> finalBoard = TreeSearchCollaborative.bestBoard(allBoards);
+        // deleteAllTiles(GameboardGUI.getInstance().getState());
+        GameboardGUI.getInstance().removeAIMove(); 
+        System.out.println("size of finalBoard is : " + finalBoard.size());
         processAIMove2_3(finalBoard);
+
     }
+
+    Tile [][] deleteAllTiles(Tile [][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int y = 0; y < board[i].length; y++) {
+                if (board[i][y] != null) {
+                    board[i][y] = null;
+                }
+            }
+        }
+        return board;
+    }
+
+    ArrayList<ArrayList<Tile>> allSetsOnBoard(Tile [][] board) {
+        ArrayList<ArrayList<Tile>> allSets = new ArrayList<ArrayList<Tile>>();
+        ArrayList<Tile> move = new ArrayList<>();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int y = 0; y < board[i].length; y++) {
+                Tile tile = board[i][y]; 
+                if (tile != null) {
+                    move.add(tile);
+                } else {
+                    if (move.size() > 2) {
+                        allSets.add(new ArrayList<>(move));
+                    }
+                    move.clear();
+                }
+            }
+            if (move.size() > 2) {
+                allSets.add(new ArrayList<>(move));
+            }
+            move.clear();
+        } 
+        BaselineAgent.printMoves(allSets);
+        return allSets;
+    }
+
 
     void MCTS() {
         //ArrayList<ArrayList<Tile>> finalBoard = MCTS.mcts(Game.board2ArrayList(GameboardGUI.getInstance().getState()), Game.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()));
