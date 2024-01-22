@@ -77,4 +77,27 @@ public class TreeSearchCollaborative {
         return false;
     }
 
+
+    public static ArrayList<ArrayList<Tile>> bestBoard(ArrayList<ArrayList<ArrayList<Tile>>> solutions) {
+        int valueOfBoard = 0;
+        ArrayList<ArrayList<Tile>> bestBoard = new ArrayList<ArrayList<Tile>>();
+
+        for (ArrayList<ArrayList<Tile>> board : solutions) {
+            int value = getValueOfBoard(board);
+            if (value > valueOfBoard) {
+                bestBoard = board;
+                valueOfBoard = value;
+            }
+        }
+        return bestBoard;
+    }
+
+    static int getValueOfBoard(ArrayList<ArrayList<Tile>> board) {
+        int numberOfTiles = 0;
+
+        for (ArrayList<Tile> move : board) {
+            numberOfTiles += move.size();
+        }
+        return numberOfTiles;
+    }
 }
