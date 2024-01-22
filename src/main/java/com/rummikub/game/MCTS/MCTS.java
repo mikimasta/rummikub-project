@@ -132,7 +132,7 @@ public class MCTS {
         int player = 0;
         ArrayList<ArrayList<Tile>> initalBoard = new ArrayList<ArrayList<Tile>>();
         initalBoard = stateBoard;
-        while(stateHand != null && opponentHand != null){
+        while((stateHand != null && opponentHand != null) && !pile.isEmpty() ){
             if(player == 0){
                 ArrayList<ArrayList<Tile>> move = Move.getMove(stateHand, stateBoard);
                 if(move != null){
@@ -142,6 +142,7 @@ public class MCTS {
                 else{
                     stateHand.add(pile.remove(0));
                 }
+                player = 1;
             }
             else if(player == 1){
                 ArrayList<ArrayList<Tile>> move = Move.getMove(opponentHand, stateBoard);
@@ -152,11 +153,12 @@ public class MCTS {
                 else{
                     opponentHand.add(pile.remove(0));
                 }
+                player = 0;
             }
         }
 
          int handtally = tallyHand(stateHand);
-        return 100 - handtally; 
+        return (100 - handtally)/100; 
     }
 
     private static int tallyHand(ArrayList<Tile> stateHand){
