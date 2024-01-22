@@ -30,9 +30,9 @@ public class Game {
     public static byte AI1type;
     public static byte AI2type;
 
-    public static Game getInstance() {
+    public static Game getInstance(byte players) {
         if (instance == null)
-            instance = new Game(NUM_OF_PLAYERS, isAIGame, GAME_MODE, AI1type, AI2type);
+            instance = new Game(players, false, (byte) 1,(byte)1,(byte)1);
         return instance;
     }
      public static Game getInstance(byte numPlayers, boolean gameAI, byte GAME_MODE, byte AI1, byte AI2) {
