@@ -80,10 +80,6 @@ public class MCTS {
         return node;
     }
 
-//    // private  ArrayList<ArrayList<ArrayList<Tile>>> generateValidMoves(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
-//         ArrayList<ArrayList<ArrayList<Tile>>> validMoves = new ArrayList<ArrayList<ArrayList<Tile>>>();
-//         //fill this in
-//     //}
 
     private  ArrayList<Tile> getNewHand(ArrayList<ArrayList<Tile>> solutionBoard, ArrayList<ArrayList<Tile>> intialBoard, ArrayList<Tile> hand){
         ArrayList<Tile> usedTiles = new ArrayList<>();
@@ -139,12 +135,24 @@ public class MCTS {
         initalBoard = stateBoard;
         while(stateHand != null && opponentHand != null){
             if(player == 0){
-                stateBoard = Move.getMove(stateHand, stateBoard);
+                ArrayList<ArrayList<Tile>> move = Move.getMove(stateHand, stateBoard);
+                if(move != null){
+                stateBoard = move;
                 stateHand = getNewHand(initalBoard, stateBoard, stateHand);
+                }
+                else{
+                    stateHand.add(pile.remove(0));
+                }
             }
             else if(player == 1){
-                stateBoard = Move.getMove(opponentHand, stateBoard);
+                ArrayList<ArrayList<Tile>> move = Move.getMove(opponentHand, stateBoard);
+                if(move != null){
+                stateBoard = move;
                 opponentHand = getNewHand(initalBoard, stateBoard, opponentHand);
+                }
+                else{
+                    opponentHand.add(pile.remove(0));
+                }
             }
         }
 
