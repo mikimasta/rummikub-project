@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Stack;
 import javafx.scene.paint.Color;
 
-public class TreeSearch {
+public class TreeSearchBaseline {
     
     private static final int NUMBER_OF_AGENTS = 3;
 
