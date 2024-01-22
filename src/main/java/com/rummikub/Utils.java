@@ -77,7 +77,7 @@ public class Utils {
      * @param arr 2D array
      * @return an arraylist
      */
-    public static ArrayList<Tile> Array2DToArrayList(Tile[][] arr){
+    public static ArrayList<Tile> Array2DToArrayList(Tile[][] arr) {
         ArrayList<Tile> arrList = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
             for (int j = 0; j < arr[i].length; j++) {
@@ -97,5 +97,39 @@ public class Utils {
         }
 
         return deepCopy;
+    }
+
+    public static Tile[][] listTo2dArray(ArrayList<ArrayList<Tile>> list) {
+        int rows = list.size();
+        int cols = 0;
+
+        for (ArrayList<Tile> rowList : list) {
+            cols = Math.max(cols, rowList.size());
+        }
+
+
+        Tile[][] tileArray = new Tile[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            ArrayList<Tile> rowList = list.get(i);
+            for (int j = 0; j < rowList.size(); j++) {
+                tileArray[i][j] = rowList.get(j);
+            }
+        }
+
+        return tileArray;
+    }
+    public static ArrayList<ArrayList<Tile>> convertToArrayList(Tile[][] tileArray) {
+        ArrayList<ArrayList<Tile>> arrayListOfArrayList = new ArrayList<>();
+
+        for (Tile[] row : tileArray) {
+            ArrayList<Tile> rowList = new ArrayList<>();
+            for (Tile tile : row) {
+                rowList.add(tile);
+            }
+            arrayListOfArrayList.add(rowList);
+        }
+
+        return arrayListOfArrayList;
     }
 }

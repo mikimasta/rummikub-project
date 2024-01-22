@@ -3,8 +3,10 @@ package com.rummikub.game.MCTS;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rummikub.Utils;
 import com.rummikub.game.Tile;
-
+import com.rummikub.movegen.MoveGenerator;
+import javafx.scene.paint.Color;
 
 
 public class MCTS {
@@ -12,7 +14,8 @@ public class MCTS {
 
     public static ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         Node root = new Node(stateBoard, stateHand);
-        for(int i = 0; i < NUM_SIMULATIONS; i++){
+        for(int i = 1; i <= NUM_SIMULATIONS; i++){
+            System.out.println("Simulation number : " + i);
             Node node = select(root);
             List<Node>  children = expand(node).getChildren();
             for(Node child : children){
@@ -28,7 +31,7 @@ public class MCTS {
 
     private static Node select(Node node) {
        
-    while(node.getChildren() != null){
+    if (!node.getChildren().isEmpty()){
             node = bestUCT(node);
     }
         return node;
@@ -65,10 +68,11 @@ public class MCTS {
         ArrayList<ArrayList<Tile>> stateBoard = node.getStateBoard();
         ArrayList<Tile> stateHand = node.getStateHand();
 
-        SolutionFinderAll finder = new SolutionFinderAll();
-        
+        ArrayList<ArrayList<Tile>> stateHandForMoves = new ArrayList<>();
+        stateHandForMoves.add(stateHand);
+
         // Generate all possible child nodes
-        ArrayList<ArrayList<ArrayList<Tile>>> validMoves = finder.getAllSolutions(stateHand, stateBoard);
+        ArrayList<ArrayList<ArrayList<Tile>>> validMoves = MoveGenerator.getInstance().getSolutions(Utils.listTo2dArray(stateBoard), Utils.listTo2dArray(stateHandForMoves));
         for(ArrayList<ArrayList<Tile>> moveBoard : validMoves){
             ArrayList<Tile> moveHand = getNewHand(moveBoard, stateBoard, stateHand);
             Node child = new Node(moveBoard, moveHand);
@@ -159,6 +163,7 @@ public class MCTS {
 
          int handtally = tallyHand(stateHand);
         return (100 - handtally)/100; 
+
     }
 
     private static int tallyHand(ArrayList<Tile> stateHand){
@@ -194,6 +199,58 @@ public class MCTS {
             }
         }
         return bestNode;
+    }
+
+    public static void main(String[] args) {
+
+        Tile t1 = new Tile((byte) 1, Color.RED);
+        Tile t2 = new Tile((byte) 2, Color.RED);
+        Tile t3 = new Tile((byte) 3, Color.RED);
+        Tile t4 = new Tile((byte) 4, Color.RED);
+        Tile t5 = new Tile((byte) 1, Color.ORANGE);
+        Tile t6 = new Tile((byte) 2, Color.ORANGE);
+        Tile t7 = new Tile((byte) 3, Color.ORANGE);
+        Tile t8 = new Tile((byte) 4, Color.ORANGE);
+        Tile t9 = new Tile((byte) 1, Color.BLACK);
+        Tile t10 = new Tile((byte) 2, Color.BLACK);
+        Tile t11 = new Tile((byte) 3, Color.BLACK);
+        Tile t12 = new Tile((byte) 4, Color.BLACK);
+
+        t1.lock();
+        t2.lock();
+        t3.lock();
+        t4.lock();
+        t5.lock();
+        t6.lock();
+        t7.lock();
+        t8.lock();
+        t9.lock();
+        t10.lock();
+        t11.lock();
+        t12.lock();
+
+
+        Tile t13 = new Tile((byte) 1, Color.BLUE);
+        Tile t14 = new Tile((byte) 3, Color.BLACK);
+        Tile t15 = new Tile((byte) 5, Color.BLACK);
+
+        Tile[][] testBoard = {{t1, t2, t3, t4}, {t5, t6, t7, t8}, {t9, t10, t11, t12}};
+        Tile[][] testHand = {{t13, t14, t15}};
+
+        Tile o1 = new Tile((byte) 2, Color.RED);
+        Tile[][] opHand = {{o1}};
+
+        ArrayList<Tile> pile = new ArrayList<>();
+
+        Tile p1 = new Tile((byte) 11, Color.BLACK);
+        Tile p2 = new Tile((byte) 12, Color.BLACK);
+        Tile p3 = new Tile((byte) 13, Color.BLACK);
+
+        pile.add(p1);
+        pile.add(p2);
+        pile.add(p3);
+
+        System.out.println(MCTS.mcts(Utils.convertToArrayList(testBoard), Utils.convertToArrayList(testHand).get(0), Utils.convertToArrayList(opHand).get(0), pile));
     }
 
 }

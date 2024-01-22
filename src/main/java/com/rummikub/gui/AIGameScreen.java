@@ -88,7 +88,7 @@ public class AIGameScreen extends Pane {
         endTurn.setOnAction(e -> {
             if (Game.getInstance().currentPlayer.isAI()) { //player is AI
                 if(Game.getInstance().currentPlayer.getAiType()==0) {
-                    Greedy();
+                    greedy();
                     if (gameboard.stateNotChanged() && Game.getInstance().getPoolSize(Game.getInstance().getPool()) > 0) {
                         System.out.println("No move possible for computer. Drawing a tile...");
                         Game.getInstance().currentPlayer.draw(Game.getInstance().getPool().remove(0));
@@ -199,7 +199,7 @@ public class AIGameScreen extends Pane {
 
     }
 
-    void Greedy() {
+    void greedy() {
 
         ArrayList<Node> MCTSList = TreeSearchBaseline.findBestMove(GameboardGUI.getInstance().getState(), Game.getInstance().currentPlayer.getHand());
         MCTSList = removeDuplicateLists(MCTSList);
@@ -225,7 +225,7 @@ public class AIGameScreen extends Pane {
         processAIMove2_3(finalBoard);
     }
 
-    void MCTS(){
+    void MCTS() {
         //ArrayList<ArrayList<Tile>> finalBoard = MCTS.mcts(Game.board2ArrayList(GameboardGUI.getInstance().getState()), Game.TwodArrayToArrayList(Game.getInstance().currentPlayer.getHand()));
         //processAIMove2_3(finalBoard);
     }

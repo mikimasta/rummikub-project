@@ -83,7 +83,7 @@ public class MoveGenerator {
         filterGroupsAndRuns();
     }
 
-    ArrayList<ArrayList<ArrayList<Tile>>> getSolutions(Tile[][] state, Tile[][] hand) {
+    public ArrayList<ArrayList<ArrayList<Tile>>> getSolutions(Tile[][] state, Tile[][] hand) {
         load(state, hand);
         solve();
         return this.solutions;
