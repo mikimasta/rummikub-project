@@ -167,7 +167,9 @@ class GameboardGUI extends Pane {
 
     public void setState(Tile[][] newState) {
         this.state = newState;
-        setPrevState();
+        if(newState!=null) {
+            setPrevState();
+        }
     }
     
 
