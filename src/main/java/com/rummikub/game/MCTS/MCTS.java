@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rummikub.Utils;
-import com.rummikub.game.Game;
-import com.rummikub.game.Player;
-import com.rummikub.game.RandBaseline;
 import com.rummikub.game.Tile;
 import com.rummikub.movegen.MoveGenerator;
 import javafx.scene.paint.Color;
@@ -15,7 +12,7 @@ import javafx.scene.paint.Color;
 public class MCTS {
     private static int NUM_SIMULATIONS = 1000;
 
-    public static ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, List<Tile> pile){
+    public static ArrayList<ArrayList<Tile>> mcts(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         Node root = new Node(stateBoard, stateHand);
         for(int i = 1; i <= NUM_SIMULATIONS; i++){
             System.out.println("Simulation number : " + i);
@@ -34,7 +31,7 @@ public class MCTS {
 
     private static Node select(Node node) {
        
-    if(!node.getChildren().isEmpty()){
+    if (!node.getChildren().isEmpty()){
             node = bestUCT(node);
     }
         return node;
@@ -135,46 +132,33 @@ public class MCTS {
         return false;
     }
 
-    private static double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, List<Tile> pile){
+    private static double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         int player = 0;
-        ArrayList<ArrayList<Tile>> prevBoard = new ArrayList<ArrayList<Tile>>();
-        ArrayList<ArrayList<Tile>> currentBoard = new ArrayList<ArrayList<Tile>>();
-        currentBoard = stateBoard;
-
-        int noMoveA = 0;
-        int noMoveB = 0;
-
-        while(!((stateHand.isEmpty() || opponentHand.isEmpty()) || (pile.isEmpty() && noMoveA > 2 && noMoveB > 2))){
-            System.out.println("AI NULL? " + stateHand.isEmpty() + " other Null? " + opponentHand.isEmpty() + " tie? " +(pile.isEmpty() && noMoveA > 2 && noMoveB > 2));
+        ArrayList<ArrayList<Tile>> initalBoard = new ArrayList<ArrayList<Tile>>();
+        initalBoard = stateBoard;
+        while((stateHand != null && opponentHand != null) && !pile.isEmpty() ){
             if(player == 0){
-                ArrayList<ArrayList<Tile>> move = RandBaseline.getRandMove(stateBoard, stateHand);
+                ArrayList<ArrayList<Tile>> move = Move.getMove(stateHand, stateBoard);
                 if(move != null){
-                prevBoard = currentBoard;
-                currentBoard = move;
-                stateHand = getNewHand(prevBoard, currentBoard, stateHand);
-                noMoveA = 0;
+                stateBoard = move;
+                stateHand = getNewHand(initalBoard, stateBoard, stateHand);
                 }
                 else{
                     stateHand.add(pile.remove(0));
-                    noMoveA++;
                 }
                 player = 1;
             }
             else if(player == 1){
-                ArrayList<ArrayList<Tile>> move = RandBaseline.getRandMove(stateBoard, opponentHand);
+                ArrayList<ArrayList<Tile>> move = Move.getMove(opponentHand, stateBoard);
                 if(move != null){
-                prevBoard = currentBoard;
-                currentBoard = move;
-                opponentHand = getNewHand(prevBoard, currentBoard, opponentHand);
-                noMoveB = 0;
+                stateBoard = move;
+                opponentHand = getNewHand(initalBoard, stateBoard, opponentHand);
                 }
                 else{
                     opponentHand.add(pile.remove(0));
-                    noMoveB++;
                 }
                 player = 0;
             }
-            lockTiles(currentBoard);
         }
 
          int handtally = tallyHand(stateHand);
@@ -216,70 +200,6 @@ public class MCTS {
         }
         return bestNode;
     }
-
-    private static void lockTiles(ArrayList<ArrayList<Tile>> board){
-        for(ArrayList<Tile> set: board){
-            for(Tile tile : set){
-                tile.lock();
-            }
-        }
-    }
-    
-
-    // public static void main(String[] args) {
-
-    //     Game game = Game.getInstance((byte)2);
-    //     List<Tile> pile = game.getPool();
-    //     List<Player> players = game.getPlayers();
-    //     ArrayList<Tile> handMCTS = Game.TwodArrayToArrayList(players.get(0).getHand());
-    //     ArrayList<Tile> handBaseLine = Game.TwodArrayToArrayList(players.get(1).getHand());
-
-    //     int player = 0;
-    //     ArrayList<ArrayList<Tile>> previousBoard = new ArrayList<ArrayList<Tile>>();
-    //     ArrayList<ArrayList<Tile>> board = new ArrayList<ArrayList<Tile>>();
-
-    //     int noMoveMCTS = 0;
-    //     int noMoveBase = 0;
-        
-    //     while(!((handMCTS.isEmpty()|| handBaseLine.isEmpty()) || (pile.isEmpty() && noMoveBase > 2 && noMoveMCTS > 2))){
-    //         if(player == 0){
-    //             ArrayList<ArrayList<Tile>> move = RandBaseline.getRandMove(board, handBaseLine);
-    //             if(move != null){
-    //                 board = move;
-    //                 handBaseLine = getNewHand(previousBoard, board, handBaseLine);
-    //                 noMoveBase = 0;
-    //             }
-    //             else{
-    //                 handBaseLine.add(pile.remove(0));
-    //                 noMoveBase++;
-    //             }
-    //             player = 1;
-    //         }
-    //         else if(player == 1){
-    //             ArrayList<ArrayList<Tile>> move = MCTS.mcts(board, handMCTS, handBaseLine, pile);
-    //             if(move != null){
-    //                 board = move;
-    //                 handMCTS = getNewHand(previousBoard, board, handMCTS);
-    //                 noMoveMCTS = 0;
-    //             }
-    //             else{
-    //                 handMCTS.add(pile.remove(0));
-    //                 noMoveMCTS++;
-    //             }
-    //             player = 0;
-    //         }
-    //     }
-
-    //     if(handMCTS == null){
-    //         System.out.println("MCTS WIN SCORE = 0" + "BASELINE LOSE SCORE = " + (100-tallyHand(handBaseLine)));
-    //     }
-    //     else if(handBaseLine == null){
-    //         System.out.println("MCTS LOSE SCORE = " + (-tallyHand(handMCTS)) + "BASELINE WIN SCORE =  0" );
-    //     }
-    //     else{
-    //         System.out.println("TIE MCTS LOSE SCORE = " + (-tallyHand(handMCTS)) + " BASELINE LOSE SCORE = " + (-tallyHand(handBaseLine)) );
-    //     }
-    // }
 
     public static void main(String[] args) {
 
