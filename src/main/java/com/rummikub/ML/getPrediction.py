@@ -1,7 +1,11 @@
+import scipy.io
 import numpy as np
 
-def getPrediction(Theta1, Theta2, X):
+def getPrediction(X):
 
+    trained_params = scipy.io.loadmat('/path/to/your/save/file/parameters.mat')
+    Theta1 = trained_params['Theta1']
+    Theta2 = trained_params['Theta2']
 # Useful values
     m = np.shape(X)[0]              #number of examples
     

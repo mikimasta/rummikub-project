@@ -57,6 +57,9 @@ def trainNN():
     Theta2 = np.reshape(nn_params[((hidden_layer_size * (input_layer_size + 1))):],
                                 (num_labels, (hidden_layer_size + 1)), order='F')
     
+    scipy.io.savemat('/path/to/your/save/file/parameters.mat', {'Theta1': Theta1, 'Theta2': Theta2})
+
+    
     return Theta1, Theta2
 
 

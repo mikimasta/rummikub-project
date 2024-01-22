@@ -17,7 +17,7 @@ public class MCTS {
             Node node = select(root);
             List<Node>  children = expand(node).getChildren();
             for(Node child : children){
-                double reward = simulate(child.getStateBoard(), child.getStateHand(), opponentHand, pile);
+                double reward = simulateNormal(child.getStateBoard(), child.getStateHand(), opponentHand, pile);
                 child.updateScore(reward);
                 backpropagate(child, reward);
 
@@ -129,7 +129,7 @@ public class MCTS {
         return false;
     }
 
-    private double simulate(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
+    private double simulateNormal(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
         int player = 0;
         ArrayList<ArrayList<Tile>> initalBoard = new ArrayList<ArrayList<Tile>>();
         initalBoard = stateBoard;
@@ -168,8 +168,11 @@ public class MCTS {
         return count;
     }
 
-    //private ArrayList<ArrayList<Tile>> getRandMove(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand){
-    //}
+    private double simulateNN(ArrayList<ArrayList<Tile>> stateBoard, ArrayList<Tile> stateHand, ArrayList<Tile> opponentHand, ArrayList<Tile> pile){
+
+
+    }
+
 
     private void backpropagate(Node node, double reward){
         while (node.getParent() != null) {
